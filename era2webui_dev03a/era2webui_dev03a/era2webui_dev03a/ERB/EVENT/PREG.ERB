@@ -1,0 +1,1280 @@
+﻿;≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+;妊娠・出産関連の処理
+;≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+;=============================================================================
+;妊娠関連のイベント
+;=============================================================================
+;---------------------------------------------------------
+;フラグ管理
+;---------------------------------------------------------
+;CFLAG
+;70→誰によって妊娠させられたか（マスター = 1, 助手 = 2, 奴隷 = 3）
+;71→マスターによる中田氏カウント用
+;72→助手による奴隷への中田氏カウント用
+;73→奴隷による助手への中田氏カウント用
+;74→ぶっかけ場所判別フラグ
+;75→使用済みコンドーム判定（コンドーム精飲に使用）
+;76→妊娠時の分岐保存用
+;77→出産日
+;78→父親は？？
+;79→乳母かな？
+;追加 FLAG
+;17→臨月or育児中の奴隷はいるか？
+;18→射精箇所選択機能および妊娠機能のON・OFF
+;19→射精選択の自動モード時射精箇所選択機能のON・OFF
+;TFLAG
+;700→育児部屋コマンド実行した？
+;701、702→育児部屋コマンド判定の予備というか事故防止用のために確保
+;MARK
+;89→元から母乳体質かどうかのフラグ
+;90→育児部屋にいるかどうか
+
+;---------------------------------------------------------
+;中田氏・妊娠フラグに絡む関数郡
+;---------------------------------------------------------
+@IN_VAGINA_ALL
+
+;奴隷の妊娠チェック
+IF TARGET > 0
+	IF TALENT:オトコ == 0 && TALENT:卵生 == 0 && TALENT:産卵体質 == 0 && TALENT:妊娠 == 0 && TALENT:懐卵 == 0 && TEQUIP:緊急避妊薬 == 0 && !TALENT:死亡
+		;普段から初期化してるが念のため
+		CFLAG:70 = 0
+		;まず、主人との間で判定
+		;中だしされているならチェックへ
+		SIF CFLAG:71 > 0
+			CALL NAKADASHI_CHECK, TARGET, 1
+
+		;助手がいれば助手との間で判定（主人との判定で妊娠確定していない場合）
+		IF ASSI > 0 && CFLAG:70 == 0
+			;中だしされているならチェックへ
+			SIF CFLAG:72 > 0
+				CALL NAKADASHI_CHECK, TARGET, 2
+		ENDIF
+	ENDIF
+ENDIF
+
+;助手の妊娠チェック
+IF ASSI > 0
+	IF TALENT:ASSI:オトコ == 0 && TALENT:ASSI:卵生 == 0 && TALENT:ASSI:産卵体質 == 0 && TALENT:ASSI:妊娠 == 0 && TALENT:ASSI:懐卵 == 0 && TEQUIP:ASSI:緊急避妊薬 == 0 && !TALENT:ASSI:死亡
+		;普段から初期化してるが念のため
+		CFLAG:ASSI:70 = 0
+		;まず、主人との間で判定
+		;中だしされているならチェックへ
+		SIF CFLAG:ASSI:71 > 0
+			CALL NAKADASHI_CHECK, ASSI, 1
+
+		;奴隷との間で判定（主人との判定で妊娠確定していない場合）
+		IF TARGET > 0 && CFLAG:ASSI:70 == 0
+			;中だしされているならチェックへ
+			SIF CFLAG:ASSI:73 > 0
+				CALL NAKADASHI_CHECK, ASSI, 3
+		ENDIF
+	ENDIF
+ENDIF
+
+;only if the funciont is activated
+SIF (FLAG:11 & 128) == 0
+	RETURN
+
+;check for pregnancy of master
+IF TALENT:MASTER:オトコ == 0 && TALENT:MASTER:卵生 == 0 && TALENT:MASTER:産卵体質 == 0 && TALENT:MASTER:妊娠 == 0 && TALENT:MASTER:懐卵 == 0 && TEQUIP:MASTER:緊急避妊薬 == 0 && !TALENT:MASTER:死亡
+	;普段から初期化してるが念のため
+	CFLAG:MASTER:70 = 0
+	;assi to master check
+	SIF ASSI > 0 && CFLAG:MASTER:72 > 0
+		CALL NAKADASHI_CHECK, MASTER, 2
+
+	;slave to master check (only if not get pregnant by assi)
+	IF !CFLAG:MASTER:70 && CFLAG:MASTER:73 > 0
+		CALL NAKADASHI_CHECK, MASTER, 3
+	ENDIF
+ENDIF
+
+
+@NAKADASHI_CHECK, ARG, ARG:1
+;中出しされた精子量に応じて確率処理
+;70 + ARG:1：チェックするフラグ番号
+
+;膣内射精量で分岐するのでその下準備
+LOCAL = ((CFLAG:ARG:(70 + ARG:1) / 2) > 5) ? 5 # CFLAG:ARG:(70 + ARG:1) / 2
+
+[IF_DEBUG]
+PRINTFORMW Pregnancy rate for %CALLNAME:ARG%: {RATE_PREGNANCY(LOCAL, ARG, ARG:1)}
+[ENDIF]
+
+;妊娠するかの判定
+SIF (RAND:(RATE_PREGNANCY(LOCAL, ARG, ARG:1)) == 0 || FLAG:602) && CFLAG:ARG:3669 != -2
+	CFLAG:ARG:70 = ARG:1
+
+
+;妊娠確率計算
+;(6 - ARG + MAX(2 - ARG, 0)：基本値設定
+;(ARG:1 > 1) * MIN(LOCAL, 2)：父親が主人以外時の補正
+;TALENT:ARG:小柄体型 * 2：小柄体型の補正
+;((TEQUIP:ARG:排卵誘発剤 > 0) ? 1 # 3)：排卵誘発剤による補正
+@RATE_PREGNANCY(ARG, ARG:1, ARG:2)
+#FUNCTION
+;基本値
+LOCAL = 6 - ARG + MAX(3 - ARG, 0) + (ARG:2 > 1) * MIN(ARG, 2)
+;素質補正
+;TALENT:幼児	:[幼児]
+;CFLAG:3669 == -2:未初潮
+;TALENT:小人体型	:[小人体型]
+;TALENT:小柄体型	:[小柄体型]
+;TALENT:求聞持	:[求聞持]
+;TALENT:機械	:[機械]
+;TALENT:霊体	:[霊体]
+;TALENT:人形	:[人形]
+;TALENT:爆発物	:[爆発物]
+;TALENT:神霊	:[神霊]
+;TALENT:半神	:[半神]
+;TALENT:危険日	:[危険日]
+;TALENT:生理	:[生理]
+;TALENT:排卵	:[排卵]
+LOCAL += TALENT:(ARG:1):130 * 3
+LOCAL += (TALENT:(ARG:1):127 + TALENT:(ARG:1):128 + TALENT:(ARG:1):216) * 2
+LOCAL += TALENT:(ARG:1):206 + TALENT:(ARG:1):207 + TALENT:(ARG:1):208 + TALENT:(ARG:1):220 + TALENT:(ARG:1):222 + TALENT:(ARG:1):223
+LOCAL += TALENT:(ARG:1):511 * 3
+SIF !TALENT:(ARG:1):512
+	LOCAL = MAX(LOCAL - TALENT:(ARG:1):510 * 3 , 1)
+;[妖精]のみ特殊処理
+SIF TALENT:(ARG:1):200 && ((ARG:2 == 1 && !TALENT:MASTER:妖精知識) || (ARG:2 == 2 && !TALENT:ASSI:妖精知識) || (ARG:2 == 3 && !TALENT:妖精知識))
+	LOCAL++
+
+RETURNF (LOCAL * ((TEQUIP:(ARG:1):16 > 0 || TALENT:(ARG:1):512) ? 1 # 3))
+
+
+;---------------------------------------------------------
+;妊娠処理関数郡
+;---------------------------------------------------------
+@GET_CHILD_ALL
+IF TARGET > 0
+	IF TALENT:妊娠 == 0 && CFLAG:70 > 0
+		;妊娠時の口上をイベント口上でやってみるのはいいとして分岐どうしよう…
+		;基本的には口上側で分岐してもらう方向で
+		;TFLAG:222 を口上分岐用父親関連＋グッドバッド判定用に使用
+		TFLAG:222 = NO:(GET_SEMEN_GIVER(TARGET)) + 10000
+		CALL DETERMINE_N_FLAG, TARGET
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 170, GET_SEMEN_GIVER(TARGET)
+		PRINTFORMW %CALLNAME:TARGET%は[妊娠]した。
+		TALENT:TARGET:妊娠 = 1
+		;妊娠時のステータスの変化
+		CALL CHANGE_N_STATUS, TARGET
+	ENDIF
+ENDIF
+
+IF ASSI > 0
+	IF TALENT:ASSI:妊娠 == 0 && CFLAG:ASSI:70 > 0
+		;妊娠時の口上をイベント口上でやってみるのはいいとして分岐どうしよう…
+		;基本的には口上側で分岐してもらう方向で
+		TFLAG:222 = NO:(GET_SEMEN_GIVER(ASSI)) + 10000
+		CALL DETERMINE_N_FLAG, ASSI
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ASSI, 170, GET_SEMEN_GIVER(ASSI)
+		PRINTFORMW %CALLNAME:ASSI%は[妊娠]した。
+		TALENT:ASSI:妊娠 = 1
+		;妊娠時のステータスの変化
+		CALL CHANGE_N_STATUS, ASSI
+	ENDIF
+ENDIF
+
+;only if the funciont is activated
+IF FLAG:11 & 128
+	IF TALENT:MASTER:妊娠 == 0 && CFLAG:MASTER:70 > 0
+		;妊娠時の口上をイベント口上でやってみるのはいいとして分岐どうしよう…
+		;基本的には口上側で分岐してもらう方向で
+		TFLAG:222 = NO:(GET_SEMEN_GIVER(MASTER)) + 10000
+		; CALL DETERMINE_N_FLAG, MASTER
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, GET_SEMEN_GIVER(MASTER), 168
+		PRINTFORMW %CALLNAME:MASTER%は[妊娠]した。
+		TALENT:MASTER:妊娠 = 1
+		;妊娠時のステータスの変化
+		CALL CHANGE_N_STATUS, MASTER
+	ENDIF
+ENDIF
+
+CALL CLEAR_FLAG
+
+;-------------------------------------------------
+;グッド妊娠・バッド妊娠のフラグ設定
+;-------------------------------------------------
+@DETERMINE_N_FLAG, ARG
+LOCAL:1 = NO:(GET_SEMEN_GIVER(ARG)) + 10000
+;父親主人なら恋慕、烙印、隷属、壊造人格
+;父親助手なら、助手と助手間の十分な調教経験
+;父親奴隷なら、助手と奴隷間の十分な調教経験
+IF ((TALENT:ARG:恋慕 || TALENT:ARG:烙印 || TALENT:ARG:隷属 || TALENT:ARG:壊造人格) && CFLAG:ARG:70 == 1) || (CFLAG:ARG:70 == 2 && CFLAG:ARG:(LOCAL:1) >= 1000) || (CFLAG:ARG:70 == 3 && CFLAG:ARG:(LOCAL:1) >= 1000)
+	;妊娠（グッド）フラグ
+	CFLAG:ARG:76 = 1
+;強気な女たちのレアバッド妊娠(これは後からグッド条件を満たしても手遅れ)
+ELSEIF (TALENT:ARG:反抗的 || TALENT:ARG:気丈 || TALENT:ARG:生意気 || TALENT:ARG:プライド高い || TALENT:ARG:サド) && RAND:100 > 79
+	;妊娠（SPバッド）フラグ
+	CFLAG:ARG:76 = 3
+;通常のバッド妊娠
+ELSE
+	;妊娠（バッド）フラグ
+	CFLAG:ARG:76 = 2
+ENDIF
+
+;-------------------------------------------------
+;妊娠時のステータスの変化
+;-------------------------------------------------
+@CHANGE_N_STATUS, ARG
+;基本的に対象が変わるだけで同じなので関数にくくりだした
+;体力上限を減らす
+;体力が上限超えることもあるので、体力501以上なら500にする
+MAXBASE:ARG:0 -= 500
+IF BASE:ARG:体力 >= 501
+	BASE:ARG:体力 = 500
+	IF TFLAG:989 == 0
+		PRINTFORML 酷く疲れているようだ……休ませた方が良いだろう。
+		PRINTFORMW 　
+	ENDIF
+ENDIF
+
+CSTR:ARG:8 = 
+CSTR:ARG:9 = 
+CSTR:ARG:10 = 
+
+;出産系のフラグ設定
+CFLAG:ARG:77 = DAY + FLAG:600
+LOCAL = GET_SEMEN_GIVER(ARG)
+CFLAG:ARG:78 = NO:LOCAL
+CFLAG:ARG:3004 = CFLAG:LOCAL:3109
+LOCAL:1 = CFLAG:ARG:78 + 10000
+;身体測定フラグを寝せる(次回身体測定を行うため)
+CFLAG:ARG:508 = 0
+;父親の名前を母親で仮保存
+CSTR:ARG:8 = %CALLNAME:LOCAL%
+;母親の名前を母親で仮保存
+CSTR:ARG:9 = %CALLNAME:ARG%
+
+SIF TALENT:MASTER:998
+	PRINTFORML CSTR:ARG:8 : %CSTR:ARG:8%	CSTR:ARG:9 : %CSTR:ARG:9%
+
+
+;父親主人なら恋慕、烙印、隷属、壊造人格
+;父親助手なら、助手と助手間の十分な調教経験
+;父親奴隷なら、助手と奴隷間の十分な調教経験
+IF ((TALENT:ARG:恋慕 || TALENT:ARG:烙印 || TALENT:ARG:隷属 || TALENT:ARG:壊造人格) && CFLAG:ARG:70 == 1) || (CFLAG:ARG:70 == 2 && CFLAG:ARG:(LOCAL:1) >= 1000) || (CFLAG:ARG:70 == 3 && CFLAG:ARG:(LOCAL:1) >= 1000) || ARG == MASTER
+	IF TFLAG:989 == 0 && ARG != MASTER
+		PRINTFORMW %CALLNAME:ARG%は困惑しつつも%CALLNAME:LOCAL%の子を授かった喜びに表情を緩ませている。
+		IF TALENT:ARG:彼氏あり || TALENT:ARG:旦那あり
+			IF TALENT:ARG:服従
+				PRINTFORM %CALLNAME:ARG%は
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, ARG
+				PRINTFORMW の事を思い出したのか、一瞬だけ悲しそうな表情になった後、%CALLNAME:LOCAL%への謝罪の言葉を述べた……
+			ENDIF
+		ENDIF
+		PRINTL 
+	ENDIF
+
+	;妊娠（グッド）フラグ
+	CFLAG:ARG:76 = 1
+
+	;妊婦の胸の大きさをフラグに代入する処理
+	CFLAG:ARG:3006 = 0
+	;絶壁
+	IF TALENT:ARG:絶壁 
+		CFLAG:ARG:3006 = 1
+	;貧乳
+	ELSEIF TALENT:ARG:貧乳
+		CFLAG:ARG:3006 = 2
+	;巨乳
+	ELSEIF TALENT:ARG:巨乳
+		CFLAG:ARG:3006 = 4
+	;爆乳
+	ELSEIF TALENT:ARG:爆乳
+		CFLAG:ARG:3006 = 5
+	;普通
+	ELSE
+		CFLAG:ARG:3006 = 3
+	ENDIF
+
+	;乳がワンランクパワーアップする
+	;絶→貧　貧→普　普→巨　巨・爆→そのまま
+	IF TALENT:ARG:巨乳 == 0 && TALENT:ARG:爆乳 == 0
+		SIF TFLAG:989 == 0
+			PRINTFORMW %CALLNAME:ARG%の胸が大きくなった
+		IF TALENT:ARG:絶壁 == 1
+			SIF TFLAG:989 == 0
+				PRINTFORMW [%TALENTNAME:110%]から[%TALENTNAME:111%]になった。
+			TALENT:ARG:絶壁 = 0
+			TALENT:ARG:貧乳 = 1
+		ELSEIF TALENT:ARG:貧乳 == 1
+			SIF TFLAG:989 == 0
+				PRINTFORMW [%TALENTNAME:111%]から普通のサイズになった。
+			TALENT:ARG:貧乳 = 0
+		ELSE
+			SIF TFLAG:989 == 0
+				PRINTFORMW [%TALENTNAME:112%]になった。
+			TALENT:ARG:巨乳 = 1
+		ENDIF
+		SIF TFLAG:989 == 0
+			PRINTL 
+	ENDIF
+
+	;母乳出るようになる
+	IF TALENT:ARG:母乳体質 == 0
+		IF TFLAG:989 == 0
+			PRINTFORMW %CALLNAME:ARG%は母乳が出るようになった。
+			PRINTL 
+		ENDIF
+		TALENT:ARG:母乳体質 = 1
+		CALL CALC_GAUGE3_SLAVE, ARG, 1
+	ELSE
+		;すでに母乳体質の場合はそのフラグを持っておく
+		MARK:ARG:89 = 1
+	ENDIF
+
+		;素質変動処理の呼び出し
+	IF ARG != MASTER
+		CALL LOST_TALENTS, ARG, 11, 0
+		CALL LOST_TALENTS, ARG, 20, RESULT
+		CALL LOST_TALENTS, ARG, 21, RESULT
+		CALL LOST_TALENTS, ARG, 22, RESULT
+		CALL LOST_TALENTS, ARG, 27, RESULT
+		SIF TALENT:ARG:淫魔 == 0
+			CALL LOST_TALENTS, ARG, 31, RESULT
+		CALL LOST_TALENTS, ARG, 32, RESULT
+		CALL LOST_TALENTS, ARG, 34, RESULT
+		CALL LOST_TALENTS, ARG, 38 - TALENT:LOCAL:オトコ, RESULT
+		CALL LOST_TALENTS, ARG, 39, RESULT
+		SIF TALENT:ARG:淫魔 == 0
+			CALL GET_TALENTS, ARG, 30, RESULT
+
+		SIF TFLAG:989 == 0 && RESULT != 0
+			PRINTFORMW を\@(RESULT == 2) ? 得た # 失った\@
+	ENDIF
+;強気な女たちのレアバッド妊娠(これは後からグッド条件を満たしても手遅れ)
+ELSEIF (TALENT:ARG:反抗的 || TALENT:ARG:気丈 || TALENT:ARG:生意気 || TALENT:ARG:プライド高い || TALENT:ARG:サド) && RAND:100 > 79
+	IF TFLAG:989 == 0
+		IF TALENT:ARG:彼氏あり || TALENT:ARG:旦那あり
+			PRINTFORM %CALLNAME:ARG%は
+			;思い人あり、彼氏あり、旦那あり
+			CALL PARTNER_NAME, ARG
+			PRINTFORM 以外の子を孕んだこと
+			PRINTFORMW への恨み言をつぶやきながら、%CALLNAME:LOCAL%をきつく睨みつけている。
+		ENDIF
+		PRINTFORML %CALLNAME:ARG%は自分が孕んだことに強い憤りを感じているようだ。
+		PRINTFORMW %CALLNAME:ARG%の中で何かのスイッチが入ってしまったようだ。
+	ENDIF
+	
+	;好感度減少
+	SIF CFLAG:ARG:好感度 > 0
+		TIMES CFLAG:ARG:好感度 , 0.40
+
+	;反発刻印3取得
+	SIF MARK:ARG:反発刻印 < 3
+		CALL COMMON_MARK_UP, ARG, 9, 3, TFLAG:989 * 2
+	
+	;否定の珠取得
+	CALL COMMON_UP_JUEL, ARG, 100 , 10000 , TFLAG:989 * 2 , 0
+	
+
+	;母乳体質の場合はそのフラグを持っておく
+	SIF TALENT:ARG:母乳体質
+		MARK:ARG:89 = 1
+
+	;妊娠（SPバッド）フラグ
+	CFLAG:ARG:76 = 3
+
+	;素質変動処理の呼び出し
+	CALL LOST_TALENTS, ARG, 10, 0
+	CALL LOST_TALENTS, ARG, 13, RESULT
+	CALL LOST_TALENTS, ARG, 14, RESULT
+	CALL LOST_TALENTS, ARG, 17, RESULT
+	CALL LOST_TALENTS, ARG, 22, RESULT
+	CALL LOST_TALENTS, ARG, 25, RESULT
+	SIF TALENT:ARG:淫魔 == 0
+		CALL LOST_TALENTS, ARG, 31, RESULT
+	CALL LOST_TALENTS, ARG, 33, RESULT
+	CALL LOST_TALENTS, ARG, 39, RESULT
+	CALL LOST_TALENTS, ARG, 63, RESULT
+	CALL LOST_TALENTS, ARG, 70, RESULT
+	CALL LOST_TALENTS, ARG, 82, RESULT
+	CALL LOST_TALENTS, ARG, 95, RESULT
+	CALL GET_TALENTS, ARG, 11, RESULT
+	CALL GET_TALENTS, ARG, 12, RESULT
+	CALL GET_TALENTS, ARG, 15, RESULT
+	CALL GET_TALENTS, ARG, 16, RESULT
+	CALL GET_TALENTS, ARG, 20, RESULT
+	CALL GET_TALENTS, ARG, 21, RESULT
+	CALL GET_TALENTS, ARG, 27, RESULT
+	SIF TALENT:ARG:淫魔 == 0
+		CALL GET_TALENTS, ARG, 30, RESULT
+	CALL GET_TALENTS, ARG, 32, RESULT
+	CALL GET_TALENTS, ARG, 34, RESULT
+	CALL GET_TALENTS, ARG, 38 - TALENT:LOCAL:オトコ, RESULT
+	CALL GET_TALENTS, ARG, 71, RESULT
+	CALL GET_TALENTS, ARG, 81, RESULT
+	CALL GET_TALENTS, ARG, 158, RESULT
+
+	SIF TFLAG:989 == 0 && RESULT != 0
+		PRINTFORMW を\@(RESULT == 2) ? 得た # 失った\@
+;通常のバッド妊娠
+ELSE
+	IF TFLAG:989 == 0
+		IF TALENT:ARG:彼氏あり || TALENT:ARG:旦那あり
+			IF TALENT:ARG:精神崩壊
+				PRINTFORM %CALLNAME:ARG%は虚ろな目で微笑みながら、
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, ARG
+				PRINTFORML の子を宿したことへの喜びの言葉をつぶやいている。
+				PRINTL 
+				PRINTFORMW どうやら、
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, ARG
+				PRINTFORMW の子供を妊娠したと思い込んだようだ……
+			ELSE
+				PRINTFORM %CALLNAME:ARG%は
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, ARG
+				PRINTFORM 以外の子を孕んだこと
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, ARG
+				PRINTFORMW への謝罪の言葉をつぶやき。
+				PRINTFORMW %CALLNAME:ARG%は幽鬼のような表情をしている。
+			ENDIF
+		ELSE
+			PRINTFORMW %CALLNAME:ARG%は幽鬼のような表情をしている。
+		ENDIF
+		PRINTFORMW %CALLNAME:ARG%の中で何かが壊れてしまったようだ。
+	ENDIF
+		
+	;母乳体質の場合はそのフラグを持っておく
+	SIF TALENT:ARG:母乳体質
+		MARK:ARG:89 = 1
+
+	;妊娠（バッド）フラグ
+	CFLAG:ARG:76 = 2
+
+	;素質変動処理の呼び出し
+	CALL LOST_TALENTS, ARG, 11, 0
+	CALL LOST_TALENTS, ARG, 12, RESULT
+	CALL LOST_TALENTS, ARG, 16, RESULT
+	CALL LOST_TALENTS, ARG, 20, RESULT
+	CALL LOST_TALENTS, ARG, 27, RESULT
+	CALL LOST_TALENTS, ARG, 31, RESULT
+	CALL LOST_TALENTS, ARG, 32, RESULT
+	CALL LOST_TALENTS, ARG, 34, RESULT
+	CALL LOST_TALENTS, ARG, 35, RESULT
+	CALL LOST_TALENTS, ARG, 63, RESULT
+	CALL LOST_TALENTS, ARG, 70, RESULT
+	SIF TALENT:ARG:オトコ == 0 && TALENT:LOCAL:オトコ == 0
+		CALL LOST_TALENTS, ARG, 83, RESULT
+	CALL LOST_TALENTS, ARG, 90, RESULT
+	CALL LOST_TALENTS, ARG, 91, RESULT
+	CALL LOST_TALENTS, ARG, 92, RESULT
+	CALL LOST_TALENTS, ARG, 95, RESULT
+	CALL GET_TALENTS, ARG, 21, RESULT
+	CALL GET_TALENTS, ARG, 22, RESULT
+	CALL GET_TALENTS, ARG, 38 - TALENT:LOCAL:オトコ, RESULT
+	CALL GET_TALENTS, ARG, 158, RESULT
+
+	SIF TFLAG:989 == 0 && RESULT != 0
+		PRINTFORMW を\@(RESULT == 2) ? 得た # 失った\@
+ENDIF
+
+
+;-------------------------------------------------
+;臨月到達
+;-------------------------------------------------
+@REACH_FULL_TERM, ARG
+CFLAG:ARG:4 = 2
+TARGET = (TARGET == ARG) ? -1 # TARGET
+ASSI = (ASSI == ARG) ? -1 # ASSI
+;育児室フラグをON
+IF ARG != MASTER
+	FLAG:603 = 1
+	;育児部屋入りするときのイベント口上
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 173
+ELSE
+	FINDCHARA CFLAG:3109, CFLAG:ARG:3004
+	SIF RESULT > 0
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, RESULT, 169
+ENDIF
+
+;-------------------------------------------------
+;出産
+;-------------------------------------------------
+@CHILD_BIRTH, ARG
+IF TFLAG:989
+	EXP:ARG:出産経験 += 1
+ELSE
+	PRINTFORML %CALLNAME:ARG%は、%ITEMNAME:(CFLAG:ARG:78)%の子供を無事出産しました。
+	PRINTL 
+	PRINTL 出産経験＋1
+	EXP:ARG:出産経験 += 1
+	PRINTW  
+ENDIF
+
+;妊娠（グッド）の場合
+IF CFLAG:ARG:76 == 1
+	IF !TFLAG:989
+		CALL CHILD_CHECK_AND_NAME, ARG, 0
+		IF (TALENT:ARG:彼氏あり || TALENT:ARG:旦那あり) && !TALENT:ARG:恋慕 && TALENT:ARG:服従
+				PRINTFORM 生まれたばかりの赤ん坊を受け取った%CALLNAME:ARG%は
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, TARGET
+				PRINTFORML の事を思い出したのか、陰のある表情を見せた
+				PRINTFORMW が、すぐに元に戻り、授乳を始めると主人である%CALLNAME:MASTER%をじっと見つめてきた……
+		ELSE
+			PRINTFORMW %CALLNAME:ARG%は産まれたばかりの赤ん坊を受け取ると、優しく抱きかかえ母乳を飲ませ始めた。
+		ENDIF
+	ENDIF
+	;妊娠から育児へ移行
+	TALENT:ARG:妊娠 = 0
+
+
+	IF ARG == MASTER
+		IF TFLAG:989
+			EQUIP:ARG:紺の飴玉 = 0
+		ELSE
+			CALL SELECT_NURSE, ARG
+		ENDIF
+	ELSE
+		TALENT:ARG:育児中 = 1
+	ENDIF
+
+	;if not nurturing the child in person
+	IF TALENT:ARG:141 == 0
+		MAXBASE:ARG:0 += 500
+		CFLAG:ARG:4 = 0
+		CALL RESET_FLAG_N_FORCE, ARG
+	ELSE
+		CFLAG:ARG:3000 = NO:ARG
+		CFLAG:ARG:3003 = CFLAG:ARG:3109
+		;乳母のシステムがよくわからんので
+		CSTR:ARG:10 = %CALLNAME:ARG%
+	ENDIF
+	
+	IF TALENT:ARG:母性 == 0
+		SIF !TFLAG:989
+			PRINTFORMW %CALLNAME:ARG%は[%TALENTNAME:142%]に目覚めた！
+		TALENT:ARG:母性 = 1
+		IF TALENT:ARG:痛みに強い == 0
+			IF TFLAG:989
+				SIF TALENT:ARG:痛みに弱い == 1
+					TALENT:ARG:痛みに弱い = 0
+			ELSE
+				PRINTFORML %CALLNAME:ARG%は産みの苦しみを経験したことで精神的に強くなった。
+				PRINTFORM %CALLNAME:ARG%は
+				IF TALENT:ARG:痛みに弱い == 1
+					PRINTFORM [%TALENTNAME:40%]を克服し、
+					TALENT:ARG:痛みに弱い = 0
+				ENDIF
+				PRINTFORMW [%TALENTNAME:41%]を得た。
+			ENDIF
+			TALENT:ARG:痛みに強い = 1
+		ENDIF
+	ELSE
+		SIF !TFLAG:989
+			PRINTW  
+	ENDIF
+;レアバッドかバッドで妊娠後にグッドの条件を満たせず、[無関心]、[感情乏しい]がついている場合
+ELSEIF CFLAG:ARG:76 == 3 || (((CFLAG:ARG:78 == NO:MASTER && TALENT:ARG:恋慕 == 0) || (CFLAG:ARG:78 != NO:MASTER && CFLAG:ARG:(LOCAL:1) < 1000)) && TALENT:ARG:無関心 && TALENT:ARG:感情乏しい)
+	IF !TFLAG:989
+		IF CFLAG:ARG:76 == 3
+			PRINTFORM しかし、%CALLNAME:ARG%は産まれた赤ん坊の養育を拒否した……
+			IF TALENT:ARG:彼氏あり || TALENT:ARG:旦那あり
+				PRINTFORM %CALLNAME:ARG%は
+				;思い人あり、彼氏あり、旦那あり
+				CALL PARTNER_NAME, ARG
+				PRINTFORM への謝罪の言葉をつぶやき
+				PRINTFORMW 、射殺さんばかりの視線で%CALLNAME:MASTER%を睨みつけてきた……
+			ENDIF
+		ELSE
+			PRINTFORM しかし、%CALLNAME:ARG%は産まれた赤ん坊にいっこうに関心を示さなかった……
+		ENDIF
+	ENDIF
+	LOCAL:2 = 0
+	FOR LOCAL:3, 1, CHARANUM
+		SIF TALENT:(LOCAL:3):140 == 0 && TALENT:(LOCAL:3):141 == 0 && TALENT:(LOCAL:3):142
+			LOCAL:2 += 1
+	NEXT
+	IF TFLAG:989
+		EQUIP:ARG:紺の飴玉 = 0
+	ELSE
+		IF LOCAL:2 > 0
+			CALL SELECT_NURSE, ARG
+		ELSE
+			PRINTFORMW %CALLNAME:MASTER%はやむなく、赤ん坊を里子に出しました……
+			;この時点で産みの親のEQUIP:紺の飴玉(紺の飴玉)のフラグをクリアする。
+			EQUIP:ARG:紺の飴玉 = 0
+		ENDIF
+	ENDIF
+	TALENT:ARG:妊娠 = 0
+	CFLAG:ARG:4 = 0
+	;妊娠時に減った体力の最大値が回復
+	MAXBASE:ARG:0 += 500
+
+	CALL RESET_FLAG_N_FORCE, ARG
+;バッド後にグッドの条件を満たしている場合
+ELSE
+	IF !TFLAG:989
+		CALL CHILD_CHECK_AND_NAME, ARG, 0
+		PRINTFORMW %CALLNAME:ARG%は何か陰のある表情をしながらも、赤ん坊を受け取るとミルクを飲ませ始めた。
+		IF TALENT:ARG:彼氏あり || TALENT:ARG:旦那あり
+			PRINTFORM わが子に授乳させる%CALLNAME:ARG%は
+			;思い人あり、彼氏あり、旦那あり
+			CALL PARTNER_NAME, ARG
+			PRINTFORMW への謝罪の言葉をつぶやき……
+		ENDIF
+	ENDIF
+	;妊娠から育児へ移行
+	TALENT:ARG:妊娠 = 0
+	TALENT:ARG:育児中 = 1
+	CFLAG:ARG:3000 = NO:ARG
+	CFLAG:ARG:3003 = CFLAG:ARG:3109
+	
+	;乳母のシステムがよくわからんので
+	CSTR:ARG:10 = %CALLNAME:ARG%
+ENDIF
+
+
+;出産時の口上をイベント口上でやってみるのはいいとして分岐どうしよう…
+;基本的には口上側で分岐してもらう方向で
+SIF !TFLAG:989
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 171
+
+;-------------------------------------------------
+;育ての親指定
+;-------------------------------------------------
+@SELECT_NURSE, ARG
+PRINTFORMW %CALLNAME:MASTER%は赤ん坊の養育を他の奴隷に任せることにした。
+PRINTW  
+PRINTL 誰に任せますか？
+FOR LOCAL, 1, CHARANUM
+	;現在[妊娠][育児中]状態でなく、[母性]持ちのキャラを羅列
+	SIF TALENT:LOCAL:妊娠 == 0 && TALENT:LOCAL:育児中 == 0 && TALENT:LOCAL:母性
+		CALL ARRANGE_CHARALIST, LOCAL
+NEXT
+PRINTFORMLC  [0]里子に出す
+SIF ARG == MASTER
+	PRINTFORMLC  [-1]自分で育てる
+$INPUT_LOOP
+INPUT
+IF RESULT == 0
+	PRINTFORMW %CALLNAME:MASTER%はやむなく、赤ん坊を里子に出しました……
+	;この時点で産みの親のEQUIP:紺の飴玉(紺の飴玉)のフラグをクリアする。
+	EQUIP:ARG:紺の飴玉 = 0
+	RETURN
+ELSEIF RESULT == -1
+	PRINTFORMW %CALLNAME:MASTER%は自分で赤ん坊を育てることにしました。
+	TALENT:ARG:141 = 1
+ELSEIF RESULT < -1 || RESULT >= CHARANUM || TALENT:RESULT:妊娠 == 1 || TALENT:RESULT:育児中 == 1 || TALENT:RESULT:母性 == 0
+	CLEARLINE 1
+	REUSELASTLINE
+	GOTO INPUT_LOOP
+ELSE
+	PRINTFORMW %CALLNAME:MASTER%は%CALLNAME:RESULT%に乳母をやってもらうことにしました。
+	LOCAL = RESULT
+	SIF ARG != MASTER
+		CALL CHILD_CHECK_AND_NAME, RESULT, 2
+	;育児期間を設定する
+	CFLAG:LOCAL:77 = DAY
+	CFLAG:LOCAL:78 = CFLAG:ARG:78
+	CFLAG:LOCAL:3000 = NO:ARG
+	CFLAG:LOCAL:3003 = CFLAG:ARG:3109
+	;生みの親が持つ精子提供者の固有IDコピー
+	CFLAG:LOCAL:3004 = CFLAG:ARG:3004
+	
+	;父親の名前を乳母で仮保存
+	CSTR:LOCAL:8 = %CSTR:ARG:8%
+	;母親の名前を乳母で仮保存
+	CSTR:LOCAL:9 = %CSTR:ARG:9%
+	;乳母の名前を乳母で仮保存
+	CSTR:LOCAL:10 = %CALLNAME:LOCAL%
+	
+	;EQUIP:紺の飴玉(紺の飴玉)のフラグを育ての親に譲渡する。
+	EQUIP:LOCAL:紺の飴玉 = EQUIP:ARG:紺の飴玉
+	EQUIP:ARG:紺の飴玉 = 0
+	IF TALENT:LOCAL:育児中 == 0
+		TALENT:LOCAL:育児中 = 1
+		CFLAG:LOCAL:4 = 2
+		FLAG:603 = 1
+		TARGET = (TARGET == LOCAL) ? -1 # TARGET
+		ASSI = (ASSI == LOCAL) ? -1 # ASSI
+		;乳母フラグを設定
+		CFLAG:LOCAL:79 = 1
+	ENDIF
+	;乳母になったときのイベント口上
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, LOCAL, 174
+ENDIF
+
+;-------------------------------------------------
+;育児室
+;-------------------------------------------------
+@CHILD_CARE_ROOM
+#DIM SP_COUNTER, 2
+;表示させるキャラを抽出（LOCAL:2に人数）
+CALLF CLEAR_LIST
+SP_COUNTER:1 = 0
+PL_VAR_X:2 = 0
+PL_VAR_X:3 = 0
+PRINTL どの部屋へ様子を見に行きますか？
+FOR SP_COUNTER:0, 0, CHARANUM
+	;現在臨月か[育児中]のキャラを羅列
+	IF CFLAG:(SP_COUNTER:0):4 == 2 && CFLAG:(SP_COUNTER:0):3008 == 0 && SP_COUNTER:0 != MASTER
+		CALLF SET_LIST, SP_COUNTER:1, SP_COUNTER:0
+		CALL ARRANGE_CHARALIST, SP_COUNTER:0
+		SP_COUNTER:1++
+		SIF SP_COUNTER:1 % 2 == 0
+			PRINTL 
+	ENDIF
+NEXT
+SIF SP_COUNTER:1 % 2 == 1
+	PRINTL 
+PRINTFORMLC [1000]戻る
+PRINTFORMLC [1111]一気に全員を見る
+PRINTL 
+$INPUT_LOOP
+INPUT
+IF RESULT == 1000
+	RETURN 0
+ELSEIF RESULT == 1111
+	PL_VAR_X:2 = 1
+	RESULT = GET_LIST(PL_VAR_X:3)
+ELSEIF RESULT < 0 || RESULT >= CHARANUM || CFLAG:RESULT:4 != 2 || CFLAG:RESULT:3008 == 1
+	CLEARLINE 1
+	REUSELASTLINE
+	GOTO INPUT_LOOP
+ENDIF
+
+$MEET_ALL
+PRINTFORML %CALLNAME:MASTER%は%CALLNAME:RESULT%のところへ向かった……
+;----↓era2webui用↓---------------
+;RESULTが変わってしまうので退避
+LOCAL:1 = RESULT
+IF TALENT:RESULT:140
+	CALL OUTPUT_TXT("育児部屋臨月",RESULT)
+ELSEIF TALENT:RESULT:143
+	CALL OUTPUT_TXT("育児部屋抱卵",RESULT)
+ELSE
+	CALL OUTPUT_TXT("育児部屋",RESULT)
+ENDIF
+;RESULTを元に戻す
+RESULT = LOCAL:1
+;----↑era2webui用↑---------------
+PRINTW  
+;まだ出産前の場合
+IF TALENT:RESULT:妊娠
+	;グッド妊娠で父親がMASTERで相愛か親愛持ち
+	IF CFLAG:RESULT:76 == 1 && CFLAG:RESULT:78 == NO:MASTER && (TALENT:RESULT:親愛 || TALENT:RESULT:相愛)
+		PRINTFORMW %CALLNAME:RESULT%は%CALLNAME:MASTER%の顔を見ると、一点の曇りもない満面の笑顔を向けてきた。
+		PRINTFORMW %CALLNAME:MASTER%はもうすぐ出産を迎える%CALLNAME:RESULT%を心の底から励ました。
+	;グッド妊娠で父親がMASTER
+	ELSEIF CFLAG:RESULT:76 == 1 && CFLAG:RESULT:78 == NO:MASTER
+		PRINTFORMW %CALLNAME:RESULT%は%CALLNAME:MASTER%の顔を見ると、元気づけられたように笑顔を向けてきた。
+		PRINTFORMW %CALLNAME:MASTER%はもうすぐ出産を迎える%CALLNAME:RESULT%を励ました。
+	;グッド妊娠で父親がその他
+	ELSEIF CFLAG:RESULT:76 == 1
+		PRINTFORMW %CALLNAME:RESULT%は%CALLNAME:MASTER%の顔を見ると、少し戸惑ったような顔を向けてきた。
+		PRINTFORMW %CALLNAME:MASTER%はもうすぐ出産を迎える%CALLNAME:RESULT%のお腹を優しくなでてあげた。
+	;レアバッド妊娠or拒絶持ち
+	ELSEIF CFLAG:RESULT:76 == 3 || TALENT:RESULT:拒絶
+		IF TALENT:RESULT:彼氏あり || TALENT:RESULT:旦那あり
+			PRINTFORM 大きくなったお腹を見ながら沈んだ表情で
+			;思い人あり、彼氏あり、旦那あり
+			CALL PARTNER_NAME, RESULT
+			PRINTFORML の名前をつぶやいていた%CALLNAME:RESULT%は、
+			PRINTFORM 訪れた%CALLNAME:MASTER%に気付くと、望まぬ出産を
+			PRINTFORMW 嫌がり、%CALLNAME:MASTER%を罵倒する言葉をつぶやき始めた。
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT%は%CALLNAME:MASTER%の顔を見ると、激しい怒りの表情を向けてきた。
+		ENDIF
+		PRINTFORMW %CALLNAME:MASTER%はあまりの剣幕に逃げ帰るほかなかった……
+	;その他
+	ELSE
+		PRINTFORMW %CALLNAME:RESULT%は%CALLNAME:MASTER%を見ても特段の反応を示さなかった……
+		PRINTFORMW %CALLNAME:MASTER%はこれも罰なのかもしれないと思いながら帰るほかなかった……
+	ENDIF
+;まだ孵化前の場合
+ELSEIF TALENT:RESULT:抱卵中
+	;相愛か親愛持ち
+	IF TALENT:RESULT:親愛 || TALENT:RESULT:相愛
+		PRINTFORMW %CALLNAME:RESULT%は、%CALLNAME:MASTER%との愛の結晶である卵を一生懸命暖めていた。
+		PRINTFORMW %CALLNAME:MASTER%はもうすぐ孵化を迎える卵を、%CALLNAME:RESULT%と一緒に見守った。
+	;その他
+	ELSE
+		PRINTFORMW %CALLNAME:RESULT%は、%CALLNAME:MASTER%の顔を見ると、恥ずかしげな笑顔を向けてきた。
+		PRINTFORMW %CALLNAME:MASTER%はもうすぐ孵化を迎える卵を、%CALLNAME:RESULT%と一緒に見守った。
+	ENDIF
+;[恋慕]と[淫乱]ありで父親がMASTERで1/3の頻度で
+ELSEIF TALENT:RESULT:恋慕 && TALENT:RESULT:淫乱 && CFLAG:RESULT:78 == NO:MASTER && RAND:3 == 0
+	IF TIME == 0
+		PRINTFORMW %CALLNAME:MASTER%が部屋に入ってきたことに気づくと、%CALLNAME:RESULT%は淫らな笑みを浮かべつつ出迎えた。
+		PRINTFORMW %CALLNAME:MASTER%はそれからしばらくの間、%CALLNAME:RESULT%に誘惑を受けつつも親子水入らずの時間を楽しんだ。
+	ELSE
+		PRINTFORMW %CALLNAME:MASTER%が部屋に入ってくると、子供がちょうど寝付いたところらしい。
+		PRINTFORMW ふと、%CALLNAME:RESULT%は音を立てないように背後から抱きついてきた。
+		PRINTFORML %CALLNAME:MASTER%は熱情を持て余す%CALLNAME:RESULT%を慰めつつも、
+		PRINTFORMW 赤子のかわいい寝顔をのぞき込みながら幸せなひとときを過ごすことにした。
+	ENDIF
+;[恋慕]ありで父親がMASTER
+ELSEIF TALENT:RESULT:恋慕 && CFLAG:RESULT:78 == NO:MASTER
+	IF TIME == 0
+		PRINTFORMW %CALLNAME:MASTER%が部屋に入ってきたことに気づくと、%CALLNAME:RESULT%は満面の笑顔で出迎えた。
+		PRINTFORMW %CALLNAME:MASTER%はそれからしばらくの間、親子水入らずの時間を楽しんだ。
+	ELSE
+		PRINTFORMW %CALLNAME:MASTER%が部屋に入ってくると、子供がちょうど寝付いたところらしく、%CALLNAME:RESULT%は音を立てないようにと仕草で伝えてきた。
+		PRINTFORML %CALLNAME:MASTER%は子供の寝顔を%CALLNAME:RESULT%と二人でかわいい寝顔をのぞき込み、
+		PRINTW そして、どちらからというわけでもなく顔を見合わせ、ほころばせていた。
+	ENDIF
+;[淫乱]ありで父親がMASTER
+ELSEIF TALENT:RESULT:淫乱 && CFLAG:RESULT:78 == NO:MASTER
+	IF TIME == 0
+		PRINTFORMW %CALLNAME:MASTER%が部屋に入ってきたことに気づくと、%CALLNAME:RESULT%は淫らな笑みを浮かべつつ出迎えた。
+		PRINTFORMW %CALLNAME:MASTER%はそれからしばらくの間、%CALLNAME:RESULT%に誘惑を受けつつも親子水入らずの時間を楽しんだ。
+	ELSE
+		PRINTFORMW %CALLNAME:MASTER%が部屋に入ってくると、子供がちょうど寝付いたところらしい。
+		PRINTFORMW ふと、%CALLNAME:RESULT%は音を立てないように背後から抱きついてきた。
+		PRINTFORML %CALLNAME:MASTER%は熱情を持て余す%CALLNAME:RESULT%を慰めつつも、
+		PRINTFORMW 赤子のかわいい寝顔をのぞき込みながら幸せなひとときを過ごすことにした。
+	ENDIF
+;[恋慕]ありで父親MASTER以外
+ELSEIF TALENT:RESULT:恋慕
+	PRINTFORM %CALLNAME:MASTER%が部屋に入ってくると、
+	PRINTFORMW %CALLNAME:RESULT%は少しとまどいながらもそれを迎えた。
+	PRINTW それから、子供の様子を見ながら久しぶりに二人の会話を楽しんだ。
+;[恋慕]なし
+ELSE
+	IF TIME == 0
+		PRINTFORMW %CALLNAME:RESULT%は%CALLNAME:MASTER%を見ても特段の反応を示さなかった……
+		PRINTW 子どもがその周りで楽しそうにはしゃいでいるのが痛々しく思えた。
+		PRINTFORMW %CALLNAME:MASTER%はこれも罰なのかもしれないと思いながら帰るほかなかった……
+	ELSE
+		PRINTFORMW %CALLNAME:RESULT%は既に寝ており、%CALLNAME:MASTER%が入ってきても特段の反応を示さなかった……
+		PRINTW 子どももその隣ですやすやと寝ていた。
+		PRINTFORMW %CALLNAME:MASTER%はこれも罰なのかもしれないと思いながら帰るほかなかった……
+	ENDIF
+ENDIF
+;出産後、育児室に来たことを記録(子供の好感度に影響する)
+SIF TALENT:RESULT:妊娠 == 0 && TALENT:RESULT:抱卵中 == 0
+	CFLAG:RESULT:3009 += RAND(1, 5)
+
+CFLAG:RESULT:3008 = 1
+SIF SP_COUNTER:1 <= 1
+	TFLAG:700 = 1
+
+TFLAG:701 = DAY
+TFLAG:702 = TIME
+
+IF PL_VAR_X:2 == 1
+	PL_VAR_X:3++
+	IF PL_VAR_X:3 < SP_COUNTER:1
+		RESULT = GET_LIST(PL_VAR_X:3)
+		PRINTL 
+		GOTO MEET_ALL
+	ENDIF
+	TFLAG:700 = 1
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;親離れ
+;-------------------------------------------------
+@DEPEARENT, ARG
+PRINTFORML %CALLNAME:ARG%の育てていた子供が親離れしました。
+PRINTW  
+PRINTFORMW %CALLNAME:ARG%は再び調教可能になりました。
+
+TALENT:ARG:育児中 = 0
+CFLAG:ARG:4 = 0
+;妊娠時に減った体力の最大値が回復
+IF CFLAG:ARG:79 == 0
+	MAXBASE:ARG:0 += 500
+	PRINTFORML %CALLNAME:ARG%の胸は母乳を与える役割を終えました。
+	IF TALENT:ARG:絶壁 == 0 && TALENT:ARG:貧乳 == 0
+		PRINTFORMW 子供に母乳を与えたことで%CALLNAME:ARG%の胸が小さくなりました。
+		;妊娠時に大きくなった胸のサイズを一段小さくする
+		CALL REVERSE_B_SIZE, ARG
+	ELSE
+		PRINTW  
+	ENDIF
+	;妊娠時に発生した母乳体質を消失させる
+	CALL LOST_MILK, ARG
+ELSE
+	;乳母だったらフラグ解除
+	CFLAG:ARG:79 = 0
+	CFLAG:ARG:4 = 0
+ENDIF
+CALL CHILD_CHECK, ARG
+CALL RESET_FLAG_N_FORCE, ARG
+
+;親離れ時の口上をイベント口上でやってみるのはいいとして分岐どうしよう…
+;基本的には口上側で分岐してもらう方向で
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 172
+TFLAG:900 = ARG
+
+;育児室にいる奴隷が他に居ない場合、育児室のフラグ解除
+LOCAL = FINDCHARA(CFLAG:4, 2, 0)
+FLAG:603 = (LOCAL > 0) ? 1 # 0
+
+;-------------------------------------------------
+;妊娠パッチまわりのフラグをリセット
+;-------------------------------------------------
+@CLEAR_FLAG
+IF TARGET != -1
+	CFLAG:70 = 0
+	CFLAG:71 = 0
+	CFLAG:72 = 0
+	CFLAG:73 = 0
+	
+	TEQUIP:排卵誘発剤 = 0
+	TEQUIP:緊急避妊薬 = 0
+ENDIF
+
+IF ASSI >= 0
+	CFLAG:ASSI:70 = 0
+	CFLAG:ASSI:71 = 0
+	CFLAG:ASSI:72 = 0
+	CFLAG:ASSI:73 = 0
+ENDIF
+
+CFLAG:MASTER:70 = 0
+CFLAG:MASTER:71 = 0
+CFLAG:MASTER:72 = 0
+CFLAG:MASTER:73 = 0
+
+;-------------------------------------------------
+;親離れ・妊娠消滅等時のフラグリセット
+;-------------------------------------------------
+@RESET_FLAG_N_FORCE, ARG
+CFLAG:ARG:76 = 0
+CFLAG:ARG:78 = -1
+CFLAG:ARG:3004 = -1
+MARK:ARG:89 = 0
+;育児室に通った回数をリセット
+CFLAG:ARG:3009 = 0
+FOR LOCAL, 1, CHARANUM
+	;他にも対象キャラがいれば、フラグを再設定
+	SIF CFLAG:LOCAL:4 == 2
+		FLAG:603 = 1
+NEXT
+
+;子育て終了or妊娠強制終了時の胸サイズの縮小処理
+@REVERSE_B_SIZE, ARG
+SIF TALENT:ARG:恋慕 == 0 || CFLAG:ARG:78 != NO:MASTER || !CFLAG:ARG:3006
+	RETURN 0
+
+;一旦胸の素質をリセット
+TALENT:ARG:絶壁 = 0
+TALENT:ARG:貧乳 = 0
+TALENT:ARG:巨乳 = 0
+TALENT:ARG:爆乳 = 0
+
+;拡大前の状態に戻す
+;絶壁だった
+IF CFLAG:ARG:3006 == 1
+	TALENT:ARG:絶壁 = 1
+;貧乳だった
+ELSEIF CFLAG:ARG:3006 == 2
+	TALENT:ARG:貧乳 = 1
+;巨乳だった
+ELSEIF CFLAG:ARG:3006 == 4
+	TALENT:ARG:巨乳 = 1
+;爆乳だった
+ELSEIF CFLAG:ARG:3006 == 5
+	TALENT:ARG:爆乳 = 1
+ENDIF
+;身体測定フラグを寝せる(次回身体測定を行うため)
+CFLAG:ARG:8 = 0
+
+;子育て終了or妊娠強制終了時の母乳体質完了処理
+@LOST_MILK, ARG
+IF TALENT:ARG:母乳体質 && MARK:ARG:89 == 0
+	TALENT:ARG:母乳体質 = 0
+	MAXBASE:ARG:3 = 0
+ENDIF
+
+;=============================================================================
+;産卵関係
+;=============================================================================
+;-------------------------------------------------
+;産卵イベント
+;-------------------------------------------------
+@EVENT_LAY_EGG(ARG)
+;ABL:Ｖ感覚をみる
+LOCAL:1 = 175 * (1+ABL:ARG:Ｖ感覚)
+
+;EXP:Ｖ経験をみる
+IF EXP:ARG:Ｖ経験 < EXPLV:1
+	TIMES LOCAL:1 , 0.20
+	LOCAL:2 = 3000
+ELSEIF EXP:ARG:Ｖ経験 < EXPLV:2
+	TIMES LOCAL:1 , 0.60
+	LOCAL:2 = 2000
+ELSEIF EXP:ARG:Ｖ経験 < EXPLV:3
+	TIMES LOCAL:1 , 1.00
+	LOCAL:2 = 1500
+ELSEIF EXP:ARG:Ｖ経験 < EXPLV:4
+	TIMES LOCAL:1 , 1.20
+	LOCAL:2 = 1000
+ELSEIF EXP:ARG:Ｖ経験 < EXPLV:5
+	TIMES LOCAL:1 , 1.40
+	LOCAL:2 = 500
+ELSE
+	TIMES LOCAL:1 , 1.60
+	LOCAL:2 = 100
+ENDIF
+
+;EXP:産卵経験をみる
+IF EXP:ARG:産卵経験 < EXPLV:2
+	TIMES LOCAL:1 , 0.80
+	TIMES LOCAL:2 , 1.50
+ELSEIF EXP:ARG:産卵経験 < EXPLV:4
+	TIMES LOCAL:1 , 1.00
+	TIMES LOCAL:2 , 1.00
+ELSEIF EXP:ARG:産卵経験 < EXPLV:5
+	TIMES LOCAL:1 , 1.20
+	TIMES LOCAL:2 , 0.80
+ELSE
+	TIMES LOCAL:1 , 1.50
+	TIMES LOCAL:2 , 0.60
+ENDIF
+
+LOCAL:3 = RAND:10 
+LOCAL:3 -= 8
+
+;産卵促進剤あり
+LOCAL:3 += (TFLAG:128 > 0 && ARG != ASSI && ARG != MASTER) * 3
+
+;中田氏あり
+IF CFLAG:ARG:71 || CFLAG:ARG:72 || CFLAG:ARG:73
+	LOCAL:3 += 1
+;for master, there must be nakadashi
+ELSEIF ARG == MASTER
+	LOCAL:3 = 0
+ENDIF
+
+[IF_DEBUG]
+PRINTFORMW Egg laying rate for %CALLNAME:ARG%: {LOCAL:3}
+[ENDIF]
+
+;一定以下のLOCAL:3なら産卵しない
+SIF LOCAL:3 < 1
+	RETURN 0
+
+;産卵促進剤無しでの産卵は1個に限定
+LOCAL:4 = MAX(TFLAG:128 , 1)
+
+;産卵イベント用のイベント口上
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 179, LOCAL:4
+
+IF TALENT:ARG:処女
+	PRINTL 処女喪失
+	TALENT:ARG:処女 = 0
+	TIMES LOCAL:2 , 2.50
+ENDIF
+;Ｖ経験
+CALL COMMON_UP_EXP, ARG, 0, LOCAL:4*5, 0, 1
+;Ｖ拡張経験
+CALL COMMON_UP_EXP, ARG, 32, (1 + LOCAL:4/2), 0, 1
+;産卵経験
+CALL COMMON_UP_EXP, ARG, 51, LOCAL:4, 1, 1
+
+CFLAG:ARG:70 = 0
+IF FLAG:11 & 4
+	SIF CFLAG:ARG:71 > 0
+		CALL NAKADASHI_CHECK, ARG, 1
+	SIF CFLAG:ARG:72 > 0 && !CFLAG:ARG:70
+		CALL NAKADASHI_CHECK, ARG, 2
+	SIF CFLAG:ARG:73 > 0 && !CFLAG:ARG:70
+		CALL NAKADASHI_CHECK, ARG, 3
+ENDIF
+
+IF CFLAG:ARG:70 == 1
+	PRINT どうやら産まれた卵
+	SIF TFLAG:128 > 4
+		PRINT のいくつか
+	PRINTL は有精卵のようだ
+ENDIF
+
+;異常経験5以下かつ妄信、親愛、相愛、服従、烙印、隷属、傀儡、精神崩壊なしだと狂気が付く
+IF EXP:ARG:異常経験 < 6 && TALENT:ARG:妄信 == 0 && TALENT:ARG:親愛 == 0 && TALENT:ARG:相愛 == 0 && TALENT:ARG:狂気 == 0 && TALENT:ARG:服従 == 0 && TALENT:ARG:烙印 == 0 && TALENT:ARG:隷属 == 0 && TALENT:ARG:傀儡 == 0 && TALENT:ARG:壊造人格 == 0
+	;ただし、卵生、または、恋慕ありなら回避する
+	IF TALENT:ARG:卵生 == 0 && TALENT:ARG:恋慕 == 0 && ARG != MASTER
+		TALENT:ARG:狂気 = 1
+		CFLAG:ARG:12 |= 1
+		CFLAG:ARG:17 |= 2
+		;産卵で発狂するイベント口上
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 184
+		PRINTFORMW %CALLNAME:ARG%は[狂気]を得た
+		IF TALENT:ARG:理性
+			MAXBASE:ARG:9 = MAX(MAXBASE:ARG:9 / 2, 1)
+			SIF BASE:ARG:理性 > MAXBASE:ARG:9
+				BASE:ARG:理性 = MAXBASE:ARG:9
+		ENDIF
+	ENDIF
+ENDIF
+;入手した卵を展示室に
+IF FLAG:12 & 8
+	DRAWLINE
+	PRINTFORML %CALLNAME:ARG%が産んだ卵をどうしますか？
+	SIF ARG != MASTER
+		PRINTLC [0]展示室に飾る
+	PRINTLC [1]売りに出す　
+	;[恋慕]以上もしくは[壊造人格]かつ、[狂気]を持っていない、[抱卵中]でない、妊娠判定がONの場合（不具合修正）
+	SIF ((TALENT:ARG:恋慕 || TALENT:ARG:壊造人格) && TALENT:ARG:狂気 == 0 && TALENT:ARG:抱卵中 == 0 && CFLAG:ARG:70) || ARG == MASTER
+		PRINTFORMLC [2]\@ ARG != MASTER ? %CALLNAME:TARGET%に育てさせる # 自分で育てる\@
+	PRINTL 
+	$INPUT_LOOP
+	INPUT
+	IF RESULT == 0 && ARG != MASTER
+		CALL GET_EGG, ARG
+	ELSEIF RESULT == 1
+		;産卵促進剤なしでの産卵のフラグを立てる
+		SIF TFLAG:128 == 0
+			TFLAG:128 = -1
+	ELSEIF RESULT == 2 && ((TALENT:ARG:恋慕 || TALENT:ARG:壊造人格) && TALENT:ARG:抱卵中 == 0 && TALENT:ARG:狂気 == 0 && CFLAG:ARG:70) || ARG == MASTER
+		PRINTL 
+		IF ARG != MASTER
+			PRINTFORML %CALLNAME:MASTER%は有精卵の一つを%CALLNAME:TARGET%に育てさせる事にした。
+		ELSE
+			PRINTFORML %CALLNAME:MASTER%は有精卵の一つを自分で育てる事にした。
+		ENDIF
+		PRINTW  
+		TFLAG:128 = MAX(LOCAL:4 - 1, 0)
+
+		;出産系のフラグ設定
+		CFLAG:ARG:77 = DAY + FLAG:601
+		LOCAL = GET_SEMEN_GIVER(ARG)
+		CFLAG:ARG:78 = NO:LOCAL
+		CFLAG:ARG:3004 = CFLAG:LOCAL:3109
+		
+		;父親の名前を母親で仮保存
+		CSTR:ARG:8 = %CALLNAME:LOCAL%
+		;母親の名前を母親で仮保存
+		CSTR:ARG:9 = %CALLNAME:ARG%
+		
+		;身体測定フラグを寝せる(次回身体測定を行うため)
+		CFLAG:ARG:508 = 0
+
+		;抱卵取得イベント口上
+		IF ARG != MASTER
+			CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 175, GET_SEMEN_GIVER(ARG)
+		ELSE
+			CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, GET_SEMEN_GIVER(ARG), 178
+		ENDIF
+		PRINTFORMW %CALLNAME:ARG%は[抱卵]を得た
+		;素質[抱卵]を取得
+		TALENT:ARG:抱卵中 = 1
+
+		;妊婦の胸の大きさをフラグに代入する処理
+		CFLAG:ARG:3006 = 0
+		;絶壁
+		IF TALENT:ARG:絶壁 
+			CFLAG:ARG:3006 = 1
+		;貧乳
+		ELSEIF TALENT:ARG:貧乳
+			CFLAG:ARG:3006 = 2
+		;巨乳
+		ELSEIF TALENT:ARG:巨乳
+			CFLAG:ARG:3006 = 4
+		;爆乳
+		ELSEIF TALENT:ARG:爆乳
+			CFLAG:ARG:3006 = 5
+		;普通
+		ELSE
+			CFLAG:ARG:3006 = 3
+		ENDIF
+
+		;乳がワンランクパワーアップする
+		;絶→貧　貧→普　普→巨　巨・爆→そのまま
+		IF TALENT:ARG:巨乳 == 0 && TALENT:ARG:爆乳 == 0
+			PRINTFORMW %CALLNAME:ARG%は卵の世話をしているうちに胸が大きくなった。
+			IF TALENT:ARG:絶壁 == 1
+				PRINTFORMW [%TALENTNAME:110%]から[%TALENTNAME:111%]になった。
+				TALENT:ARG:絶壁 = 0
+				TALENT:ARG:貧乳 = 1
+			ELSEIF TALENT:ARG:貧乳 == 1
+				PRINTFORMW [%TALENTNAME:111%]から普通のサイズになった。
+				TALENT:ARG:貧乳 = 0
+			ELSE
+				PRINTFORMW [%TALENTNAME:112%]になった。
+				TALENT:ARG:巨乳 = 1
+			ENDIF
+			PRINTL 
+		ENDIF
+		;母乳出るようになる
+		IF TALENT:ARG:母乳体質 == 0
+			PRINTFORMW %CALLNAME:ARG%は母乳が出るようになった。
+			PRINTL 
+			TALENT:ARG:母乳体質 = 1
+			CALL CALC_GAUGE3_SLAVE, ARG, 1
+		ELSE
+			;すでに母乳体質の場合はそのフラグを持っておく
+			MARK:ARG:89 = 1
+		ENDIF
+	ELSE
+		CLEARLINE 1
+		REUSELASTLINE
+		GOTO INPUT_LOOP
+	ENDIF
+ENDIF
+
+;ほっとくと通常の妊娠イベントも始めるので消去
+CFLAG:ARG:70 = 0
+
+;体力消耗
+BASE:ARG:体力 = MAX((100 - 10*LOCAL:3), 1)
+
+PRINTFORMW %CALLNAME:ARG%は体力を激しく消耗している。
+PRINTW 少し休ませたほうがよさそうだ……
+PRINTL 
+
+;-------------------------------------------------
+;孵化イベント
+;-------------------------------------------------
+@EGG_BIRTH, ARG
+;LOCAL = CFLAG:ARG:78 + 100
+DRAWLINE
+;孵化イベント口上
+FINDCHARA CFLAG:3109, CFLAG:ARG:3004
+SIF RESULT >= 0
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 176, RESULT
+
+CALL CHILD_CHECK_AND_NAME, ARG, 3
+;抱卵から育児へ移行
+PRINTFORMW %CALLNAME:ARG%は赤ん坊の世話の為、引き続き育児室で育児をします。
+CFLAG:ARG:4 = 2
+CFLAG:ARG:3000 = NO:ARG
+CFLAG:ARG:3003 = CFLAG:ARG:3109
+;乳母のシステムがよくわからんので
+CSTR:ARG:10 = %CALLNAME:ARG%
+TALENT:ARG:抱卵中 = 0
+TALENT:ARG:育児中 = 1
+IF TALENT:ARG:母性 == 0
+	TALENT:ARG:母性 = 1
+	;母性本能取得イベント口上
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ARG, 177
+	PRINTFORMW %CALLNAME:ARG%は[%TALENTNAME:142%]を得た。
+ENDIF
+;身体測定フラグを寝せる(次回身体測定を行うため)
+CFLAG:ARG:8 = 0
+
+;体力変動のつじつま合わせのため、こっそり減少
+MAXBASE:ARG:0 = MAX(MAXBASE:ARG:0 - 500, 10)
+BASE:ARG:体力 = MIN(BASE:ARG:体力, 500)
+
+TARGET = (TARGET == ARG) ? -1 # TARGET
+ASSI = (ASSI == ARG) ? -1 # ASSI
+;育児室フラグをON
+SIF ARG != MASTER
+	FLAG:603 = 1
+RETURN 0
+
+;get id of who make the pregnancy
+@GET_SEMEN_GIVER(ARG)
+#FUNCTION
+#LOCALSIZE 1
+SELECTCASE CFLAG:ARG:70
+	CASE 1
+		RETURNF MASTER
+	CASE 2
+		RETURNF ASSI
+	CASE 3
+		RETURNF TARGET
+ENDSELECT

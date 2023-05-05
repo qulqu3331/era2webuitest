@@ -1,0 +1,840 @@
+﻿;=============================================================================
+;朝イベントその0～朝フェラ
+;=============================================================================
+;-----------------------------------------------
+;朝フェラ実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_0
+;朝イベント汎用実行判定（主人の竿が有るか？）
+SIF MORNING_EVENT_COMMON_JUDGMENT(2) == 0
+	RETURN 0
+
+;猫舌だと猫フェラが有効でないとダメ
+IF TALENT:猫舌
+	;猫舌だと従順3・技巧5・奉仕精神4が必要
+	SIF (FLAG:14 & 16 && (ABL:従順 < 3 || ABL:技巧 < 5 || ABL:奉仕精神 < 4)) || (FLAG:14 & 16) == 0
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-----------------------------------------------
+;朝フェラ
+;-----------------------------------------------
+@MORNING_EVENT_0
+;精液中毒
+IF ABL:精液中毒 == 1
+	LOCAL = 1
+ELSEIF ABL:精液中毒 == 2
+	LOCAL = 2
+ELSEIF ABL:精液中毒 == 3
+	LOCAL = 3
+ELSEIF ABL:精液中毒 == 4
+	LOCAL = 4
+ELSE
+	LOCAL = 5
+ENDIF
+;汚臭鈍感
+IF TALENT:汚臭鈍感
+	LOCAL += 1
+;汚臭敏感
+ELSEIF TALENT:汚臭敏感
+	LOCAL -= 1
+ENDIF
+;献身的
+SIF TALENT:献身的
+	LOCAL += 1
+;恋慕
+SIF TALENT:恋慕
+	LOCAL += 1
+;服従
+SIF TALENT:服従
+	LOCAL += 1
+;淫乱
+SIF TALENT:淫乱
+	LOCAL += 1
+;条件を満たしていない
+SIF LOCAL < 1
+	RETURN 0
+	
+CALL OUTPUT_TXT("朝フェラ")
+DRAWLINE
+;口上の関数,TFLAG:200の140を使用
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 140, LOCAL
+
+;フェラ経験
+CALL COMMON_UP_EXP,TARGET, 22, LOCAL , 0, 1
+IF LOCAL / 2 > 0
+	;精液経験
+	CALL COMMON_UP_EXP,TARGET, 4, (LOCAL / 2), 0, 1
+	;射精経験(主人)
+	CALL COMMON_UP_EXP,MASTER, 3, (LOCAL / 2), 0
+
+	;LUNATIC以上は射精するたびに体力が減少
+	CALL EXHAUST_EJAC, MASTER, LOCAL / 2
+ENDIF
+
+IF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+	;レズ経験
+	CALL COMMON_UP_EXP,TARGET, 12, 3, 0, 1
+ELSEIF TALENT:オトコ && TALENT:MASTER:オトコ
+	;ＢＬ経験
+	CALL COMMON_UP_EXP,TARGET, 13, 3, 0, 1
+ENDIF
+
+;[精愛味覚]があれば条件分岐
+IF TALENT:精愛味覚 > 0
+	;精飲絶頂経験
+	CALL COMMON_UP_EXP,TARGET, 8, 1, 0, 1
+ENDIF
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその1～朝新妻プレイ(相愛時限定)
+;=============================================================================
+;-----------------------------------------------
+;朝新妻プレイ実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_1
+;相愛がなかったらダメ
+SIF TALENT:相愛 == 0
+	RETURN 0
+;オトコだったらダメ
+SIF TALENT:オトコ
+	RETURN 0
+;人魚はダメ
+SIF TALENT:人魚
+	RETURN 0
+
+RESULT = 0
+;汎用身体サイズチェック
+SIF COMMON_BODYSIZE_CHECK(MASTER, TARGET) == 0
+	RETURN 0
+
+;エプロンがない場合はだめ
+SIF ITEM:エプロン == 0
+	RETURN 0
+;主人に棒がある場合は、処女もしくはＶ経験がない場合もだめ（再生処女でも許さない）
+SIF (TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり) && (TALENT:処女 || EXP:Ｖ経験 <= 0)
+	RETURN 0
+;主人に棒がある場合は、貞操帯を装着している場合、不可能
+SIF (TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり) && CFLAG:42 & 2
+	RETURN 0
+;育児室に居て出産前なら不可能
+SIF CFLAG:4 == 2 && (TALENT:妊娠 == 1 || TALENT:抱卵中 == 1)
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------
+;朝の新妻プレイ
+;-----------------------------------------------
+@MORNING_EVENT_1
+;露出癖
+IF CFLAG:好感度 > 4000
+	LOCAL = (ABL:露出癖 >= 5 && CFLAG:好感度 > 4500) ? 4 # 3
+ELSE
+	LOCAL = (ABL:露出癖 < 4) ? 1 # 2
+ENDIF
+;献身的
+SIF TALENT:献身的
+	LOCAL += 1
+;快感に素直
+SIF TALENT:快感に素直
+	LOCAL += 1
+;Ｖ敏感(相手が棒持ち)
+IF TALENT:Ｖ敏感 && (TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり)
+	LOCAL += 1
+;Ｖ鈍感(相手が棒持ち)
+ELSEIF TALENT:Ｖ鈍感 && (TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり)
+	LOCAL -= 1
+ENDIF
+;Ｂ敏感(相手が棒なし)
+IF TALENT:Ｂ敏感 && TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
+	LOCAL += 1
+;Ｂ鈍感(相手が棒なし)
+ELSEIF TALENT:Ｂ鈍感 && TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
+	LOCAL -= 1
+ENDIF
+;恋慕
+SIF TALENT:恋慕
+	LOCAL += 1
+;条件を満たしていない
+SIF LOCAL < 1
+	RETURN 0
+
+CFLAG:154 |= 4
+CFLAG:MASTER:154 |= 32
+
+CALL OUTPUT_TXT("朝の新妻プレイ")
+DRAWLINE
+;口上の関数,TFLAG:200の145を使用
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 145, LOCAL
+
+;主人に棒があるときはＶに挿入
+IF TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり
+	;Ｖ経験
+	CALL COMMON_UP_EXP,TARGET, 0, LOCAL , 0, 1
+	;精液経験
+	CALL COMMON_UP_EXP,TARGET, 4, LOCAL , 0, 1
+	;Ｖ調律経験
+	CALL COMMON_UP_EXP,TARGET, 42, LOCAL , 0, 1
+	;レズ経験
+	SIF TALENT:MASTER:オトコ == 0
+		CALL COMMON_UP_EXP,TARGET, 12, LOCAL , 0, 1
+	;射精経験(主人)
+	CALL COMMON_UP_EXP,MASTER, 3, (LOCAL / 2), 0
+
+	;LUNATIC以上は射精するたびに体力が減少
+	CALL EXHAUST_EJAC, MASTER, LOCAL
+;棒ないときはおっぱい鷲づかみさせておきます
+ELSE
+	;Ｂ快楽経験
+	CALL COMMON_UP_EXP,TARGET, 44, LOCAL , 0, 1
+	;レズ経験
+	CALL COMMON_UP_EXP,TARGET, 12, LOCAL , 0, 1
+ENDIF
+;絶頂経験
+CALL COMMON_UP_EXP,TARGET, 2, LOCAL , 0
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその2～朝パイズリ
+;=============================================================================
+;-----------------------------------------------
+;パイズリ実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_2
+;オトコか絶壁だと不可
+SIF TALENT:オトコ || TALENT:絶壁
+	RETURN 0
+;[爆乳]なら技巧LV1以上、[巨乳]でなければ技巧3以上、[貧乳]だと技巧4以上必要
+SIF (TALENT:爆乳 && ABL:技巧 == 0) || (TALENT:巨乳 && ABL:技巧 < 2) || (TALENT:貧乳 == 0 && TALENT:巨乳 == 0 && TALENT:爆乳 == 0 && ABL:技巧 < 3) || (TALENT:貧乳 && ABL:技巧 < 4)
+	RETURN 0
+
+;朝イベント汎用実行判定（主人の竿が有るか？）
+SIF MORNING_EVENT_COMMON_JUDGMENT(2) == 0
+	RETURN 0
+
+;汎用身体サイズチェック
+SIF COMMON_BODYSIZE_CHECK(MASTER, TARGET) == 0
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------
+;パイズリ
+;-----------------------------------------------
+@MORNING_EVENT_2
+;精液中毒
+IF ABL:精液中毒 == 1
+	LOCAL:0 = 1
+ELSEIF ABL:精液中毒 == 2
+	LOCAL:0 = 2
+ELSEIF ABL:精液中毒 == 3
+	LOCAL:0 = 3
+ELSEIF ABL:精液中毒 == 4
+	LOCAL:0 = 4
+ELSE
+	LOCAL:0 = 5
+ENDIF
+;汚臭鈍感
+IF TALENT:汚臭鈍感
+	LOCAL:0 += 1
+;汚臭敏感
+ELSEIF TALENT:汚臭敏感
+	LOCAL:0 -= 1
+ENDIF
+;献身的
+SIF TALENT:献身的
+	LOCAL:0 += 1
+;Ｂ敏感
+IF TALENT:Ｂ敏感
+	LOCAL:0 += 1
+;Ｂ鈍感
+ELSEIF TALENT:Ｂ鈍感
+	LOCAL:0 -= 1
+ENDIF
+;淫乱
+SIF TALENT:淫乱
+	LOCAL:0 += 1
+;条件を満たしていない
+SIF LOCAL:0 < 1
+	RETURN 0
+
+CALL OUTPUT_TXT("朝パイズリ")
+DRAWLINE
+;口上の関数,TFLAG:200の141を使用
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 141, LOCAL
+
+;巨乳・爆乳の場合のボーナス,欲情が2倍
+LOCAL:1 = (TALENT:巨乳 || TALENT:爆乳) ? 60 # 30
+
+;首謀者のパイズリ実行回数
+CFLAG:パイズリした回数 += 1
+;主人のパイズリ堪能回数
+CFLAG:MASTER:パイズリされた回数 += 1
+;精液経験
+CALL COMMON_UP_EXP,TARGET, 4, LOCAL:0 , 0, 1
+;射精経験(主人)
+CALL COMMON_UP_EXP,MASTER, 3, LOCAL:0 , 0
+
+;LUNATIC以上は射精するたびに体力が減少
+CALL EXHAUST_EJAC, MASTER, LOCAL:0
+
+;奉仕快楽経験
+CALL COMMON_UP_EXP,TARGET, 20, (LOCAL:0 / 2), 0, 1
+;レズ経験
+SIF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+	CALL COMMON_UP_EXP,TARGET, 12, 7, 0, 1
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその3～朝騎乗位
+;=============================================================================
+;-----------------------------------------------
+;朝騎乗位実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_3
+;オトコだったらダメ
+SIF TALENT:オトコ
+	RETURN 0
+;貞操帯を装着している場合、不可能
+SIF CFLAG:42 & 2
+	RETURN 0
+;処女かＶ経験ない場合もダメ
+SIF TALENT:処女 || EXP:Ｖ経験 < 1
+	RETURN 0
+;人魚はダメ
+SIF TALENT:人魚
+	RETURN 0
+
+;汎用身体サイズチェック
+SIF COMMON_BODYSIZE_CHECK(MASTER, TARGET) == 0
+	RETURN 0
+
+;朝イベント汎用実行判定（主人の竿が有るか？）
+SIF MORNING_EVENT_COMMON_JUDGMENT(2) == 0
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------
+;騎乗位
+;-----------------------------------------------
+@MORNING_EVENT_3
+;尻穴狂いの場合、1/5の確率でアナル騎乗位になる
+;尻穴狂いの条件は以下の通り
+;「Ａ感覚3以上」もしくは「Ａ敏感な淫乱持ち」もしくは「淫尻持ち」もしくは「淫魔持ち」の状態でＡ経験がLv3より上の時
+IF RAND:5 == 0 && (ABL:Ａ感覚 >= 3 || (TALENT:Ａ敏感 && TALENT:淫乱) || TALENT:淫尻 || TALENT:淫魔) && EXP:Ａ経験 > EXPLV:3
+	RESULT = 0
+	;アナル騎乗位実行判定
+	CALL MORNING_EVENT_JUDGMENT_4
+	
+	IF RESULT != 0
+		;アナル騎乗位呼び出し
+		CALL MORNING_EVENT_4
+		RETURN 1
+	ENDIF
+ENDIF
+
+;朝から凄いなぁ……
+;精液中毒
+IF ABL:精液中毒 == 1
+	LOCAL = 1
+ELSEIF ABL:精液中毒 == 2
+	LOCAL = 2
+ELSEIF ABL:精液中毒 == 3
+	LOCAL = 3
+ELSEIF ABL:精液中毒 == 4
+	LOCAL = 4
+ELSE
+	LOCAL = 5
+ENDIF
+;献身的
+SIF TALENT:献身的
+	LOCAL += 1
+;快感に素直
+SIF TALENT:快感に素直
+	LOCAL += 1
+;Ｖ敏感
+IF TALENT:Ｖ敏感
+	LOCAL += 1
+;Ｖ鈍感
+ELSEIF TALENT:Ｖ鈍感
+	LOCAL -= 1
+ENDIF
+;恋慕
+SIF TALENT:恋慕
+	LOCAL += 1
+;服従
+SIF TALENT:服従
+	LOCAL += 1
+;淫乱
+SIF TALENT:淫乱
+	LOCAL += 1
+;条件を満たしていない
+SIF LOCAL < 1
+	RETURN 0
+
+CFLAG:154 |= 1
+CFLAG:MASTER:154 |= 8
+
+CALL OUTPUT_TXT("朝騎乗位")
+;ここで主人が胸を揉む分岐判定(ただし、Ｂ感覚Lv3未満もしくは絶壁持ちは分岐しない)
+DRAWLINE
+;騎乗位で胸揉み付きの場合
+IF ABL:Ｂ感覚 >= 3 && TALENT:絶壁 == 0 && RAND:100 < 20
+	;口上の関数,TFLAG:200の146を使用(朝騎乗位＋胸揉み)
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 146, LOCAL
+
+	;Ｖ経験
+	CALL COMMON_UP_EXP,TARGET, 0, LOCAL , 0, 1
+	IF LOCAL/2 > 0
+		;絶頂経験
+		CALL COMMON_UP_EXP,TARGET, 2, (LOCAL / 2), 0, 1
+		;精液経験
+		CALL COMMON_UP_EXP,TARGET, 4, (LOCAL / 2), 0, 1
+		IF COM_ABLE_CHECK_FEMALE(TARGET)
+			C_NUMBER = MAX(RAND:(LOCAL / 2 + 1), 0)
+			CALL process_womb_semen(TARGET, C_NUMBER, @"{MASTER}")
+		ENDIF
+		;奉仕快楽経験
+		CALL COMMON_UP_EXP,TARGET, 20, (LOCAL / 2), 0, 1
+		;射精経験(主人)
+		CALL COMMON_UP_EXP,MASTER, 3, (LOCAL / 2), 0
+
+		;LUNATIC以上は射精するたびに体力が減少
+		CALL EXHAUST_EJAC, MASTER, LOCAL / 2
+	ENDIF
+
+	;Ｖ調律経験
+	CALL COMMON_UP_EXP,TARGET, 42, LOCAL , 0, 1
+	;Ｂ快楽経験
+	CALL COMMON_UP_EXP,TARGET, 44, LOCAL , 0, 1
+	;レズ経験
+	SIF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+		CALL COMMON_UP_EXP,TARGET, 12, 7, 0, 1
+;激しく騎乗位の場合
+ELSE
+	;口上の関数,TFLAG:200の142を使用(朝騎乗位)
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 142, LOCAL
+
+	;Ｖ経験
+	CALL COMMON_UP_EXP,TARGET, 0, LOCAL , 0, 1
+	IF LOCAL / 2 > 0
+		;絶頂経験
+		CALL COMMON_UP_EXP,TARGET, 2, (LOCAL / 2), 0, 1
+		;精液経験
+		CALL COMMON_UP_EXP,TARGET, 4, (LOCAL / 2), 0, 1
+		IF COM_ABLE_CHECK_FEMALE(TARGET)
+			C_NUMBER = MAX(RAND:(LOCAL / 2 + 1), 0)
+			CALL process_womb_semen(TARGET, C_NUMBER, @"{MASTER}")
+		ENDIF
+		;奉仕快楽経験
+		CALL COMMON_UP_EXP,TARGET, 20, (LOCAL / 2), 0, 1
+		;射精経験(主人)
+		CALL COMMON_UP_EXP,MASTER, 3, (LOCAL / 2), 0
+
+		;LUNATIC以上は射精するたびに体力が減少
+		CALL EXHAUST_EJAC, MASTER, LOCAL / 2
+	ENDIF
+
+	;Ｖ調律経験
+	CALL COMMON_UP_EXP,TARGET, 42, LOCAL , 0, 1
+	;レズ経験
+	SIF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+		CALL COMMON_UP_EXP,TARGET, 12, 7, 0, 1
+ENDIF
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその4～朝騎乗位アナル
+;=============================================================================
+;-----------------------------------------------
+;朝騎乗位アナル実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_4
+;一定のＡ経験がない場合は不可
+SIF EXP:Ａ経験 < EXPLV:3
+	RETURN 0
+;貞操帯を装着している場合、不可能
+SIF CFLAG:42 & 2
+	RETURN 0
+
+;汎用身体サイズチェック
+SIF COMMON_BODYSIZE_CHECK(MASTER, TARGET) == 0
+	RETURN 0
+
+;朝イベント汎用実行判定（主人の竿が有るか？）
+SIF MORNING_EVENT_COMMON_JUDGMENT(2) == 0
+	RETURN 0
+
+RETURN 1
+
+;-----------------------------------------------
+;騎乗位アナル
+;-----------------------------------------------
+;朝から凄いなぁ……
+@MORNING_EVENT_4
+;精液中毒
+IF ABL:精液中毒 == 1
+	LOCAL = 1
+ELSEIF ABL:精液中毒 == 2
+	LOCAL = 2
+ELSEIF ABL:精液中毒 == 3
+	LOCAL = 3
+ELSEIF ABL:精液中毒 == 4
+	LOCAL = 4
+ELSE
+	LOCAL = 5
+ENDIF
+;献身的
+SIF TALENT:献身的
+	LOCAL += 1
+;快感に素直
+SIF TALENT:快感に素直
+	LOCAL += 1
+;Ａ敏感
+IF TALENT:Ａ敏感
+	LOCAL += 1
+;Ａ鈍感
+ELSEIF TALENT:Ａ鈍感
+	LOCAL -= 1
+ENDIF
+;恋慕
+SIF TALENT:恋慕
+	LOCAL += 1
+;服従
+SIF TALENT:服従
+	LOCAL += 1
+;淫乱
+SIF TALENT:淫乱
+	LOCAL += 1
+;条件を満たしていない
+SIF LOCAL < 1
+	RETURN 0
+
+CFLAG:154 |= 2
+CFLAG:MASTER:154 |= 16
+
+CALL OUTPUT_TXT("朝騎乗位アナル")
+DRAWLINE
+;口上の関数,TFLAG:200の147を使用(朝騎乗位アナル)
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 147, LOCAL
+
+;Ａ経験
+CALL COMMON_UP_EXP,TARGET, 1, LOCAL , 0, 1
+IF LOCAL / 2 > 0
+	;絶頂経験
+	CALL COMMON_UP_EXP,TARGET, 2, (LOCAL / 2), 0, 1
+	;精液経験
+	CALL COMMON_UP_EXP,TARGET, 4, (LOCAL / 2), 0, 1
+	;奉仕快楽経験
+	CALL COMMON_UP_EXP,TARGET, 20, (LOCAL / 2), 0, 1
+	;射精経験(主人)
+	CALL COMMON_UP_EXP,MASTER, 3, (LOCAL / 2), 0, 1
+
+	;LUNATIC以上は射精するたびに体力が減少
+	CALL EXHAUST_EJAC, MASTER, LOCAL / 2
+ENDIF
+
+;Ａ快楽経験
+CALL COMMON_UP_EXP,TARGET, 43, LOCAL , 0, 1
+IF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+	;レズ経験
+	CALL COMMON_UP_EXP,TARGET, 12, 7, 0, 1
+ELSEIF TALENT:オトコ && TALENT:MASTER:オトコ
+	;ＢＬ経験
+	CALL COMMON_UP_EXP,TARGET, 13, 7, 0, 1
+ENDIF
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその5～お目覚めのキッス
+;=============================================================================
+;-----------------------------------------------
+;キスで起こされる実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_5
+;奉仕精神が2未満、従順が3未満のいずれかを満たす場合は不可
+SIF ABL:奉仕精神 < 2 || ABL:従順 < 3
+	RETURN 0
+;どちらかが猫舌だと猫フェラが有効でないとダメ
+IF TALENT:猫舌 || TALENT:MASTER:猫舌
+	;主人か調教者が猫舌だと二人の技巧が足して7必要
+	SIF (FLAG:14 & 16 && (ABL:MASTER:技巧 + ABL:技巧) < 7) || (FLAG:14 & 16) == 0
+		RETURN 0
+ENDIF
+
+;育児室に居て出産前なら不可能
+SIF CFLAG:4 == 2 && (TALENT:妊娠 == 1 || TALENT:抱卵中 == 1)
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------
+;お目覚めのキッス
+;-----------------------------------------------
+@MORNING_EVENT_5
+;従順＋奉仕精神
+IF ABL:奉仕精神 + ABL:従順 < 7
+	LOCAL = 1
+ELSEIF ABL:奉仕精神 + ABL:従順 < 9
+	LOCAL = 2
+ELSE
+	LOCAL = 4
+ENDIF
+;献身的
+SIF TALENT:献身的
+	LOCAL += 1
+;親愛
+SIF TALENT:親愛
+	LOCAL += 2
+;条件を満たしていない
+SIF LOCAL < 1
+	RETURN 0
+
+CALL OUTPUT_TXT("キスで起こされる")
+DRAWLINE
+;口上の関数,TFLAG:200の143を使用
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 143, LOCAL
+
+;愛情経験
+SIF LOCAL / 2 > 0
+	CALL COMMON_UP_EXP,TARGET, 21, (LOCAL / 2), 0, 1
+;キス経験
+CALL COMMON_UP_EXP,TARGET, 23, 1, 0, 1
+IF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+	;レズ経験
+	CALL COMMON_UP_EXP,TARGET, 12, 2, 0, 1
+ELSEIF TALENT:オトコ && TALENT:MASTER:オトコ
+	;ＢＬ経験
+	CALL COMMON_UP_EXP,TARGET, 13, 2, 0, 1
+ENDIF
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその6～朝の足コキ
+;=============================================================================
+;-----------------------------------------------
+;朝の足コキ実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_6
+;サドっ気が3未満、反発刻印がLv3以上のときはダメ
+SIF ABL:サドっ気 < 3 || MARK:反発刻印 >= 3
+	RETURN 0
+;育児室に居て出産前なら不可能
+SIF CFLAG:4 == 2 && (TALENT:妊娠 == 1 || TALENT:抱卵中 == 1)
+	RETURN 0
+;人魚はダメ
+;SIF TALENT:人魚
+;	RETURN 0
+RETURN 1
+
+;-----------------------------------------------
+;朝の足コキ（朝足コキ追加)
+;-----------------------------------------------
+@MORNING_EVENT_6
+;サドっ気で加算Lv3で1
+;そもそもココに来る時点で3あるので最低1
+LOCAL = (ABL:サドっ気 - 2)
+;倒錯的
+SIF TALENT:倒錯的
+	LOCAL += 1
+;サド
+SIF TALENT:サド
+	LOCAL += 2
+;小悪魔
+SIF TALENT:小悪魔
+	LOCAL += 1
+;ドＳ
+SIF TALENT:ドＳ
+	LOCAL += 5
+;恋慕
+SIF TALENT:恋慕
+	LOCAL += 1
+;淫乱
+SIF TALENT:淫乱
+	LOCAL += 2
+;条件を満たしていない
+SIF LOCAL < 1
+	RETURN 0
+
+;奴隷が朝足コキした/MASTERが朝足コキで起きた
+CFLAG:154 |= 64
+CFLAG:MASTER:154 |= 128
+
+CALL OUTPUT_TXT("朝の足コキ")
+DRAWLINE
+;口上の呼び出し,TFLAG:200の148を使用
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 148, LOCAL
+
+;射精処理/竿が無ければ飛ばす。
+IF LOCAL / 2 > 0 && (TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり)
+	;精液経験
+	CALL COMMON_UP_EXP,TARGET, 4, (LOCAL / 2), 0, 1
+	;射精経験(主人)
+	CALL COMMON_UP_EXP,MASTER, 3, (LOCAL / 2), 0
+
+	;LUNATIC以上は射精するたびに体力が減少
+	CALL EXHAUST_EJAC, MASTER, LOCAL / 2
+ENDIF
+
+IF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+	;レズ経験
+	CALL COMMON_UP_EXP,TARGET, 12, 3, 0, 1
+ELSEIF TALENT:オトコ && TALENT:MASTER:オトコ
+	;ＢＬ経験
+	CALL COMMON_UP_EXP,TARGET, 13, 3, 0, 1
+ENDIF
+DRAWLINE
+WAIT
+
+;=============================================================================
+;朝イベントその7～朝の３Ｐ
+;=============================================================================
+;-----------------------------------------------
+;朝の３Ｐ実行判定
+;-----------------------------------------------
+@MORNING_EVENT_JUDGMENT_7
+;助手が居ない
+SIF ASSI < 0
+	RETURN 0
+;助手が朝イベントの対象である時は不可
+SIF ASSI == TARGET
+	RETURN 0
+;対象もしくは助手がオトコの場合は不可
+SIF TALENT:オトコ || TALENT:ASSI:オトコ
+	RETURN 0
+;対象もしくは助手が反発刻印3の時は不可
+SIF MARK:反発刻印 >= 3 || MARK:ASSI:反発刻印 >= 3
+	RETURN 0
+;対象もしくは助手に貞操帯が付いてる場合は不可
+SIF (CFLAG:42 & 2) || (CFLAG:ASSI:42 & 2)
+	RETURN 0
+;対象もしくは助手が育児室に居て出産前なら不可能
+SIF (CFLAG:4 == 2 && (TALENT:妊娠 == 1 || TALENT:抱卵中 == 1)) || (CFLAG:ASSI:4 == 2 && (TALENT:妊娠 == 1 || TALENT:抱卵中 == 1))
+	RETURN 0
+;対象もしくは助手が「レズっ気1未満で両刀でない」場合は不可
+SIF (ABL:レズっ気 < 1 && TALENT:両刀 == 0) || (ABL:ASSI:レズっ気 < 1 && TALENT:ASSI:両刀 == 0)
+	RETURN 0
+;1/4の確率で発生
+SIF RAND:4 != 0
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------
+;朝の３Ｐ
+;-----------------------------------------------
+@MORNING_EVENT_7
+VARSET LOCAL, 0
+;奴隷と助手の欲望とレズ中毒を加算して平均化
+LOCAL:50 += (ABL:欲望 + ABL:レズ中毒 + ABL:ASSI:欲望 + ABL:ASSI:レズ中毒) / 4
+
+;淫乱
+SIF TALENT:淫乱
+	LOCAL:50 += 2
+SIF TALENT:ASSI:淫乱
+	LOCAL:50 += 2
+;献身的
+SIF TALENT:献身的
+	LOCAL:50 += 1
+SIF TALENT:ASSI:献身的
+	LOCAL:50 += 1
+;親愛
+SIF TALENT:親愛
+	LOCAL:50 += 1
+SIF TALENT:ASSI:親愛
+	LOCAL:50 += 1
+;相愛
+SIF TALENT:相愛
+	LOCAL:50 += 1
+SIF TALENT:ASSI:相愛
+	LOCAL:50 += 1
+;助手が鼓舞
+SIF TALENT:ASSI:鼓舞
+	LOCAL:50 += 1
+;恐怖刻印2以上
+SIF MARK:恐怖刻印 >= 2
+	LOCAL:50 -= 1
+SIF MARK:ASSI:恐怖刻印 >= 2
+	LOCAL:50 -= 1
+;反発刻印あり
+SIF MARK:反発刻印
+	LOCAL:50 -= MARK:反発刻印
+SIF MARK:ASSI:反発刻印
+	LOCAL:50 -= MARK:ASSI:反発刻印
+;条件を満たしていない
+SIF LOCAL:50 < 1
+	RETURN 0
+;LOCAL:50 = 1の場合は処理の都合上サービスする
+SIF LOCAL:50 == 1
+	LOCAL:50 = 2
+
+CALL OUTPUT_TXT("朝の３Ｐ")
+DRAWLINE
+TFLAG:99 = 0
+;口上の呼び出し,TFLAG:200の163,164を使用
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 163, LOCAL:50
+;奴隷側の口上でTFLAG:99を立ててなければ、助手側の口上を呼び出す
+SIF TFLAG:99 == 0
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, ASSI, 164, LOCAL:50
+
+;奴隷と助手が朝３Ｐした/MASTERが３Ｐで起こされた
+CFLAG:154 |= 256
+CFLAG:ASSI:154 |= 256
+CFLAG:MASTER:154 |= 512
+
+;LOCAL:1=主人が受ける精液経験, LOCAL:2=調教対象が受ける精液経験, LOCAL:3=助手が受ける精液経験
+;主人の射精処理/主人に竿が無ければ飛ばす。
+IF TALENT:MASTER:オトコ || TALENT:MASTER:ふたなり
+	LOCAL:2 += LOCAL:50 / 2
+	LOCAL:3 += LOCAL:50 / 2
+ENDIF
+
+;奴隷の射精処理/奴隷に竿が無ければ飛ばす。
+IF TALENT:オトコ || TALENT:ふたなり
+	LOCAL:1 += LOCAL:50 / 2
+	LOCAL:3 += LOCAL:50 / 2
+ENDIF
+
+;助手の射精処理/助手に竿が無ければ飛ばす。
+IF TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり
+	LOCAL:1 += LOCAL:50 / 2
+	LOCAL:2 += LOCAL:50 / 2
+ENDIF
+
+FOR LOCAL:99 , 0 , 3
+	IF LOCAL:99 == 0
+		LOCAL = MASTER
+	ELSEIF LOCAL:99 == 1
+		LOCAL = TARGET
+	ELSE
+		LOCAL = ASSI
+	ENDIF
+	
+	;精液経験(汎用)
+	SIF LOCAL:(LOCAL:99 + 1) > 0
+		CALL COMMON_UP_EXP , LOCAL, 4, (LOCAL:(LOCAL:99 + 1)), 0
+	;汎用射精処理/見ている対象に竿が無ければ飛ばす。
+	IF TALENT:LOCAL:オトコ || TALENT:LOCAL:ふたなり
+		;射精経験(汎用)
+		CALL COMMON_UP_EXP ,LOCAL , 3, LOCAL:50, 0
+
+		;LUNATIC以上は射精するたびに体力が減少
+		CALL EXHAUST_EJAC , LOCAL, LOCAL:50
+	ENDIF
+NEXT
+
+;レズ経験(調教対象・助手)
+IF TALENT:MASTER:オトコ == 0
+	CALL COMMON_UP_EXP,TARGET, 12, 6, 0
+	CALL COMMON_UP_EXP,ASSI, 12, 6, 0
+ELSE
+	CALL COMMON_UP_EXP,TARGET, 12, 3, 0
+	CALL COMMON_UP_EXP,ASSI, 12, 3, 0
+ENDIF
+DRAWLINE
+WAIT

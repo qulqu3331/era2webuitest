@@ -1,0 +1,757 @@
+﻿;≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+;工作関連処理
+;≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+;=============================================================================
+;工作選擇処理
+;=============================================================================
+@WORKING_JUDGE
+PRINTL 何をして働かせる？
+PRINTL [0] - おまかせ
+PRINTL [1] - 性的な仕事はさせない
+PRINTL [2] - 売春をさせる
+;エッチをしなければならない
+$WORKING_SELECT_INPUT_LOOP
+INPUT
+IF RESULT == 0
+	TFLAG:203 = 0
+ELSEIF RESULT == 1
+	TFLAG:203 = 1
+ELSEIF RESULT == 2
+	IF (ABL:従順 >= 5 || (MARK:苦痛刻印 + MARK:屈服刻印 + MARK:薬物刻印 * 3 + MARK:恐怖刻印 - MARK:反発刻印 * 3) >= 3 || TALENT:弱味 || TALENT:服従 || TALENT:壊造人格 || TALENT:淫乱 || TALENT:娼婦 || TALENT:求愛依存 || TALENT:売春中毒) && (!EXP:売春経験 || !EXP:被輪姦経験) && !TALENT:精神崩壊 && !TALENT:傀儡
+		IF CFLAG:44 == 5 || MARK:恐怖刻印 >= 3
+			PRINTFORML %CALLNAME:TARGET%に売春をさせようとしたが懇願された……
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%に売春をさせようとしたが抵抗された……
+		ENDIF
+		;口上を表示
+		IF (FLAG:10 & 1) != 0 && !(CFLAG:9 & 1)
+			;専用口上
+			IF CFLAG:9 & 8
+				;口上の存在判定,821
+				TRYCCALLFORM TRY_{NO:TARGET}
+					TRYCALLFORM KOJO_{NO:TARGET}_DENIAL_MESSAGE, 821
+				CATCH
+				ENDCATCH
+			;汎用口上
+			ELSEIF CFLAG:9 & 4
+				CALL KOJO_X_DENIAL_MESSAGE
+			ENDIF
+		ENDIF
+		PRINTL [0] - 売春を強要する
+		PRINTL [1] - 諦める
+		$WORKING_SELECT_INPUT_LOOP_2
+		INPUT
+		IF RESULT == 0
+			TFLAG:44 = 0
+			LOCAL:1 = 3
+			LOCAL:2 = ABL:従順
+			TFLAG:44 = LOCAL:1
+			IF MARK:反発刻印 >= LOCAL:1 && MARK:97 >= LOCAL:1
+				LOCAL:1 = 0
+				TFLAG:44 = 0
+			ENDIF
+			SIF LOCAL:1
+				CALL COMMON_MARK_UP, TARGET, 9, LOCAL:1, 0
+			;感情乏しい、傀儡、精神崩壊、壊造人格の場合は反発刻印による従順ダウンはなし
+			IF TALENT:感情乏しい == 0 && TALENT:精神崩壊 == 0 && TALENT:傀儡 == 0 && TALENT:壊造人格 == 0
+				IF ABL:従順 > 0 && ABL:従順 <= 2 && TFLAG:44 == 3
+					ABL:従順 = 0
+				ELSEIF ABL:従順 == 3 && TFLAG:44 == 3
+					ABL:従順 = 2
+				ELSEIF ABL:従順 && ABL:従順 <= 2 && TFLAG:44 == 2
+					ABL:従順 -= 1
+				ENDIF
+			ENDIF
+			TFLAG:44 = 0
+			;刻印取得による従順変動
+			SIF LOCAL:2 != ABL:従順
+				PRINTFORML そして従順がLV{ABL:従順}になった
+			TFLAG:203 = 2
+		ELSEIF RESULT == 1
+			RETURN 0
+		ELSE
+			CLEARLINE 1
+			REUSELASTLINE
+			GOTO WORKING_SELECT_INPUT_LOOP_2
+		ENDIF
+	ELSEIF !(ABL:従順 >= 5 || (MARK:苦痛刻印 + MARK:屈服刻印 + MARK:薬物刻印 * 3 + MARK:恐怖刻印 - MARK:反発刻印 * 3) >= 3 || TALENT:服従 || TALENT:壊造人格 || TALENT:淫乱 || TALENT:娼婦 || TALENT:求愛依存 || TALENT:売春中毒)
+		PRINTFORML %CALLNAME:TARGET%に売春をさせようとしたが拒否された。
+		PRINTW もう少し調教が必要なようだ。
+		;口上を表示
+		IF (FLAG:10 & 1) != 0 && !(CFLAG:9 & 1)
+			;専用口上
+			IF CFLAG:9 & 8
+				;口上の存在判定,821
+				TRYCCALLFORM TRY_{NO:TARGET}
+					TRYCALLFORM KOJO_{NO:TARGET}_DENIAL_MESSAGE, 821
+				CATCH
+				ENDCATCH
+			;汎用口上
+			ELSEIF CFLAG:9 & 4
+				CALL KOJO_X_DENIAL_MESSAGE
+			ENDIF
+		ENDIF
+		RETURN 0
+	ELSE
+		TFLAG:203 = 2
+	ENDIF
+ELSE
+	$WORKING_SELECT_LOOP
+	CLEARLINE 1
+	REUSELASTLINE
+	GOTO WORKING_SELECT_INPUT_LOOP
+ENDIF
+LOCAL = 100 - MARK:反発刻印 * 7 - TALENT:嫉妬 * 5
+LOCAL:3 = 0
+SELECTCASE ABL:従順
+	CASE 0
+		LOCAL -= 10
+	CASE 1
+		LOCAL -= 7
+	CASE 2
+		LOCAL -= 4
+	CASE 3
+		LOCAL -= 1
+	CASE 4
+		LOCAL += 2
+	CASEELSE
+		LOCAL += 5
+ENDSELECT
+IF RAND:100 >= LOCAL && (TALENT:嫉妬 || ABL:従順 < 5) && TALENT:服従 == 0
+	PRINTL 
+	PRINTFORMW %CALLNAME:TARGET%はしぶしぶ働いた
+	PRINTW ………………
+	PRINTW …………
+	PRINTW ……
+	PRINTFORMW %CALLNAME:TARGET%は工作時に失踪しました……
+	IF TALENT:嫉妬
+		CFLAG:1 = 0
+		CFLAG:4 = 1
+		LOCAL:3 = 1
+	ENDIF
+	;「売却時口上表示」が有効である
+	SIF FLAG:12 & 8192
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 180, LOCAL
+	IF LOCAL:3 == 0
+		;対象or助手の売却・解放による登録削除処理
+		CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 195, TFLAG:200
+		CALL IRC_CHARA_GONE, TARGET
+		DELCHARA TARGET
+	ENDIF
+	TARGET = -1
+	IF ASSI < 0
+		ASSI = -1
+	ELSE
+		ASSI = (ASSI > TARGET) ? (ASSI - 1) # ASSI
+	ENDIF
+ELSE
+	CALL LABORING_REMUNERATION
+ENDIF
+LOCAL:3 = 0
+
+;休憩フラグを立てる
+FLAG:0 = 1
+BEGIN TURNEND
+RETURN 1
+;=============================================================================
+;勞力作業系
+;=============================================================================
+;-------------------------------------------------
+;報酬判定
+;-------------------------------------------------
+@LABORING_REMUNERATION
+$LABORING_SELECT_LOOP
+VARSET LOCAL, 0
+LOCAL = RAND:5
+LOCAL:1 = 0
+LOCAL:2 = 0
+;ABL:従順
+IF ABL:従順 == 0
+	LOCAL:2 = 5
+ELSEIF ABL:従順 == 1
+	LOCAL:2 = 10
+ELSEIF ABL:従順 == 2
+	LOCAL:2 = 15
+ELSEIF ABL:従順 == 3
+	LOCAL:2 = 20
+ELSEIF ABL:従順 == 4
+	LOCAL:2 = 25
+ELSE
+	LOCAL:2 = 35
+ENDIF
+
+;ABL:技巧
+IF ABL:技巧 == 0
+	LOCAL:2 += 10
+ELSEIF ABL:技巧 == 1
+	LOCAL:2 += 20
+ELSEIF ABL:技巧 == 2
+	LOCAL:2 += 30
+ELSEIF ABL:技巧 == 3
+	LOCAL:2 += 50
+ELSEIF ABL:技巧 == 4
+	LOCAL:2 += 70
+ELSE
+	LOCAL:2 += 90
+ENDIF
+
+;ABL:工作技能
+IF ABL:工作技能 == 0
+	TIMES LOCAL:2 , 0.80
+ELSEIF ABL:工作技能 == 1
+	TIMES LOCAL:2 , 1.00
+ELSEIF ABL:工作技能 == 2
+	TIMES LOCAL:2 , 1.20
+ELSEIF ABL:工作技能 == 3
+	TIMES LOCAL:2 , 1.40
+ELSEIF ABL:工作技能 == 4
+	TIMES LOCAL:2 , 1.60
+ELSE
+	TIMES LOCAL:2 , 1.80
+ENDIF
+
+;EXP:工作經驗
+IF EXP:工作経験 < EXPLV:1
+	TIMES LOCAL:2 , 0.80
+ELSEIF EXP:工作経験 < EXPLV:2
+	TIMES LOCAL:2 , 1.00
+ELSEIF EXP:工作経験 < EXPLV:3
+	TIMES LOCAL:2 , 1.20
+ELSEIF EXP:工作経験 < EXPLV:4
+	TIMES LOCAL:2 , 1.40
+ELSEIF EXP:工作経験 < EXPLV:5
+	TIMES LOCAL:2 , 1.60
+ELSE
+	TIMES LOCAL:2 , 1.80
+ENDIF
+
+;隸屬
+IF TALENT:隷属
+	TIMES LOCAL:2 , 3.00
+;烙印
+ELSEIF TALENT:烙印
+	TIMES LOCAL:2 , 2.50
+;服從
+ELSEIF TALENT:服従
+	TIMES LOCAL:2 , 2.00
+ENDIF
+
+;EASYでないなら作り手の体力消耗、気力消耗、酔い、ストレスによるマイナス補正がある
+IF FLAG:3 != 1
+	;体力消耗状態
+	SIF MAXBASE:0 > 0 && (100 * BASE:体力) / MAXBASE:0 <= 25
+		TIMES LOCAL:2 , 0.75
+	;気力消耗状態
+	SIF MAXBASE:1 > 0 && (100 * BASE:気力) / MAXBASE:1 <= 25
+		TIMES LOCAL:2 , 0.75
+	;酔っている
+	SIF MAXBASE:8 > 0 && (100 * BASE:酔い) / MAXBASE:8 >= 80
+		TIMES LOCAL:2 , 0.50
+
+	;ストレスが10000以上
+	IF CFLAG:ストレス >= 10000
+		TIMES LOCAL:2 , 0.80
+	;ストレスが1000以上
+	ELSEIF CFLAG:ストレス >= 1000
+		TIMES LOCAL:2 , 0.90
+	ENDIF
+ENDIF
+
+;反発刻印持ち
+SIF MARK:反発刻印
+	TIMES LOCAL:2 , 0.80
+
+;LOCAL = 工作の種類
+IF LOCAL == 0 && ABL:工作技能 >= 4
+	;キャラ固有工作
+	LOCAL:4 = 450
+ELSEIF LOCAL == 1 && TALENT:母乳体質
+	;授乳
+	LOCAL:4 = 400
+	;母性
+	SIF TALENT:母性
+		LOCAL:4 += 50
+ELSEIF LOCAL == 2
+	;性教育の授業
+	LOCAL:4 = 350
+	;教育者
+    SIF TALENT:教育者
+		LOCAL:4 += 100
+ELSEIF LOCAL == 3 && ABL:歌唱技能 > 0 && !RAND:(6 - ABL:歌唱技能)
+	;ミニライブ
+	LOCAL:4 = 300
+	;歌唱技能
+    SIF ABL:歌唱技能 > 0
+		LOCAL:4 += ABL:歌唱技能 * 30
+ELSE
+	;肉体労働
+	LOCAL:4 = 300
+	;体力気力
+	SIF MAXBASE:0 > 2500 || MAXBASE:1 > 2000
+		LOCAL:4 += 100
+ENDIF
+
+
+;工作名人
+SIF TALENT:工作名人
+	TIMES LOCAL:4 , 1.80
+;魅力
+SIF TALENT:魅力
+	TIMES LOCAL:4 , 1.10
+;謎の魅力
+SIF TALENT:謎の魅力
+	TIMES LOCAL:4 , 1.10
+;人気
+SIF TALENT:人気
+	TIMES LOCAL:4 , 1.30
+
+IF LOCAL == 0 && (ABL:料理技能 >= 4 || LOCAL:1 == 1)
+	;(専用)口上側で定義されている固有工作が25%の確率で出る
+	IF CFLAG:9 & 8 && RAND:4 == 0
+		IF ((TALENT:淫乱 && !TALENT:恋慕 && RAND:4 == 0) || TFLAG:203 == 2) && TFLAG:203 != 1 && STRLENS(CSTR:91) > 0
+			TFLAG:202 = 1
+			LOCAL:4 += 150
+			TSTR:5 = %CSTR:91%
+		ELSEIF STRLENS(CSTR:90) > 0
+			TSTR:5 = %CSTR:90%
+			TFLAG:202 = 0
+		ELSE
+			GOTO LABORING_SELECT_LOOP
+		ENDIF
+	ELSE
+		GOTO LABORING_SELECT_LOOP
+	ENDIF
+	LOCAL:7 = 0
+ELSEIF LOCAL == 1 && TALENT:母乳体質
+	IF ((TALENT:淫乱 && !TALENT:恋慕 && RAND:4 == 0) || TFLAG:203 == 2) && TFLAG:203 != 1
+		TFLAG:202 = 1
+		LOCAL:4 += 150
+		TSTR:5 = 搾乳プレイ
+	ELSE
+		TSTR:5 = 授乳
+		TFLAG:202 = 0
+	ENDIF
+	LOCAL:7 = 1
+ELSEIF LOCAL == 2
+	IF ((TALENT:淫乱 && !TALENT:恋慕 && RAND:4 == 0) || TFLAG:203 == 2) && TFLAG:203 != 1
+		TFLAG:202 = 1
+		LOCAL:4 += 150
+		TSTR:5 = 性教育の授業
+	ELSE
+		TSTR:5 = 宣教授业
+		TFLAG:202 = 0
+	ENDIF
+	LOCAL:7 = 2
+ELSEIF LOCAL == 3
+	IF ((TALENT:淫乱 && !TALENT:恋慕 && RAND:4 == 0) || TFLAG:203 == 2) && TFLAG:203 != 1
+		TFLAG:202 = 1
+		LOCAL:4 += 150
+		TSTR:5 = 乱交ライブ
+	ELSE
+		TSTR:5 = ミニライブ
+		TFLAG:202 = 0
+	ENDIF
+	LOCAL:7 = 3
+ELSE
+	IF ((TALENT:淫乱 && !TALENT:恋慕 && RAND:4 == 0) || TFLAG:203 == 2) && TFLAG:203 != 1
+		TFLAG:202 = 1
+		LOCAL:4 += 150
+		TSTR:5 = 乱交
+	ELSE
+		TSTR:5 = 肉体労働
+		TFLAG:202 = 0
+	ENDIF
+	LOCAL:7 = 4
+ENDIF
+
+IF TFLAG:202
+	;淫魔
+	IF TALENT:淫魔
+		TIMES LOCAL:4 , 1.6
+	;淫乱
+	ELSEIF TALENT:淫乱
+		TIMES LOCAL:4 , 1.3
+	ENDIF
+	;オトコ
+	SIF TALENT:オトコ
+		TIMES LOCAL:4 , 0.7
+ENDIF
+	
+PRINTL 
+PRINTFORM %CALLNAME:TARGET%は
+IF ABL:従順 < 4 && (MARK:苦痛刻印 + MARK:屈服刻印 + MARK:薬物刻印 * 2 + MARK:恐怖刻印 - MARK:反発刻印 * 2) < 3
+	PRINT しぶしぶ
+ELSE
+	PRINT 一生懸命
+ENDIF
+PRINTW 働いた
+PRINTL 
+
+IF TFLAG:203 == 2
+	CALL OUTPUT_TXT("輪姦")
+ELSE
+	CALL OUTPUT_TXT("工作")
+ENDIF
+
+;工作時の口上・地の文の表示
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 821, LOCAL
+
+BASE:体力 = MAX(BASE:体力 - MAX(MAXBASE:0 * 5 / 9, 600) - TFLAG:202 * 100 * (RAND:2 + 1 + LIMIT(MARK:反発刻印, 0, 2)), 1)
+BASE:気力 = MAX(BASE:気力 - MAX(MAXBASE:1 * 4 / 9, 450) - TFLAG:202 * 125 * (RAND:2 + 1 + LIMIT(MARK:反発刻印, 0, 2)), 1)
+
+PRINTFORML %CALLNAME:TARGET%は体力と気力を消耗した。
+
+;工作技能Lv4かつ固有工作の場合、値段は下方修正(元はLv5専用だったので)
+SIF LOCAL:7 == 0 && ABL:工作技能 == 4 && LOCAL:1 == 0
+	TIMES LOCAL:4 , 0.8
+	
+LOCAL:3 = (LOCAL:2 * LOCAL:4) / 45
+IF FLAG:3 >= 3
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 5000, 2)
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 10000, 2)
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 50000, 2)
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 100000, 2)
+ELSE
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 5000, 2)
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 10000, 2)
+	LOCAL:3 = TABLE_CALC(LOCAL:3, 50000, 2)
+ENDIF
+;親愛
+SIF TALENT:親愛
+	TIMES LOCAL:3 , 1.50
+PRINTFORML %CALLNAME:TARGET%は働いたことで{LOCAL:3}圓を得た。
+MONEY:1 = LOCAL:3
+CALL SHOW_MONEY_INCREACE
+;--------------------------------------------------
+;工作(奴隷)で稼いだ最高金額判定処理
+SIF MONEY:1 > MONEY:974
+	CALL NEW_HIGH_INCOME_ALL, 974
+SIF MONEY:1 > CFLAG:85
+	CALL NEW_HIGH_INCOME_SLAVE, 85
+CALL TOTAL_INCOME_SLAVE, MONEY:1
+;--------------------------------------------------
+
+;エロ系の経験
+LOCAL:9 = 0
+;成功するとファンからお酒をプレゼントされる
+SIF TFLAG:202 && ITEM:カルーア < 99 && ITEM:ビール < 99 && ITEM:ワイン < 99 && ITEM:大吟醸酒 < 99 && ITEM:スピリタス < 99 && ITEM:神便鬼毒酒 < 99
+	CALL WORKING_PRESENT, LOCAL:3
+
+IF LOCAL:7 == 1 && !TFLAG:202
+	;噴乳経験
+	CALL COMMON_UP_EXP, TARGET, 5, 1+ABL:噴乳中毒+RAND:2, 0
+ELSEIF TFLAG:202 == 1
+	;相手の人数を決める。
+	LOCAL:8 = 2
+	SIF TALENT:淫乱
+		LOCAL:8 = LIMIT(RAND:4 + ABL:欲望, 2, 5)
+	LOCAL = MAX(RAND:21, 8)
+	LOCAL:9 += LOCAL*(5 + MARK:反発刻印)/LOCAL:8 + TALENT:理性 * (10 - ABL:欲望)
+	LOCAL:11 = 0
+	;経験値取得処理
+	;00Ｖ経験
+	IF !TALENT:オトコ
+		IF TALENT:処女
+			SETCOLOR 0xF06050
+			PRINTL 【純潔喪失】
+			RESETCOLOR
+			LOCAL:11 += 1
+			;売春による処女喪失の口上表示
+			CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 1400
+			TALENT:処女 = 0
+			LOCAL:9 *= 3
+			TFLAG:403 |= 4
+		ELSEIF TALENT:処女 == 2
+			SETCOLOR 0xF06050
+			PRINTL 【処女膜喪失】
+			RESETCOLOR
+			SIF CFLAG:405 < 3
+				CALL COMMON_UP_EXP, TARGET, 50, 1, 0
+			;売春による処女喪失の口上表示
+			CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 1400
+			TALENT:処女 = 0
+			LOCAL:9 *= 2
+			TFLAG:403 |= 4
+			CFLAG:405++
+		ELSE
+			TFLAG:403 = 0
+		ENDIF
+		CALL COMMON_UP_EXP, TARGET, 0, (LOCAL:8*LOCAL)/3, 0
+		LOCAL:9 += (LOCAL:8*LOCAL)/3
+	ENDIF
+	;01Ａ経験
+	IF ABL:Ａ感覚 > 1 || EXP:Ａ経験 > 12
+		CALL COMMON_UP_EXP, TARGET, 1, (LOCAL:8*LOCAL)/4, 0
+		LOCAL:9 += (LOCAL:8*LOCAL)/4
+	ENDIF
+	;02絶頂経験
+	CALL COMMON_UP_EXP, TARGET, 2, ((LOCAL:8*LOCAL*ABL:Ｃ感覚/6)+(LOCAL:8*LOCAL*ABL:Ｖ感覚/3)+(LOCAL:8*LOCAL*ABL:Ａ感覚/4)+(LOCAL:8*LOCAL*ABL:Ｂ感覚/5))/15, 0
+	;04精液経験
+	CALL COMMON_UP_EXP, TARGET, 4, (LOCAL:8*LOCAL)*ABL:技巧/12, 0
+	LOCAL:9 += (LOCAL:8*LOCAL)*ABL:技巧/12 * 2
+	IF COM_ABLE_CHECK_FEMALE(TARGET) && (LOCAL:8*LOCAL)*ABL:技巧/12 > 0
+		C_NUMBER = MAX(RAND:((LOCAL:8*LOCAL)*ABL:技巧/12 + 1), 0)
+		CALL process_womb_semen(TARGET, RAND:C_NUMBER, "遊び客")
+		LOCAL:9 += C_NUMBER * 2
+	ENDIF
+	;噴乳経験
+	IF LOCAL:7 == 1
+		CALL COMMON_UP_EXP, TARGET, 5, LOCAL:8*LOCAL*(1+ABL:噴乳中毒)/18, 0
+		LOCAL:9 += LOCAL:8*LOCAL*(1+ABL:噴乳中毒)/18
+	ENDIF
+	;13ＢＬ経験
+	SIF TALENT:オトコ
+		CALL COMMON_UP_EXP, TARGET, 13, LOCAL + ABL:ＢＬっ気 + RAND:5, 0
+	;08精飲絶頂経験
+	SIF TALENT:精愛味覚
+		CALL COMMON_UP_EXP, TARGET, 8, (LOCAL:8*ABL:精液中毒*LOCAL)/72, 0
+	;22フェラ経験
+	LOCAL:5 = RAND:(LOCAL:8/2)
+	CALL COMMON_UP_EXP, TARGET, 22, LOCAL:8+LOCAL:5, 0
+	LOCAL:9 += LOCAL:8+LOCAL:5/2
+	;23キス経験
+	LOCAL:5 = RAND:(LOCAL:8*LOCAL)
+	CALL COMMON_UP_EXP, TARGET, 23, LOCAL:5, 0
+	IF !EXP:被輪姦経験
+		;被輪姦経験
+		CALL COMMON_UP_EXP, TARGET, 82, 1, 0
+		LOCAL:11 += 1
+		LOCAL:9 += 40 + 5 * RAND:6
+	ELSE
+		;被輪姦経験
+		CALL COMMON_UP_EXP, TARGET, 82, 1, 0
+		;被姦快楽経験
+		SIF TALENT:淫乱
+			CALL COMMON_UP_EXP, TARGET, 83, 1, 0
+	ENDIF
+	;修正
+		TIMES LOCAL:9, 0.5
+	;売春経験が多いと変化なし
+	SELECTCASE EXP:売春経験
+		CASE IS <= 200
+			TIMES LOCAL:9, 2.0
+		CASE IS <= 500
+			TIMES LOCAL:9, 1.5
+		CASE IS <= 1000
+			TIMES LOCAL:9, 1.0
+		CASE IS <= 2500
+			TIMES LOCAL:9, 0.5
+	ENDSELECT
+	;服従関連素質所持は溜まりにくい補正
+	SIF TALENT:服従
+		TIMES LOCAL:9, 0.8
+	;隷属
+	SIF TALENT:隷属
+		TIMES LOCAL:9, 0.75
+	;[売春中毒]持ちだとストレスは激減
+	SIF TALENT:売春中毒
+		TIMES LOCAL:9, 0.1
+	IF LOCAL:9 > 0
+		CFLAG:ストレス += LOCAL:9
+		SIF TALENT:MASTER:998
+			PRINTFORML ストレス＋{LOCAL:9, 4, LEFT}
+	ENDIF
+
+ENDIF ;エロ系の経験全共通
+
+
+;否定の珠(反発刻印持ちなら意にそぐわないことをさせられたので)
+SIF !TFLAG:202 && MARK:反発刻印
+	CALL COMMON_UP_JUEL, TARGET, 100, ((750-LOCAL:2/2)*MARK:反発刻印+RAND:100), 0
+
+;売春経験
+IF TFLAG:202
+	SIF !EXP:売春経験
+		LOCAL:11 += 1
+	;異常経験
+	CALL COMMON_UP_EXP, TARGET, 50, LOCAL:11, 0
+	CALL COMMON_UP_EXP, TARGET, 76, LOCAL+RAND:3, 0
+ENDIF
+
+;教育経験
+IF LOCAL:7 == 2
+	SELECTCASE EXP:教育経験
+	CASE IS >= EXPLV:1
+		LOCAL:6 = 1
+	CASE IS >= EXPLV:2
+		LOCAL:6 = 2
+	CASE IS >= EXPLV:3
+		LOCAL:6 = 3
+	CASE IS >= EXPLV:4
+		LOCAL:6 = 4
+	CASE IS >= EXPLV:5
+		LOCAL:6 = 5
+	ENDSELECT
+	LOCAL:5 = LOCAL:6 + 1 + RAND:5
+	TIMES LOCAL:5, 0.50
+	CALL COMMON_UP_EXP, TARGET, 75, MAX(LOCAL:5, 1), 0
+ENDIF
+
+;歌唱経験
+IF LOCAL:7 == 3
+	SELECTCASE EXP:歌唱経験
+	CASE IS >= EXPLV:1
+		LOCAL:6 = 1
+	CASE IS >= EXPLV:2
+		LOCAL:6 = 2
+	CASE IS >= EXPLV:3
+		LOCAL:6 = 3
+	CASE IS >= EXPLV:4
+		LOCAL:6 = 4
+	CASE IS >= EXPLV:5
+		LOCAL:6 = 5
+	ENDSELECT
+	LOCAL:5 = LOCAL:6 + 1 + RAND:5
+	TIMES LOCAL:5, 0.50
+	CALL COMMON_UP_EXP, TARGET, 73, MAX(LOCAL:5, 1), 0
+ENDIF
+
+;工作経験
+LOCAL:6 = MIN(ABL:工作技能, 5)
+LOCAL:5 = LOCAL:6 + 1 + RAND:5
+TIMES LOCAL:5, 0.50
+CALL COMMON_UP_EXP, TARGET, 74, MAX(LOCAL:5, 1), 0
+
+IF TFLAG:202
+	CALL WORKING_CHECK_JUELGET, TARGET, LOCAL
+	SIF ((LOCAL:8*LOCAL*ABL:Ｃ感覚/6)+(LOCAL:8*LOCAL*ABL:Ｖ感覚/3)+(LOCAL:8*LOCAL*ABL:Ａ感覚/4)+(LOCAL:8*LOCAL*ABL:Ｂ感覚/5))/15 > 0
+		CALL PROSTITUTION_PREGNANCY_CHECK2, TARGET
+ENDIF
+
+TFLAG:202 = 0
+TFLAG:203 = 0
+TFLAG:403 = 0
+
+WAIT
+
+;-------------------------------------------------
+;珠取得処理
+;-------------------------------------------------
+;従順が高くないとガンガン溜まっていきます
+;従順が高くても溜まるのは溜まります
+@WORKING_CHECK_JUELGET, ARG, ARG:1
+;[求愛依存]または[売春中毒]だと「反転する」
+IF TALENT:ARG:求愛依存 || TALENT:ARG:売春中毒
+	CALL COMMON_UP_JUEL, ARG, 12, CALC_WORKING_JUELGET_BASIC(ARG, ARG:1) / 100, 0
+;否定の珠
+ELSE
+	CALL COMMON_UP_JUEL, ARG, 100, CALC_WORKING_JUELGET_BASIC(ARG, ARG:1), 0
+ENDIF
+
+;………………………………………………
+;珠の入手量計算
+;………………………………………………
+@CALC_WORKING_JUELGET_BASIC(ARG, ARG:1)
+#FUNCTION
+LOCAL:10 = ARG:1 * 5
+LOCAL:10 *= MAX(6 - ABL:ARG:従順 + MARK:反発刻印, 1)
+LOCAL:10 *= MAX(6 - ABL:ARG:従順 + MARK:反発刻印, 1)
+
+;対多人数補正
+SIF ARG:1 >= 10
+	TIMES LOCAL:10 , 1.25
+;[恋慕]
+SIF TALENT:ARG:恋慕
+	TIMES LOCAL:10 , 1.20
+;[相愛]
+SIF TALENT:ARG:相愛
+	TIMES LOCAL:10 , 2.50
+;[嫉妬]
+SIF TALENT:ARG:嫉妬
+	LOCAL:10 *= 100
+
+;処女を襲って奪われた場合
+SIF TFLAG:403 & 4 && TALENT:ARG:娼婦 == 0
+	LOCAL:10 *= 3
+;娼婦状態で処女を売った場合
+SIF TFLAG:403 & 4 && TALENT:ARG:娼婦
+	LOCAL:10 *= 2
+
+;素質補正
+LOCAL:10 = (LOCAL:10 * SPRING_TALENTCHECK(ARG)) / 100
+
+;[娼婦]
+SIF TALENT:ARG:娼婦
+	TIMES LOCAL:10 , 0.80
+;[春の人]
+SIF TALENT:ARG:春の人
+	TIMES LOCAL:10 , 0.75
+;[看板娘]
+SIF TALENT:ARG:看板娘
+	TIMES LOCAL:10 , 0.80
+;服従関連素質所持は溜まりにくい補正
+SIF TALENT:ARG:服従
+	TIMES LOCAL:10, 0.8
+;隷属
+SIF TALENT:ARG:隷属
+	TIMES LOCAL:10, 0.75
+;場数が多いと何とやら
+SELECTCASE EXP:ARG:売春経験
+	CASE IS >= 2500
+		TIMES LOCAL:10 , 0.25
+	CASE IS >= 1000
+		TIMES LOCAL:10 , 0.50
+	CASE IS >= 500
+		TIMES LOCAL:10 , 0.75
+	CASE IS >= 200
+		TIMES LOCAL:10 , 0.90
+ENDSELECT
+
+RETURNF LIMIT(LOCAL:10, 0, 100000)
+
+
+;-------------------------------------------------
+;ファンからのお酒プレゼント判定
+;-------------------------------------------------
+;ARG = 呼び出し元ではLOCAL:3
+@WORKING_PRESENT, ARG
+LOCAL:1 = 1
+ARG /= 75
+IF ARG >= 200
+	LOCAL = RAND:101
+	LOCAL:1 += RAND:3
+ELSEIF ARG >= 160
+	LOCAL = RAND:81
+	LOCAL:1 += RAND:2
+ELSEIF ARG >= 130
+	LOCAL = RAND:51
+	LOCAL:1 += RAND:2
+ELSEIF ARG >= 100
+	LOCAL = RAND:21
+ELSE
+	LOCAL = RAND:11
+ENDIF
+;神便鬼毒酒
+IF LOCAL >= 80
+	LOCAL:2 = 605
+;スピリタス
+ELSEIF LOCAL >= 60
+	LOCAL:2 = 604
+;大吟醸酒
+ELSEIF LOCAL >= 40
+	LOCAL:2 = 603
+;ワイン
+ELSEIF LOCAL >= 20
+	LOCAL:2 = 602
+;ビール
+ELSEIF LOCAL >= 10
+	LOCAL:2 = 601
+;カルーア
+ELSE
+	LOCAL:2 = 600
+ENDIF
+;対象が[鬼]で神便鬼毒酒を貰う場合はスピリタスに変更
+SIF TALENT:鬼 && LOCAL:2 == 605
+	LOCAL:2 = 604
+
+;99個が限界
+SIF ITEM:(LOCAL:2) + LOCAL:1 > 99
+	LOCAL:1 = 99 - ITEM:(LOCAL:2)
+SIF LOCAL:1 < 1
+	RETURN 0
+
+;工作でプレゼントゲット時の口上・地の文の表示
+;CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 453
+
+PRINTFORMW %ITEMNAME:(LOCAL:2)%を{LOCAL:1}本手に入れた
+ITEM:(LOCAL:2) += LOCAL:1

@@ -1,0 +1,238 @@
+キャラ番号,キャラ名,プロンプト,ネガティブ,目の色,メモ
+1000,あなた,gentlemen,,,色移りの問題があるため、目の色はモデルで対応できているなら無指定推奨。
+1001,霊夢,hakurei reimu,,,
+1002,魔理沙,"kirisame marisa,blonde hair,witch's black hat",,,
+1003,ルーミア,"rumia,blonde hair","tied hair,twintail,side tail",red,髪を結ぶ頻度が高いのでネガ必須
+1004,大妖精,"touhou,(((daiyousei))),green hair",,yellow,違う人が出やすい。謎衣装を着やすい。
+1005,チルノ,"cirno,blue hair",,,
+1006,美鈴,"hong meiling,red hair",,,
+1007,小悪魔,"tohou, koakuma,red hair",,,不安定
+1008,パチュリー,"patchouli knowledge,hat",twintails,,
+1009,咲夜,"izayoi sakuya,silver hair",,,
+1010,レミリア,"remilia scarlet,zun hat","(pink hair),red hair",,
+1011,フラン,"flandre scarlet,zun hat,blonde hair",,,hatがあると衣装が安定する
+1012,レティ,"touhou,(((Letty Whiterock))),medium hair",,,打率低め。名前だけで雰囲気は出るがそこから固められない。zun hatなどで帽子に言及するとクソデカ帽子になりがち。
+1013,橙,"touhou,(Chen),cat ear,brown hair,very short hair,red cloth",,,
+1014,アリス,"alice margatroid,blonde hair,headband","(tied hair),(twintails),bunny ears headband,animal ears",,
+1015,リリーＷ,"touhou, (Lily White:1.3),blonde hair,(white cape with big ribbon),white hat with red ribbon,white cloth,fairy wings",,,安定しない。名前で要素を拾ってくれてる気がしない
+1016,リリカ,"Lyrica Prismriver,Lyrica,brown hair,white collared shirt,long sleeves,red vest",ribbon,brown,キャラ名は全く効かない。茶髪赤服の女でしかない
+1017,メルラン,"Merlin Prismriver,Merlin,white blue hair,Bedhead,(wavy hair:1.2),waby bangs, pink vest, white collared shirt,long sleeves,",ribbon,blue,髪型無理。服もかなり無理がある
+1018,ルナサ,"(Lunasa Prismriver,Lunasa:1.2),blonde hair,extra short bob cut,white long sleeves,black vest",ribbon,yellow,三姉妹中では最もキャラ名認識されてるっぽいが打率が低すぎる。touhouやzun hatを強めると純狐の要素が生える
+1019,妖夢,"konpaku youmu,silver hair",,,white spiritとか書いても半霊は出なかった
+1020,幽々子,"saigyouji yuyuko,pink hair,zun hat",blue hair,,
+1021,藍,"(Yakumo Ran:1.2), tabard, zun hat,[fox tails]",,,キャラデザが情報過多なのか、ウェイトを上げると絵柄を壊されがち
+1022,紫,"Yakumo Yukari, zun hat with red ribbon","animal tails,fox tails",,尻尾生えがち
+1023,萃香,"(Ibuki Suika:1.1),light brown hair,horns of oni,child, no sleeve white shirt,red ribbon,shoulders,handcuffs",,,紫の服になりがち
+1024,リグル,"Wriggle Nightbug,antennae,green hair",,,名前だけでもかなり安定する
+1025,ミスティア,"Mystia Lorelei,pink hair,hat",,,よく学習されているが帽子が不安定
+1026,慧音,"Kamishirasawa Keine,silver hair,blue headwear with red ribbon,blue clothes","tied hair,twintail",,惜しいところまで来てるが別人になりやすい
+1027,てゐ,"(Inaba Tewi),black hair,white lop-eared,pink cloth",,,高い頻度で別人になる。髪の長さが不安定。にんじんアクセは巨大化して暴れるので外した
+1028,鈴仙,"Reisen Udongein Inaba,pink hair,dressed shirt,red tie",,,夏服の方が自然に半脱ぎになりやすい。たまにブレザーも着る
+1029,永琳,"(Yagokoro Eirin),silver hair,long sigle braid,blue nurse cap",,,服装が無理
+1030,輝夜,"Houraisan Kaguya,black hair,pink kimono",,,衣装の解釈がなかなか合わない
+1031,妹紅,Fujiwara no Mokou,,,
+1032,文,"Shameimaru Aya,black hair,touhou",,,AIはtouhou＝文ボンボンだと思っている節があるが、文本人には有用
+1033,メディスン,"(Medicine Melancholy),blonde hair,wavy hair,large red ribbon on top of head","twintails,tied hair",,諦め。似た感じにもならない。
+1034,幽香,"Kazami Yuuka,green hair,red plaid vest,long sleeves",,,髪は安定、服は指定しないと裸族だがred plaidでそれらしいのを着る。若干違う感はある
+1035,小町,"(Onozuka Komachi:1.2),%高身長%,oriental dress,blue and white dress,white sleeves,touhou,red hair",,,服装をもっと詳細に記述できれば学習データを引き出せそうな手ごたえはある
+1036,映姫,"Shiki Eiki,Yamaxanadu,green hair",,,補正しないとやたら長髪になる、冠がいまいち不安定だが何と表現したらいいんだ
+1037,静葉,"(Aki Shizuha),blonde hair",,,諦め
+1038,穣子,"(Aki Minoriko),blonde hair",,,諦め
+1039,雛,"(Kagiyama Hina:1.3),green hair,red ribbon,touhou",,,名前強調でだいぶ寄せられる。崩れやすいので油断できない
+1040,にとり,"Kawashiro Nitori,blue hair,hat",,,帽子をかぶせると光学迷彩スーツも着るようになった
+1041,椛,"Inubashiri Momiji,white hair,touhou",,,名前だけで髪色以外は十分
+1042,早苗,"Kochiya Sanae,green hair",,,
+1043,神奈子,"(Yasaka Kanako:1.2),purple hair,%高身長%",,,名前で8割正解までいくが違和感あり
+1044,諏訪子,"(Moriya Suwako:1.2),suwako,touhou,blonde hair,brown hat with eyeballs",,,だいぶわかってる感は出してくるものの惜しい感じで安定しない
+1045,サニー,"Sunny Milk,light brown hair,fairy wings",,,三月精は諦め
+1046,ルナ,"Luna Child,blonde hair,fairy wings",,,
+1047,スター,"Star Sapphire,black hair,fairy wings,blue ribbon",,,
+1048,阿求,"Hieda no Akyuu,(Akyuu),green Kimono,yellow sleeves,purple hair,white flower on hair,",,,袖の色さえ合えば阿求と言い張れるんだけど
+1049,蓮子,"Usami Renko,black hair,hat",,,
+1050,メリー,"Maribel Hearn,blonde hair,hat",,,
+1051,衣玖,"(Nagae Iku:1.3),purple hair,black hat with large red ribbon",,,60点から先に進まない感じ
+1052,天子,"(Hinanawi Tenshi),deep blue hair,hat with peach",,,ツインテ天子かわいい　帽子を脱いでも葉っぱは取れない
+1053,豊姫,Watatsuki no Toyohime,,,出せる気がしない
+1054,依姫,Watatsuki no Yorihime,,,出せる気がしない
+1055,レイセン,Reisen,,,名前で出る
+1056,リリーブラック,Lily Black,,,
+1057,キスメ,"(Kisume),green hair,twintails,plain white yukata",,,赤い髪留めはちゃんと出てくる。着物がplainじゃないとらしくならない
+1058,ヤマメ,Kurodani Yamame,,,カスりもしない
+1059,パルスィ,Mizuhashi Parsee,,,謎に学習度が高い
+1060,勇儀,"Hoshiguma Yuugi,single horn,%高身長%,blonde hair",double horn,,ちゃんと記述すれば出せそう
+1061,さとり,"Komeiji Satori,pink hair",,,サードアイまで完璧
+1062,お燐,"Kaenbyou Rin,red hair",,,
+1063,おくう,"(Reiuji Utsuho:1.2),black hair,green ribbon",,,空→おくうに書き換え
+1064,こいし,"(Komeji Koishi:1.2),white green hair,hat",,,whiteもgreenもコレジャナイ感があったがwhite greenでいいのかー。帽子つけないと黄色いリボンが頭につく
+1065,半霊,Hanrei,,,
+1066,上海人形,Shanghai Doll,,,
+1067,蓬莱人形,Hourai Doll,,,
+1068,朱鷺子,"Unnamed Book-Reading Youkai,Tokiko",,,
+1069,霖之助,Morichika Rinnosuke,,,
+1070,妖忌,Konpaku Youki,,,
+1071,ナズーリン,"Nazrin,gray hair",,,星蓮船は白蓮以外全滅に近い　次点でぬえ、ナズ
+1072,小傘,"Tatara Kogasa,Kogasa,blue hair",,,
+1073,一輪,"Kumoi Ichirin,Ichirin,blue hair,(Buddhist,kesa),hood",,,
+1074,雲山,Unzan,,,
+1075,ムラサ,"Murasa Minamitsu,Murasa,black hair",,,
+1076,星,"Toramaru Shou,yellow hair,tiger hair",,,
+1077,白蓮,"Hijiri Byakuren,Byakuren,gradation hair",,,髪色が2割くらい失敗する
+1078,ぬえ,"(Houjuu Nue),(nue),black hair",,,後ろのアレは書かなくても出るが、記述出来たらもっと安定しそう。顔面デザインにキャラクター性がないコスプレ黒髪女
+1079,はたて,"Himekaidou Hatate,Hatate,brown hair, twintails, tokin hat,short sleeves shirt,purple necktie",,,だいたい合ってるけどなんか違う子が安定して出てくる
+1080,華扇,"Ibaraki Kasen,pink_hair, two chignons on the head, double bun, (whole right arm bandage)",two horns in head,,
+1081,響子,Kasodani Kyouko,,,
+1082,芳香,Miyako Yoshika,,,
+1083,青娥,Kaku Seiga,,,
+1084,屠自古,"Soga no Tojiko,(tojiko),(ghost tail), tate eboshi,ghost girl with no legs",feet,,足
+1085,布都,"Mononobe no Futo,(futo), tate eboshi,gray hair",,,わりと良好
+1086,神子,"Toyosatomimi no Miko,(touhou),headphone",,,巫女成分が入る
+1087,マミゾウ,Futatsuiwa Mamizou ,,,
+1088,大江戸人形,,,,
+1089,ゴリアテ人形,,,,
+1090,レイラ,Leira Prismriver,,,
+1091,半霊(忌),,,,
+1092,麟,Rin Satsuki,,,
+1093,小鈴,"Motoori Kosuzu,kosuzu,checkered kimono ,checkered clothes,hair bell, yellow apron",,,
+1094,こころ,"Hata no Kokoro, (mask),fox mask on head","animal girl,animal ear",,
+1095,わかさぎ姫,"Wakasagihime,mermaid lower body,kimono",,,
+1096,赤蛮奇,Sekibanki,,,
+1097,影狼,Imaizumi Kagerou,,,
+1098,弁々,Tsukumo Benben,,,
+1099,八橋,Tsukumo Yatsuhashi,,,
+1100,正邪,Kijin Seija,,,
+1101,針妙丸,Sukuna Shinmyoumaru,,,
+1102,雷鼓,Horikawa Raiko,,,
+1103,菫子,Usami Sumireko,,,
+1104,清蘭,,,,
+1105,鈴瑚,,,,
+1106,ドレミー,,,,
+1107,サグメ,,,,
+1108,クラウン,,,,
+1109,純狐,,,,
+1110,ヘカーティア,,,,
+1111,嫦娥,,,,
+"	;2000番台〜旧作キャラ",,,,,
+2000,魅魔,,,,
+2001,里香,,,,
+2002,明羅,,,,
+2003,エレン,,,,
+2004,小兎姫,,,,
+2005,カナ,,,,
+2006,理香子,,,,
+2007,ちゆり,,,,
+2008,夢美,,,,
+2009,オレンジ,,,,
+2010,くるみ,,,,
+2011,エリー,,,,
+2012,夢月,,,,
+2013,幻月,,,,
+2014,サラ,,,,
+2015,ルイズ,,,,
+2016,ユキ,,,,
+2017,マイ,,,,
+2018,夢子,,,,
+2019,神綺,,,,
+2020,シンギョク,,,,
+2021,ユウゲンマガン,,,,
+2022,エリス,,,,
+2023,サリエル,,,,
+2024,キクリ,,,,
+2025,コンガラ,,,,
+2026,中天使,,,,
+2027,る〜こと,,,,
+"	;西方キャラ",,,,,
+2028,ＶＩＶＩＴ,,,,
+2029,比良乃,,,,
+2030,ミリア,,,,
+;2031,めい,,,,
+;2032,まい,,,,
+;2033,ゲイツ,,,,
+2034,マリー,,,,
+;2035,エーリッヒ,,,,
+2036,ビビット,,,,
+;2037,モーガン,,,,
+;2038,ミューズ,,,,
+"	;黄昏キャラ",,,,,
+2039,伊佐美,,,,
+2040,辰巳,,,,
+2041,ルミ,,,,
+2042,天治,,,,
+"	;2045〜特殊枠",,,,,
+2046,娼館のお客さん,,,,
+2048,息子,,,,
+2049,娘,,,,
+"	;3000番台〜名無しキャラ他",,,,,
+3000,ひまわり妖精,,,,
+3001,メイド妖精,,,,
+3002,赤妖精,,,,
+3003,青妖精,,,,
+3004,緑妖精,,,,
+3005,黄妖精,,,,
+3006,ゾンビフェアリー,,,,
+3007,黒ひまわり妖精,,,,
+3008,黒メイド妖精,,,,
+3009,朱妖精,,,,
+3010,蒼妖精,,,,
+3011,翠妖精,,,,
+3012,金妖精,,,,
+3013,黒呪精,,,,
+3014,地上の兎,,,,
+3015,里の人間,,,,
+3016,アリスの人形,,,,
+3017,魔界人,,,,
+3018,鴉天狗,,,,
+3019,白狼天狗,,,,
+3020,ここぁ,,,,
+3021,夜雀,,,,
+3022,地獄鴉,,,,
+3023,亡霊,,,,
+3024,河童,,,,
+3025,旧都鬼,,,,
+3026,地獄鬼,,,,
+3027,死神,,,,
+3028,玉兎,,,,
+3029,天人,,,,
+3030,化け猫,,,,
+3031,化け狐,,,,
+3032,化け鼠,,,,
+3033,仙人,,,,
+3034,吸血鬼,,,,
+3035,人魚,,,,
+3036,人狼,,,,
+3037,小人,,,,
+"	;4000番台〜オリキャラ系の枠",,,,,
+4000,メイベル,,,,
+4001,アリオーシュ,,,,
+4002,ユナ,,,,
+4003,キナコ,,,,
+4004,烈美鈴,,,,
+4005,ミルル,,,,
+4006,蝶子,,,,
+4007,みとり,,,,
+4008,則紗,,,,
+4009,天則,,,,
+4010,深疫,,,,
+4011,華蓮,,,,
+4012,閃,,,,
+4013,タト,,,,
+4014,映華,,,,
+4015,シュガーサテラ,,,,
+4016,琳華,,,,
+4017,大天狗,,,,
+4100,暮雪,,,,
+"	;5000番台〜IRCネタ関係(展示品表示に支障をきたすので伏字解除)",,,,,
+5000,ＩＲＣあなた,,,,
+5001,触手娘,,,,
+5002,ドリアード,,,,
+5003,リリーグレイ,,,,
+5020,Ｓひまわり妖精,,,,
+5021,Ｇゾンビフェアリー,,,,
+5022,Ｏメイド妖精,,,,
+5023,ロイヤルフレア,,,,
+5024,サイレントセレナ,,,,
+5025,アグニシャイン,,,,
+5026,Ｐウンディネ,,,,
+5027,シルフィホルン,,,,
+5028,メタルファティーグ,,,,
+5029,レイジィトリリトン,,,,
+5097,地獄子,,,,

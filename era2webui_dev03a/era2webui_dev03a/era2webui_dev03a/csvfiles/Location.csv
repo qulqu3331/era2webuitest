@@ -1,0 +1,26 @@
+﻿名称,プロンプト,ネガティブ,備考
+調教部屋,in bedroom,,基本的にこの背景で描画される
+,,,
+,,,
+,,,
+,,,
+お風呂場,"in bathroom,(naked,completely unclothed,soaked:1.3),no headwear,<lora:modernOFUROInJapanese_v1:1>,JMF, indoors, window, reflection, bathroom, scenery","(cloth,hat,headwear:1.3)",現代日本の風呂Lora
+,,,
+,,,
+,,,
+,,,野外のプロンプトは適当に埋めた
+yagai0,"outdoor,in courtyard","door,bed,sheet,pillow",家の中庭
+yagai1,"outdoor,In the woods,(Japanese Shrine precincts)","door,bed,sheet,pillow",博麗神社
+yagai2,"outdoor,There is a red western house in the distance","door,bed,sheet,pillow",紅魔館
+yagai3,"outdoor,Well-maintained traditional Japanese garden","door,bed,sheet,pillow",冥界
+yagai4,"outdoor,in the bamboo grove,((bamboo))","door,bed,sheet,pillow",竹林
+yagai5,"outdoor,(The whole area is covered with Red spider lily),(((Red spider lily frower)))","door,bed,sheet,pillow",彼岸
+yagai6,"outdoor,In the mountains.","door,bed,sheet,pillow",妖怪の山
+yagai7,"outdoor,In the streets of Edo,Lots of dimly glowing lanterns","door,bed,sheet,pillow",旧地獄市街
+yagai8,"outdoor,in the forest","door,bed,sheet,pillow",妖精の森
+yagai9,"outdoor,Alpine rock face,sky,above the clouds,(clouds:1.2)","(trees,plants,sea),door,bed,sheet,pillow",有頂天
+yagai10,"outdoor,In the sunflower field,(((sunflower)))","door,bed,sheet,pillow",太陽の畑
+yagai11,"outdoor,Ancient Chinese capital city streets","door,bed,sheet,pillow",月の都
+yagai12,"outdoor,(in hell)","door,bed,sheet,pillow",魔界
+yagai99,"outdoor,In a traditional Japanese Farming Village","door,bed,sheet,pillow",人里
+yagai831,"outdoor,in courtyard","door,bed,sheet,pillow",あなた館
