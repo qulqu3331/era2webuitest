@@ -1,0 +1,8 @@
+requests
+watchdog
+httpx
+tqdm
+pandas
+selenium
+Pillow
+random
