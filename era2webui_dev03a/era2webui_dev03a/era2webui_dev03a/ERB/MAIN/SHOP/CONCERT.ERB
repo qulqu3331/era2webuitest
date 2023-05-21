@@ -1,0 +1,2517 @@
+﻿;≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+;野外ライブ関連の処理
+;≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
+;=============================================================================
+;野外ライブ実行処理
+;=============================================================================
+;奴隷に歌を歌わせてチケットを売るオプション。
+;最初の関数では野外ライブ成功判定を行う
+;-------------------------------------------------
+;成功判定
+;-------------------------------------------------
+;TFLAG:236 = トリオライブフラグ
+;TFLAG:237 = トリオの３人目
+;LOCAL:1 = 実行値
+;LOCAL:2 = 難易度基準値
+@CONCERT_JUDGE
+TFLAG:235 = 0
+VARSET LOCAL, 0
+TFLAG:236 = CHECK_TRIO()
+;トリオの３人目が[吸血鬼]持ちである場合で、昼間のターンの場合には特注日傘の必要がある
+SIF TFLAG:236 != 0 && TALENT:(TFLAG:237):205 && TIME == 0 && ITEM:特注日傘 == 0
+	TFLAG:236 = 0
+;ここまでやっておいてトリオライブの確率は20%
+SIF RAND:5 != 0
+	TFLAG:236 = 0
+;トリオライブフラグON
+SIF TFLAG:236 != 0
+	CFLAG:151 |= 8
+
+;ABL:歌唱技能
+IF ABL:歌唱技能 == 0
+	LOCAL:1 = 0
+ELSEIF ABL:歌唱技能 == 1
+	LOCAL:1 = 1
+ELSEIF ABL:歌唱技能 == 2
+	LOCAL:1 = 2
+ELSEIF ABL:歌唱技能 == 3
+	LOCAL:1 = 4
+ELSEIF ABL:歌唱技能 == 4
+	LOCAL:1 = 7
+ELSE
+	LOCAL:1 = 10
+ENDIF
+
+;EXP:歌唱経験をみる
+IF EXP:歌唱経験 < EXPLV:1
+	LOCAL:1 += 1
+ELSEIF EXP:歌唱経験 < EXPLV:2
+	LOCAL:1 += 2
+ELSEIF EXP:歌唱経験 < EXPLV:3
+	LOCAL:1 += 4
+ELSEIF EXP:歌唱経験 < EXPLV:4
+	LOCAL:1 += 7
+ELSEIF EXP:歌唱経験 < EXPLV:5
+	LOCAL:1 += 10
+ELSE
+	LOCAL:1 += 15
+ENDIF
+
+;ABL:露出癖をみる
+IF ABL:露出癖 < 2
+	LOCAL:1 += 1
+ELSEIF ABL:露出癖 < 4
+	LOCAL:1 += 4
+ELSE
+	LOCAL:1 += 9
+ENDIF
+
+;臆病
+SIF TALENT:臆病
+	LOCAL:1 -= 2
+;自制心
+SIF TALENT:自制心
+	LOCAL:1 += 1
+;好奇心
+SIF TALENT:好奇心
+	LOCAL:1 += 1
+;目立ちたがり
+SIF TALENT:目立ちたがり
+	LOCAL:1 += 2
+;抑圧
+IF TALENT:抑圧
+	LOCAL:1 -= 1
+;解放
+ELSEIF TALENT:解放
+	LOCAL:1 += 1
+ENDIF
+;恥じらい
+IF TALENT:恥じらい
+	LOCAL:1 -= 1
+;恥薄い
+ELSEIF TALENT:恥薄い
+	LOCAL:1 += 2
+ENDIF
+
+;EASYでないなら作り手の体力消耗、気力消耗、酔い、ストレスによるマイナス補正がある
+IF FLAG:3 != 1
+	;体力消耗状態
+	SIF MAXBASE:0 > 0 && (100 * BASE:体力) / MAXBASE:0 <= 25
+		LOCAL:1 -= 1
+	;気力消耗状態
+	SIF MAXBASE:1 > 0 && (100 * BASE:気力) / MAXBASE:1 <= 25
+		LOCAL:1 -= 1
+	;酔っている
+	SIF MAXBASE:8 > 0 && (100 * BASE:酔い) / MAXBASE:8 >= 80
+		LOCAL:1 -= 2
+
+	;ストレスが10000以上
+	IF CFLAG:ストレス >= 10000
+		LOCAL:1 -= 2
+	;ストレスが1000以上
+	ELSEIF CFLAG:ストレス >= 1000
+		LOCAL:1 -= 1
+	ENDIF
+ENDIF
+
+LOCAL:1 = MAX(LOCAL:1, 0)
+
+;鼓舞
+IF TALENT:鼓舞
+	LOCAL:1 += 1 + RAND:15
+ELSE
+	LOCAL:1 += 1 + RAND:10
+ENDIF
+
+;難易度基礎値
+LOCAL:2 = 20
+
+;トリオボーナス
+IF TFLAG:236 & 1
+	LOCAL:2 -= 2
+ELSEIF TFLAG:236 & 2
+	LOCAL:2 -= 1
+ELSEIF TFLAG:236 & 4
+	LOCAL:2 -= 2
+ELSEIF TFLAG:236 & 8
+	LOCAL:2 -= 1
+ENDIF
+
+;相愛
+IF TALENT:相愛
+	LOCAL:2 += RAND:11
+;恋慕、親愛
+ELSEIF TALENT:恋慕 || TALENT:親愛
+	LOCAL:2 += RAND:16
+ELSE
+	LOCAL:2 += RAND:21
+ENDIF
+;場馴れしていると難易度ダウン
+IF EXP:歌唱経験 > EXPLV:5
+	LOCAL:2 -= 5
+ELSEIF EXP:歌唱経験 > EXPLV:4
+	LOCAL:2 -= 3
+ELSEIF EXP:歌唱経験 > EXPLV:3
+	LOCAL:2 -= 1
+ENDIF
+
+;キャラによって難易度変化
+;[音感]持ち
+SIF TALENT:音感
+	LOCAL:2 -= 5
+IF ASSI >= 0
+	;助手に[音感]持ちがいると難易度低下
+	SIF TALENT:ASSI:音感
+		LOCAL:2 -= 3
+	;助手が[鼓舞]持ちまたは歌唱技能Lv5以上だと難易度低下
+	SIF TALENT:ASSI:鼓舞
+		LOCAL:2 -= 1
+	SIF ABL:ASSI:歌唱技能 >= 5
+		LOCAL:2 -= 1
+ENDIF
+;[音痴]持ち
+SIF TALENT:音痴
+	LOCAL:2 += 2
+;[喘息]か[求聞持]持ち
+SIF TALENT:喘息 || TALENT:求聞持
+	LOCAL:2 += 3
+
+IF LOCAL:1 < LOCAL:2
+	;失敗
+	CALL CONCERT_FAILURE
+ELSE
+	;成功
+	CALL CONCERT_SUCCESS
+ENDIF
+
+TFLAG:154 = 1
+TFLAG:99 = 0
+;休憩フラグを立てる
+FLAG:0 = 1
+BEGIN TURNEND
+
+RETURN 1
+
+;-------------------------------------------------
+;野外ライブ失敗
+;-------------------------------------------------
+@CONCERT_FAILURE
+;TFLAG:236 = トリオライブフラグ (旧V)
+;TFLAG:237 = トリオの３人目(旧W)
+;LOCAL   = 値段補正(旧L)
+;LOCAL:1 = 値段の基礎(旧N)
+;LOCAL:2 = 値段そのもの(旧M)
+;LOCAL:3 = 乱数処理用(旧P)
+;LOCAL:4 = 習得の珠増加量(旧O)
+CALL OUTPUT_TXT("ライブ失敗")
+VARSET LOCAL, 0
+LOCAL:1 = 10
+
+;ABL:歌唱技能をみる
+IF ABL:歌唱技能 == 0
+	LOCAL = 5
+ELSEIF ABL:歌唱技能 == 1
+	LOCAL = 10
+ELSEIF ABL:歌唱技能 == 2
+	LOCAL = 15
+ELSEIF ABL:歌唱技能 == 3
+	LOCAL = 20
+ELSEIF ABL:歌唱技能 == 4
+	LOCAL = 25
+ELSE
+	LOCAL = 30
+ENDIF
+
+;ABL:露出癖をみる
+IF ABL:露出癖 == 0
+	TIMES LOCAL , 0.70
+ELSEIF ABL:露出癖 == 1
+	TIMES LOCAL , 0.90
+ELSEIF ABL:露出癖 == 2
+	TIMES LOCAL , 1.00
+ELSEIF ABL:露出癖 == 3
+	TIMES LOCAL , 1.10
+ELSEIF ABL:露出癖 == 4
+	TIMES LOCAL , 1.30
+ELSE
+	TIMES LOCAL , 1.50
+ENDIF
+
+;EXP:歌唱経験をみる
+IF EXP:歌唱経験 < EXPLV:1
+	TIMES LOCAL , 0.80
+ELSEIF EXP:歌唱経験 < EXPLV:2
+	TIMES LOCAL , 1.00
+ELSEIF EXP:歌唱経験 < EXPLV:3
+	TIMES LOCAL , 1.20
+ELSEIF EXP:歌唱経験 < EXPLV:4
+	TIMES LOCAL , 1.40
+ELSEIF EXP:歌唱経験 < EXPLV:5
+	TIMES LOCAL , 1.70
+ELSE
+	TIMES LOCAL , 2.00
+ENDIF
+
+;トリオ補正
+IF TFLAG:236 & 1
+	TIMES LOCAL , 1.80
+ELSEIF TFLAG:236 & 2
+	TIMES LOCAL , 1.50
+ELSEIF TFLAG:236 & 4
+	TIMES LOCAL , 1.80
+ELSEIF TFLAG:236 & 8
+	TIMES LOCAL , 1.50
+ENDIF
+
+;臆病
+SIF TALENT:臆病
+	TIMES LOCAL , 0.80
+;目立ちたがり
+SIF TALENT:目立ちたがり
+	TIMES LOCAL , 1.20
+;献身的
+SIF TALENT:献身的
+	TIMES LOCAL , 1.20
+
+;[音感]
+IF TALENT:音感
+	TIMES LOCAL:1 , 1.50
+;[喘息]、[求聞持]
+ELSEIF TALENT:喘息 || TALENT:求聞持
+	TIMES LOCAL:1 , 0.80
+;[音痴]
+ELSEIF TALENT:音痴
+	TIMES LOCAL:1 , 0.90
+;歌うのが上手そうな方(個人的主観入ってます)
+;咲夜さん、りぐるん、早苗さん
+ELSEIF NO:TARGET == 1009 || NO:TARGET == 1024 || NO:TARGET == 1042
+	TIMES LOCAL:1 , 1.25
+;ゆゆ様、輝夜、神奈子様、ケロちゃん
+ELSEIF NO:TARGET == 1020 || NO:TARGET == 1030 || NO:TARGET == 1039 || NO:TARGET == 1043 || NO:TARGET == 1044
+	TIMES LOCAL:1 , 1.10
+ENDIF
+
+;トリオ補正
+IF TFLAG:236 & 1
+	TIMES LOCAL:1 , 1.20
+ELSEIF TFLAG:236 & 2
+	TIMES LOCAL:1 , 1.10
+ELSEIF TFLAG:236 & 4
+	TIMES LOCAL:1 , 1.20
+ELSEIF TFLAG:236 & 8
+	TIMES LOCAL:1 , 1.10
+ENDIF
+
+PRINTL 
+IF TFLAG:236 & 1
+	PRINTFORMW %CALLNAME:TARGET%たちはプリズムリバー野外ライブを開いた
+ELSEIF TFLAG:236 & 2
+	PRINTFORMW %CALLNAME:TARGET%は三月精による野外ライブを開いた
+ELSEIF TFLAG:236 & 4
+	PRINTFORMW %CALLNAME:TARGET%はやつべんらいこによる野外ライブを開いた
+ELSEIF TFLAG:236 & 8
+	PRINTFORMW %CALLNAME:TARGET%は隠岐奈と二童子による野外ライブを開いた
+ELSE
+	PRINTFORMW %CALLNAME:TARGET%は野外ライブを開いた
+ENDIF
+PRINTL 
+
+;ライブ失敗フラグON
+CFLAG:151 |= 1
+;野外ライブ失敗時の口上・地の文の表示
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 450
+BASE:体力 = MAX(BASE:体力 - MAX(MAXBASE:0 / 3, 450) - LOCAL * 8 / 3, 1)
+BASE:気力 = MAX(BASE:気力 - MAX(MAXBASE:1 / 3, 600) - LOCAL * 5 / 3, 1)
+CFLAG:ストレス += LOCAL * 4
+;助手が[吸血鬼]のときで、昼間のターンの場合、特注日傘がないとライブを手伝わない
+IF ASSI >= 0 && (TALENT:ASSI:吸血鬼 == 0 || TIME == 1 || ITEM:特注日傘)
+	BASE:ASSI:体力 = MAX(BASE:ASSI:体力 - MAX(MAXBASE:ASSI:0 / 3, 450) - LOCAL * 7 / 3, 1)
+	BASE:ASSI:気力 = MAX(BASE:ASSI:気力 - MAX(MAXBASE:ASSI:1 / 3, 600) - LOCAL * 4 / 3, 1)
+	CFLAG:ASSI:ストレス += LOCAL * 2
+	IF TFLAG:236 != 0
+		BASE:(TFLAG:237):0 = MAX(BASE:(TFLAG:237):0 - MAX(MAXBASE:(TFLAG:237):0 / 3, 450) - LOCAL * 7 / 3, 1)
+		BASE:(TFLAG:237):1 = MAX(BASE:(TFLAG:237):1 - MAX(MAXBASE:(TFLAG:237):1 / 3, 600) - LOCAL * 4 / 3, 1)
+		CFLAG:(TFLAG:237):65 += LOCAL * 2
+	ENDIF
+ENDIF
+PRINTFORML %CALLNAME:TARGET%は体力と気力を消耗した。
+LOCAL:3 = MIN(ABL:歌唱技能, 5)
+LOCAL:4 = MAX((LOCAL:3 + RAND:6) / 3, 1)
+;歌唱経験
+CALL COMMON_UP_EXP, TARGET, 73, LOCAL:4, 1
+;助手が[吸血鬼]のときで、昼間のターンの場合、特注日傘がないとライブを手伝わない
+IF ASSI >= 0 && (TALENT:ASSI:吸血鬼 == 0 || TIME == 1 || ITEM:特注日傘)
+	CALL COMMON_UP_EXP, ASSI, 73, (1+RAND:(LOCAL:4)), 0
+	SIF TFLAG:236 != 0
+		CALL COMMON_UP_EXP, TFLAG:237, 73, (1+RAND:(LOCAL:4)), 0
+ENDIF
+PRINTL 
+WAIT
+
+RETURN 1
+
+;-------------------------------------------------
+;野外ライブ成功
+;-------------------------------------------------
+@CONCERT_SUCCESS
+;TFLAG:236 = トリオライブフラグ (旧V)
+;TFLAG:237 = トリオの３人目(旧W)
+;LOCAL   = チケット値段補正(旧L)
+;TFLAG:401 = チケット値段の基礎(旧N)
+;LOCAL:2 = チケット値段そのもの(旧M)
+;LOCAL:3 = 乱数処理用(旧P)
+;LOCAL:4 = 習得の珠増加量(旧O)
+;TFLAG:405 = 歌の種類(旧K)
+;LOCAL:6 = 成功失敗フラグ(旧H)
+;TFLAG:235 = 持ち歌披露フラグ(1で持ち歌披露)
+VARSET LOCAL, 0
+TFLAG:405 = RAND:21
+
+;ABL:歌唱技能をみる
+IF ABL:歌唱技能 == 0
+	LOCAL = 10
+ELSEIF ABL:歌唱技能 == 1
+	LOCAL = 20
+ELSEIF ABL:歌唱技能 == 2
+	LOCAL = 40
+ELSEIF ABL:歌唱技能 == 3
+	LOCAL = 60
+ELSEIF ABL:歌唱技能 == 4
+	LOCAL = 80
+ELSE
+	LOCAL = 100
+ENDIF
+
+;ABL:露出癖をみる
+IF ABL:露出癖 == 0
+	TIMES LOCAL , 0.70
+ELSEIF ABL:露出癖 == 1
+	TIMES LOCAL , 0.90
+ELSEIF ABL:露出癖 == 2
+	TIMES LOCAL , 1.00
+ELSEIF ABL:露出癖 == 3
+	TIMES LOCAL , 1.10
+ELSEIF ABL:露出癖 == 4
+	TIMES LOCAL , 1.30
+ELSE
+	TIMES LOCAL , 1.50
+ENDIF
+
+;EXP:歌唱経験をみる
+IF EXP:歌唱経験 < EXPLV:1
+	TIMES LOCAL , 0.80
+ELSEIF EXP:歌唱経験 < EXPLV:2
+	TIMES LOCAL , 1.00
+ELSEIF EXP:歌唱経験 < EXPLV:3
+	TIMES LOCAL , 1.20
+ELSEIF EXP:歌唱経験 < EXPLV:4
+	TIMES LOCAL , 1.40
+ELSEIF EXP:歌唱経験 < EXPLV:5
+	TIMES LOCAL , 1.70
+ELSE
+	TIMES LOCAL , 2.00
+ENDIF
+
+;トリオ補正
+IF TFLAG:236 & 1
+	TIMES LOCAL , 1.80
+ELSEIF TFLAG:236 & 2
+	TIMES LOCAL , 1.50
+ELSEIF TFLAG:236 & 4
+	TIMES LOCAL , 1.80
+ELSEIF TFLAG:236 & 8
+	TIMES LOCAL , 1.50
+ENDIF
+
+;臆病
+SIF TALENT:臆病
+	TIMES LOCAL , 0.80
+;目立ちたがり
+SIF TALENT:目立ちたがり
+	TIMES LOCAL , 1.20
+;献身的
+SIF TALENT:献身的
+	TIMES LOCAL , 1.20
+;恋慕
+SIF TALENT:恋慕
+	TIMES LOCAL , 2.00
+
+;EASYでないなら作り手の体力消耗、気力消耗、酔い、ストレスによるマイナス補正がある
+IF FLAG:3 != 1
+	;体力消耗状態
+	SIF MAXBASE:0 > 0 && (100 * BASE:体力) / MAXBASE:0 <= 25
+		TIMES LOCAL , 0.90
+	;気力消耗状態
+	SIF MAXBASE:1 > 0 && (100 * BASE:気力) / MAXBASE:1 <= 25
+		TIMES LOCAL , 0.90
+	;酔っている
+	SIF MAXBASE:8 > 0 && (100 * BASE:酔い) / MAXBASE:8 >= 80
+		TIMES LOCAL , 0.50
+
+	;ストレスが10000以上
+	IF CFLAG:ストレス >= 10000
+		TIMES LOCAL , 0.80
+	;ストレスが1000以上
+	ELSEIF CFLAG:ストレス >= 1000
+		TIMES LOCAL , 0.90
+	ENDIF
+ENDIF
+
+;TFLAG:405 = 歌の種類
+IF TFLAG:405 == 0 && ABL:歌唱技能 >= 5
+	;キャラの持ち歌
+	TFLAG:401 += 120
+ELSEIF TFLAG:405 == 1 || TFLAG:405 == 2
+	TFLAG:401 += 100
+ELSEIF TFLAG:405 >= 3 && TFLAG:405 < 6
+	TFLAG:401 += 80
+ELSEIF TFLAG:405 >= 6 && TFLAG:405 < 10
+	TFLAG:401 += 60
+ELSEIF TFLAG:405 >= 10 && TFLAG:405 < 15
+	TFLAG:401 += 40
+ELSE
+	TFLAG:401 += 20
+ENDIF
+
+;相愛
+IF TALENT:相愛
+	TIMES TFLAG:401 , 1.30
+;親愛
+ELSEIF TALENT:親愛
+	TIMES TFLAG:401 , 1.20
+;恋慕
+ELSEIF TALENT:恋慕
+	TIMES TFLAG:401 , 1.10
+ENDIF
+
+;[音感]
+IF TALENT:音感
+	TIMES TFLAG:401 , 1.50
+;[喘息]、[求聞持]
+ELSEIF TALENT:喘息 || TALENT:求聞持
+	TIMES TFLAG:401 , 0.80
+;[音痴]
+ELSEIF TALENT:音痴
+	TIMES TFLAG:401 , 0.90
+;歌うのが上手そうな方(個人的主観入ってます)
+;咲夜さん、りぐるん、早苗さん
+ELSEIF NO:TARGET == 1009 || NO:TARGET == 1024 || NO:TARGET == 1042
+	TIMES TFLAG:401 , 1.25
+;ゆゆ様、輝夜、神奈子様、ケロちゃん
+ELSEIF NO:TARGET == 1020 || NO:TARGET == 1030 || NO:TARGET == 1039 || NO:TARGET == 1043 || NO:TARGET == 1044
+	TIMES TFLAG:401 , 1.10
+;サタデーナイトフィーバーな衣玖さん
+ELSEIF NO:TARGET == 1051 && DAY:7 >= 7 && TIME == 1 && ABL:歌唱技能 >= 5 && TFLAG:405 == 0
+	TIMES TFLAG:401 , 1.10
+ENDIF
+
+IF LOCAL > 300
+	CALL OUTPUT_TXT("ライブ大成功")
+ELSE
+	CALL OUTPUT_TXT("ライブ成功")
+ENDIF
+PRINTL 
+
+IF TFLAG:236 & 1
+	PRINTFORMW %CALLNAME:TARGET%たちはプリズムリバー野外ライブを開いた
+ELSEIF TFLAG:236 & 2
+	PRINTFORMW %CALLNAME:TARGET%は三月精による野外ライブを開いた
+ELSEIF TFLAG:236 & 4
+	PRINTFORMW %CALLNAME:TARGET%はやつべんらいこによる野外ライブを開いた
+ELSEIF TFLAG:236 & 8
+	PRINTFORMW %CALLNAME:TARGET%は隠岐奈と二童子による野外ライブを開いた
+ELSEIF DAY:7 >= 7 && TIME == 1 && ABL:歌唱技能 >= 5 && TFLAG:405 == 0 && NO:TARGET == 1051
+	PRINTFORMW %CALLNAME:TARGET%にステージ上でフィーバーさせてやることにした
+ELSE
+	PRINTFORMW %CALLNAME:TARGET%は野外ライブを開いた
+ENDIF
+PRINTL 
+IF TFLAG:405 == 0 && ABL:歌唱技能 >= 5
+	TFLAG:235 = 1
+	;固有持ち歌披露フラグON
+	CFLAG:151 |= 2
+	;(専用)口上側で定義されている持ち歌が25%の確率で出る
+	IF STRLENS(CSTR:89) > 0 && RAND:4 == 0 && TFLAG:236 == 0
+		TSTR:6 = 『%CSTR:89%』
+		TFLAG:401 -= 40
+		TFLAG:401 += RAND:66
+	;キャラの持ち歌
+	ELSE
+		CALL SPECIAL_SONG, TFLAG:401
+		TFLAG:401 = RESULT
+	ENDIF
+ENDIF
+TFLAG:401 = MAX(TFLAG:401, 10)
+
+;トリオ補正
+IF TFLAG:236 & 1
+	TIMES TFLAG:401 , 1.20
+ELSEIF TFLAG:236 & 2
+	TIMES TFLAG:401 , 1.10
+ELSEIF TFLAG:236 & 4
+	TIMES TFLAG:401 , 1.20
+ELSEIF TFLAG:236 & 8
+	TIMES TFLAG:401 , 1.10
+ENDIF
+
+;アイドル補正
+;魅力
+SIF TALENT:魅力
+	TIMES TFLAG:401 , 1.10
+;魅惑
+SIF TALENT:魅惑
+	TIMES TFLAG:401 , 1.10
+;謎の魅力
+SIF TALENT:謎の魅力
+	TIMES TFLAG:401 , 1.10
+;人気
+SIF TALENT:人気
+	TIMES TFLAG:401 , 1.25
+;鼓舞
+SIF TALENT:鼓舞
+	TIMES TFLAG:401 , 1.30
+
+TFLAG:401 += LOCAL
+
+;野外ライブ成功時の口上・地の文の表示
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 451, TFLAG:401
+TFLAG:405 = 0
+BASE:体力 = MAX(BASE:体力 - MAX(MAXBASE:0 / 3, 450) - LOCAL * 6 / 3, 1)
+BASE:気力 = MAX(BASE:気力 - MAX(MAXBASE:1 / 3, 600) - LOCAL * 4 / 3, 1)
+;助手が[吸血鬼]のときで、昼間のターンの場合、特注日傘がないとライブを手伝わない
+IF ASSI >= 0 && (TALENT:ASSI:吸血鬼 == 0 || TIME == 1 || ITEM:特注日傘)
+	BASE:ASSI:体力 = MAX(BASE:ASSI:体力 - MAX(MAXBASE:ASSI:0 / 3, 450) - LOCAL * 5 / 3, 1)
+	BASE:ASSI:気力 = MAX(BASE:ASSI:気力 - MAX(MAXBASE:ASSI:1 / 3, 600) - LOCAL * 3 / 3, 1)
+	IF TFLAG:236 != 0
+		BASE:(TFLAG:237):0 = MAX(BASE:(TFLAG:237):0 - MAX(MAXBASE:(TFLAG:237):0 / 3, 450) - LOCAL * 5 / 3, 1)
+		BASE:(TFLAG:237):1 = MAX(BASE:(TFLAG:237):1 - MAX(MAXBASE:(TFLAG:237):1 / 3, 600) - LOCAL * 3 / 3, 1)
+	ENDIF
+ENDIF
+PRINTFORML %CALLNAME:TARGET%は体力と気力を消耗した。
+LOCAL:3 = ABL:歌唱技能
+LOCAL:4 = LOCAL:3 + 1 + RAND:5
+;助手が[吸血鬼]のときで、昼間のターンの場合、特注日傘がないとライブを手伝わない
+IF ASSI >= 0 && (TALENT:ASSI:吸血鬼 == 0 || TIME == 1 || ITEM:特注日傘)
+	CALL COMMON_UP_EXP, ASSI, 73, (1+RAND:(LOCAL:4)), 0
+	SIF TFLAG:236 != 0 
+		CALL COMMON_UP_EXP, TFLAG:237, 73, (1+RAND:(LOCAL:4)), 0
+ENDIF
+;歌唱経験
+CALL COMMON_UP_EXP, TARGET, 73, LOCAL:4, 1
+PRINTL 
+LOCAL:2 = (LOCAL + TFLAG:401) / 10
+PRINTFORML %CALLNAME:TARGET%が開いたライブで{LOCAL:2}枚の音楽チケットが売れた。
+LOCAL:3 = MAX(LOCAL:3, 1)
+LOCAL:2 = (LOCAL + TFLAG:401) * (1 + LOCAL:3 + RAND:(LOCAL:3)) / 2
+;HARDモード以上
+IF FLAG:3 >= 3
+	LOCAL:2 = TABLE_CALC(LOCAL:2, 5000, 2)
+	LOCAL:2 = TABLE_CALC(LOCAL:2, 10000, 2)
+	LOCAL:2 = TABLE_CALC(LOCAL:2, 50000, 2)
+	LOCAL:2 = TABLE_CALC(LOCAL:2, 100000, 2)
+ELSE
+	LOCAL:2 = TABLE_CALC(LOCAL:2, 10000, 2)
+	LOCAL:2 = TABLE_CALC(LOCAL:2, 50000, 2)
+ENDIF
+MONEY += LOCAL:2
+PRINTFORMW 売上金({LOCAL:2}圓)
+;--------------------------------------------------
+;野外ライブで稼いだ最高金額判定処理
+MONEY:1 = LOCAL:2
+SIF MONEY:1 > MONEY:972
+	CALL NEW_HIGH_INCOME_ALL, 972
+SIF MONEY:1 > CFLAG:最高金額_工作
+	CALL NEW_HIGH_INCOME_SLAVE, 84
+CALL TOTAL_INCOME_SLAVE, MONEY:1
+;--------------------------------------------------
+;歌唱経験500以上かつライブ大成功時人気を取得
+IF EXP:歌唱経験 >= 500 && TFLAG:401 >= 180 && TALENT:人気 == 0
+	;野外ライブで[人気]取得時の口上・地の文の表示
+	CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 452
+	PRINTFORMW %CALLNAME:TARGET%は[人気]を得た
+	TALENT:人気 = 1
+ENDIF
+;成功するとファンからお酒をプレゼントされる
+SIF TFLAG:401 >= 120 && ITEM:カルーア < 99 && ITEM:ビール < 99 && ITEM:ワイン < 99 && ITEM:大吟醸酒 < 99 && ITEM:スピリタス < 99 && ITEM:神便鬼毒酒 < 99
+	CALL CONCERT_PRESENT, TFLAG:401
+TFLAG:401 = 0
+RETURN 1
+
+;-------------------------------------------------
+;ファンからのお酒プレゼント判定
+;-------------------------------------------------
+;ARG = 成功度合い(旧N)→呼び出し元ではLOCAL:1
+@CONCERT_PRESENT, ARG
+LOCAL:1 = 1
+IF ARG >= 250
+	LOCAL = RAND:101
+	LOCAL:1 += RAND:3
+ELSEIF ARG >= 210
+	LOCAL = RAND:81
+	LOCAL:1 += RAND:2
+ELSEIF ARG >= 180
+	LOCAL = RAND:51
+	LOCAL:1 += RAND:2
+ELSEIF ARG >= 150
+	LOCAL = RAND:21
+ELSE
+	LOCAL = RAND:11
+ENDIF
+;神便鬼毒酒
+IF LOCAL >= 80
+	LOCAL:2 = 605
+;スピリタス
+ELSEIF LOCAL >= 60
+	LOCAL:2 = 604
+;大吟醸酒
+ELSEIF LOCAL >= 40
+	LOCAL:2 = 603
+;ワイン
+ELSEIF LOCAL >= 20
+	LOCAL:2 = 602
+;ビール
+ELSEIF LOCAL >= 10
+	LOCAL:2 = 601
+;カルーア
+ELSE
+	LOCAL:2 = 600
+ENDIF
+;対象が[鬼]で神便鬼毒酒を貰う場合はスピリタスに変更
+SIF TALENT:鬼 && LOCAL:2 == 605
+	LOCAL:2 = 604
+
+;99個が限界
+SIF ITEM:(LOCAL:2) + LOCAL:1 > 99
+	LOCAL:1 = 99 - ITEM:(LOCAL:2)
+SIF LOCAL:1 < 1
+	RETURN 0
+
+;野外ライブでプレゼントゲット時の口上・地の文の表示
+CALL DISPLAY_KOJO_MESSAGE_SUB_EVENT, TARGET, 453
+
+PRINTFORMW %ITEMNAME:(LOCAL:2)%を{LOCAL:1}本手に入れた
+ITEM:(LOCAL:2) += LOCAL:1
+;プレゼントされたフラグON
+CFLAG:151 |= 4
+
+;=============================================================================
+;野外ライブ用判定処理
+;=============================================================================
+;-------------------------------------------------
+;トリオライブ判定処理
+;-------------------------------------------------
+;LOCAL = 3人目の参加者(→TFLAGF:237に入れる)
+;LOCAL:1 = トリオライブになっているか？（ビット管理 0=トリオじゃない 1=虹川 2=三月精 4=やつべんらいこ 8=隠岐奈と二童子）
+@CHECK_TRIO
+#FUNCTION
+LOCAL:1 = 0
+LOCAL = 0
+
+;大前提:助手が居て、対象＆助手が反発刻印もしくは恐怖刻印Lv3を持っている場合はトリオにならない
+SIF ASSI < 0
+	RETURNF 0
+SIF TALENT:ASSI:死亡
+	RETURNF 0
+SIF MARK:反発刻印 || MARK:恐怖刻印 >= 3
+	RETURNF 0
+SIF MARK:ASSI:反発刻印 || MARK:ASSI:恐怖刻印 >= 3
+	RETURNF 0
+;助手が[吸血鬼]で夜でなく特注日傘がない場合もトリオにならない
+SIF TALENT:ASSI:吸血鬼 && TIME == 0 && ITEM:特注日傘 == 0
+	RETURNF 0
+;特定のキャラの場合はトリオでライブできるかもしれない、ただし助手がいないとダメ
+;なお３人目はその場にいて、睡眠薬の影響がなく、反発刻印なしで、恐怖刻印Lv2以下で助手可能でないといけない。また、主人であってもいけない。
+;プリズムリバー三姉妹
+IF TRIO_COMPOSITION(1016,1017,1018)
+	LOCAL:1 |= 1
+ELSEIF TRIO_COMPOSITION(1045,1046,1047)
+	LOCAL:1 |= 2
+ELSEIF TRIO_COMPOSITION(1098,1099,1102)
+	LOCAL:1 |= 4
+ELSEIF TRIO_COMPOSITION(1116,1117,1118)
+	LOCAL:1 |= 8
+ENDIF
+RETURNF LOCAL:1
+
+;-------------------------------------------------
+;キャラの固有持ち歌選択＆表示処理
+;-------------------------------------------------
+;ARG = 価格修整(呼び出し元のLOCAL:1)
+;LOCALS = 曜日(雛ちゃん用)
+@SPECIAL_SONG, ARG
+VARSET LOCALS, ""
+SPLIT "無,日,月,火,水,木,金,土", ",", LOCALS
+LOCALS = %LOCALS:(DAY:7)%
+
+SELECTCASE NO:TARGET
+	;霊夢、霊夢様
+	CASE 1001
+		;霊夢
+		IF CFLAG:0 == 0
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1002 && CFLAG:ASSI:0 == 0 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+			;霊夢＆魔理沙コンビ
+			IF LOCAL:3 == 2
+				TSTR:6 = 『あなたって、勝手よね』
+				ARG /= 2
+				ARG += RAND:512
+			ELSE
+				TSTR:6 = 『楽園の巫女』
+				ARG -= 20
+				ARG += RAND:71
+			ENDIF
+		;霊夢様
+		ELSE
+			TSTR:6 = 『楽園の女王様』
+			ARG -= 25
+			ARG += RAND:66
+		ENDIF
+		RETURN ARG
+
+	;魔理沙、魔梨沙
+	CASE 1002
+		;魔理沙
+		IF CFLAG:0 == 0
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1001 && CFLAG:ASSI:0 == 0 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+			;魔理沙＆霊夢コンビ
+			IF LOCAL:3 == 2
+				TSTR:6 = 『これでも、気にしてるんだぜ』
+				ARG /= 2
+				ARG += RAND:512
+			ELSE
+				TSTR:6 = 『弾幕はパワー』
+				ARG -= 15
+				ARG += RAND:66
+			ENDIF
+		;魔梨沙
+		ELSE
+			TSTR:6 = 『うふふ魔梨沙の独占ライブ』
+			ARG -= 25
+			ARG += RAND:77
+		ENDIF
+		RETURN ARG
+
+	;ルーミア,EXルーミア
+	CASE 1003
+		;ルーミア
+		IF CFLAG:0 == 0
+			TSTR:6 = 『宵闇飛行隊』
+			ARG -= 25
+			ARG += RAND:66
+		;EXルーミア
+		ELSE
+			TSTR:6 = 『宵闇飛行隊・LUNATIC』
+			ARG -= 20
+			ARG += RAND:88
+		ENDIF
+		RETURN ARG
+
+	;大妖精
+	CASE 1004
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1005 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;大ちゃん＆チルノコンビ
+		IF LOCAL:3 == 2
+			TSTR:6 = 『仲良しコンビでサイキョーね！』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			LOCAL:3 = RAND:3
+			IF LOCAL:3 == 0
+				TSTR:6 = 『名もなき者の詩』
+				ARG = 150
+			ELSE
+				TSTR:6 = 『大ちゃん子守唄』
+				ARG -= 21
+				ARG += RAND:62
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;チルノ
+	CASE 1005
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1004 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;チルノ＆大ちゃんコンビ
+		IF LOCAL:3 == 2
+			TSTR:6 = 『仲良しコンビでサイキョーね！』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			LOCAL:3 = RAND:256
+			IF LOCAL:3 == 0
+				TSTR:6 = 『あたいったらサイキョーね！～⑨重奏』
+				ARG = 999
+			ELSE
+				TSTR:6 = 『あたいったらサイキョーね！』
+				ARG += 9
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;美鈴
+	CASE 1006
+		TSTR:6 = 『彩光円舞』
+		ARG -= 50
+		ARG += RAND:101
+		RETURN ARG
+
+	;こぁ
+	CASE 1007
+		LOCAL:3 = RAND:30
+		IF LOCAL:3 == 0
+			TSTR:6 = 『あなたを押し倒して♪』
+			ARG = 666
+		ELSE
+			TSTR:6 = 『名もなき者の詩』
+			ARG = 150
+		ENDIF
+		RETURN ARG
+
+	;パチュリー
+	CASE 1008
+		TSTR:6 = 『唱えて今日の魔法』
+		ARG -= 23
+		ARG += RAND:45
+		RETURN ARG
+
+	;咲夜さん
+	CASE 1009
+		;咲夜さん
+		TSTR:6 = 『本気狩る☆咲夜ちゃん』
+		ARG -= 30
+		ARG += RAND:56
+		RETURN ARG
+
+	;レミリア
+	CASE 1010
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『私のこの手が真っ赤に燃える！全世界ナイトメア・吸血鬼れみりあちゃん』
+			ARG -= 40
+			ARG += RAND:171
+		ELSE
+			TSTR:6 = 『モケーレムベンベのバラード』
+			ARG -= 20
+			ARG += RAND:101
+		ENDIF
+		RETURN ARG
+
+	;フランちゃん
+	CASE 1011
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『キュッとしてどーん』
+			ARG -= 30
+			ARG += RAND:151
+		ELSE
+			TSTR:6 = 『クランベリートラップ』
+			ARG -= 15
+			ARG += RAND:126
+		ENDIF
+		RETURN ARG
+
+	;レティさん
+	CASE 1012
+		LOCAL:3 = RAND:3
+		IF LOCAL:3 == 0
+			TSTR:6 = 『猛吹雪のセレナーデ』
+			ARG -= 29
+			ARG += RAND:56
+		ELSE
+			TSTR:6 = 『吹雪のセレナーデ』
+			ARG -= 24
+			ARG += RAND:95
+		ENDIF
+		RETURN ARG
+
+	;橙
+	CASE 1013
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『黒猫のワルツ』
+			ARG -= 20
+			ARG += RAND:110
+		ELSE
+			TSTR:6 = 『黒猫の団子』
+			ARG -= 6
+			ARG += RAND:181
+		ENDIF
+		RETURN ARG
+
+	;アリス
+	CASE 1014
+		;通常のアリス
+		IF CFLAG:0 == 0
+			TSTR:6 = 『突撃マイハニー』
+			ARG += 10
+			ARG += RAND:91
+		;ちびアリス
+		ELSE
+			LOCAL:3 = RAND:2
+			IF LOCAL:3 == 0
+				TSTR:6 = “Mystic Dream”
+				ARG += RAND:100
+			ELSE
+				TSTR:6 = 『不思議の国へようこそ』
+				ARG -= 20
+				ARG += RAND:88
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;リリーホワイト
+	CASE 1015
+		TSTR:6 = 『春の歌』
+		ARG -= 40
+		ARG += RAND:111
+		RETURN ARG
+
+	;騒霊三姉妹（ルナサ・メルラン・リリカ）
+	CASE 1016 TO 1018
+		;トリオライブのとき
+		IF TFLAG:236 & 1
+			PRINTFORM 『プリズムリバー・メドレー』
+			ARG -= 3
+			ARG += RAND:333
+		;トリオライブでないとき(は、助手は出しゃばらないんですｗ)
+		ELSE
+			PRINTFORM 『%CALLNAME:TARGET%・ソロ』
+			ARG -= 12
+			ARG += RAND:256
+		ENDIF
+		RETURN ARG
+
+	;妖夢
+	CASE 1019
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『白玉楼ブルース』
+			ARG -= 37
+			ARG += RAND:172
+		ELSE
+			TSTR:6 = 『丁々発止』
+			ARG -= 31
+			ARG += RAND:60
+		ENDIF
+		RETURN ARG
+
+	;ゆゆ様、生前ゆゆ様
+	CASE 1020
+		IF CFLAG:0 == 0
+			;ゆゆ様
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1022 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+			;ゆゆゆかコンビ
+			IF LOCAL:3 == 2
+				TSTR:6 = 『ボーダーオブライフ　～ダブル百合結界～』
+				ARG /= 2
+				ARG += RAND:512
+			ELSE
+				TSTR:6 = 『幽雅に咲かせ、墨染めの桜』
+				ARG -= 18
+				ARG += RAND:145
+			ENDIF
+		;生前ゆゆ様
+		ELSE
+			TSTR:6 = 『薄墨桜の咲く庭で』
+			ARG -= 22
+			ARG += RAND:125
+		ENDIF
+		RETURN ARG
+
+	;藍しゃま
+	CASE 1021
+		TSTR:6 = 『四面楚歌☆チャーミング』
+		ARG -= 21
+		ARG += RAND:101
+		RETURN ARG
+
+	;ゆかりん
+	CASE 1022
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1020 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;ゆかゆゆコンビ
+		IF LOCAL:3 == 2
+			TSTR:6 = 『お姉様とお姉様の境界　～ダブル百合結界～』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『美しく残酷に』
+			ARG -= 13
+			ARG += RAND:146
+		ENDIF
+		RETURN ARG
+
+	;萃香
+	CASE 1023
+		TSTR:6 = 『幻想郷酒飲み音頭』
+		ARG -= 23
+		ARG += RAND:86
+		RETURN ARG
+
+	;リグル
+	CASE 1024
+		TSTR:6 = 『全世界ナイトバグ』
+		ARG -= 8
+		ARG += RAND:65
+		RETURN ARG
+
+	;みすちー
+	CASE 1025
+		LOCAL:3 = RAND:3
+		IF LOCAL:3 == 0
+			TSTR:6 = 『ミスティア音頭』
+			ARG -= 27
+			ARG += RAND:252
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『みっすみすにしてやんよ！』
+			ARG -= 74
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『ちんちんワールド』
+			ARG -= 21
+			ARG += RAND:120
+		ENDIF
+		RETURN ARG
+
+	;慧音先生
+	CASE 1026
+		TSTR:6 = 『満月必堀』
+		ARG -= 24
+		ARG += RAND:48
+		RETURN ARG
+
+	;てゐ
+	CASE 1027
+		TSTR:6 = “Lucky joker”
+		ARG /= 5
+		ARG += RAND:256
+		RETURN ARG
+
+	;鈴仙
+	CASE 1028
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『月兎自暴自棄曲(バーサーカーノイズ) ～エーリングセンス～』
+			ARG -= 11
+			ARG += RAND:142
+		ELSE
+			TSTR:6 = 『月兎自暴自棄曲(バーサーカーノイズ)』
+			ARG -= 11
+			ARG += RAND:71
+		ENDIF
+		RETURN ARG
+
+	;永琳先生
+	CASE 1029
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『胡蝶夢丸ナイトメア』
+			ARG -= 41
+			ARG += RAND:120
+		ELSE
+			TSTR:6 = 『アポロ11号』
+			ARG -= 28
+			ARG += RAND:56
+		ENDIF
+		RETURN ARG
+
+	;輝夜
+	CASE 1030
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1031 && CFLAG:ASSI:0 == 0 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;てるもこコンビ
+		IF LOCAL:3 == 2
+			;妹紅も歌わない？
+			TSTR:6 = 『かぐともこ、仲良く喧嘩しな♪』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『男は黙って金閣寺』
+			ARG -= 13
+			ARG += RAND:179
+		ENDIF
+		RETURN ARG
+
+	;妹紅、貴族の娘の妹紅
+	CASE 1031
+		;通常の妹紅
+		IF CFLAG:0 == 0
+			;さすがに、デュエットは恥ずかしいだろ…＞輝夜
+			LOCAL:3 = RAND:3
+			IF LOCAL:3 == 0
+				TSTR:6 = 『無限一夜』
+				ARG -= 21
+				ARG += RAND:160
+			ELSEIF LOCAL:3 == 1
+				TSTR:6 = 『蓬莱蓮華』
+				ARG -= 16
+				ARG += RAND:87
+			ELSE
+				TSTR:6 = 『凱風快晴』
+				ARG -= 11
+				ARG += RAND:45
+			ENDIF
+		;貴族の娘の妹紅
+		ELSE
+			TSTR:6 = 『藤の雅』
+			ARG -= 25
+			ARG += RAND:50
+		ENDIF
+		RETURN ARG
+
+	;あやや
+	CASE 1032
+		TSTR:6 = 『風神少女』
+		ARG -= 20
+		ARG += RAND:80
+		RETURN ARG
+
+	;メディスン
+	CASE 1033
+		TSTR:6 = 『スイート☆ポイズン』
+		ARG -= 26
+		ARG += RAND:110
+		RETURN ARG
+
+	;ゆうかりん
+	CASE 1034
+		;マゾっ気が5以上または[マゾ]を持っていると歌が変わる
+		IF ABL:マゾっ気 > 4 || TALENT:マゾ || (TALENT:中毒しにくい && RAND:2 == 0)
+			LOCAL:3 = RAND:2
+			IF LOCAL:3 == 0
+				TSTR:6 = “Inanimate Dream”
+				ARG -= 25
+				ARG += RAND:100
+			ELSE
+				TSTR:6 = 『散り逝く花へのレクイエム』
+				ARG -= 15
+				ARG += RAND:80
+			ENDIF
+		ELSE
+			LOCAL:3 = RAND:2
+			IF LOCAL:3 == 0
+				TSTR:6 = 『破滅のスカッド』
+				ARG -= 40
+				ARG += RAND:256
+			ELSE
+				TSTR:6 = 『崩壊デュアルスパーク』
+				ARG -= 15
+				ARG += RAND:192
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;小町
+	CASE 1035
+		TSTR:6 = 『Sabotage ～ もう何もしたくない』
+		ARG -= 24
+		ARG += RAND:72
+		RETURN ARG
+
+	;えーき様
+	CASE 1036
+		LOCAL:3 = RAND:256
+		IF LOCAL:3 == 0
+			TSTR:6 = 『閻魔様の有難いお説教』
+			ARG -= 50
+			ARG += RAND:222
+		ELSE
+			TSTR:6 = 『ヤマザナドゥ音頭』
+			ARG += RAND:678
+		ENDIF
+		RETURN ARG
+
+	;静葉おねえさん
+	CASE 1037
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1038 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;秋姉妹デュエット
+		IF LOCAL:3 == 2
+			TSTR:6 = 『私たちの秋はこれからよ！　前編』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『紅葉一巡』
+			ARG -= 32
+			ARG += RAND:129
+		ENDIF
+		RETURN ARG
+
+	;穣子、稔子
+	CASE 1038
+		;穣子
+		IF CFLAG:0 == 0
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1037 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+			;秋姉妹デュエット
+			IF LOCAL:3 == 2
+				TSTR:6 = 『私たちの秋はこれからよ！　後編』
+				ARG /= 2
+				ARG += RAND:512
+			ELSE
+				TSTR:6 = 『豊作祈願の舞』
+				ARG -= 16
+				ARG += RAND:91
+			ENDIF
+		;稔子
+		ELSE
+			TSTR:6 = 『不作祈願の舞』
+			ARG -= 16
+			ARG += RAND:77
+		ENDIF
+		RETURN ARG
+
+	;雛
+	CASE 1039
+		LOCAL:3 = RAND:128
+		IF LOCAL:3 == 0 && TALENT:おもらし癖 && TALENT:母乳体質
+			PRINTFORM 『大回転！　上から下から厄ルト大出水！！』
+			ARG -= 89
+			ARG += RAND:890
+			;噴乳経験(表示しない)
+			CALL COMMON_UP_EXP, TARGET, 5, 1, 2
+			;放尿経験(表示しない)
+			CALL COMMON_UP_EXP, TARGET, 6, 1, 2
+		ELSEIF LOCAL:3 < 2 && TALENT:母乳体質
+			PRINTFORM 『大回転！　上から厄ルト大噴水！！』
+			ARG -= 89
+			ARG += RAND:289
+			;噴乳経験(表示しない)
+			CALL COMMON_UP_EXP, TARGET, 5, 1, 2
+		ELSEIF LOCAL:3 < 2 && TALENT:おもらし癖
+			PRINTFORM 『大回転！　下から厄ルト大洪水！！』
+			ARG -= 89
+			ARG += RAND:289
+			;放尿経験(表示しない)
+			CALL COMMON_UP_EXP, TARGET, 6, 1, 2
+		ELSE
+			PRINTFORM 『厄い%LOCALS%曜日』
+			ARG -= 50
+			ARG += RAND:210
+		ENDIF
+		RETURN ARG
+
+	;にとり、ぐりんだむ
+	CASE 1040
+		;にとり
+		IF CFLAG:0 == 0
+			LOCAL:3 = RAND:2
+			IF LOCAL:3 == 0
+				TSTR:6 = 『超妖怪弾頭』
+				ARG -= 13
+				ARG += RAND:105
+			ELSE
+				TSTR:6 = 『キュウリハンター』
+				ARG -= 17
+				ARG += RAND:111
+			ENDIF
+		;ぐりんだむ
+		ELSE
+			LOCAL:3 = RAND:2
+			IF LOCAL:3 == 0
+				TSTR:6 = 『エッチなのはいくないと思います！』
+				ARG -= 33
+				ARG += RAND:122
+			ELSE
+				TSTR:6 = 『日本語喋れる　わたし、すごい！』
+				ARG -= 27
+				ARG += RAND:100
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;もみっち
+	CASE 1041
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 1
+			TSTR:6 = 『将棋は歩から』
+			ARG -= 20
+			ARG += RAND:70
+		ELSE
+			TSTR:6 = 『犬のみまわりさん』
+			ARG -= 25
+			ARG += RAND:65
+		ENDIF
+		RETURN ARG
+
+	;早苗、早苗様
+	CASE 1042
+		;早苗
+		IF CFLAG:0 == 0
+			TSTR:6 = 『信濃の子守唄』
+			ARG -= 15
+			ARG += RAND:84
+		;早苗様
+		ELSE
+			TSTR:6 = 『桃色幻想郷』
+			ARG -= 25
+			ARG += RAND:89
+		ENDIF
+		RETURN ARG
+
+	;神奈子
+	CASE 1043
+		LOCAL:3 = RAND:4
+		IF LOCAL:3 == 0
+			TSTR:6 = 『神話戦隊オンバシラー』
+			ARG -= 30
+			ARG += RAND:120
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『神話戦隊オンバシラーDX』
+			ARG -= 25
+			ARG += RAND:56
+		ELSEIF LOCAL:3 == 2
+			TSTR:6 = 『神話戦隊オンバシラー外伝』
+			ARG -= 20
+			ARG += RAND:130
+		ELSE
+			TSTR:6 = 『神話戦隊オンバシラー・FinalEdition』
+			ARG -= 20
+			ARG += RAND:150
+		ENDIF
+		RETURN ARG
+
+	;ケロちゃん
+	CASE 1044
+		LOCAL:3 = RAND:16
+		IF LOCAL:3 == 0
+			TSTR:6 = 『明日ハレの日、ケの昨日』
+			ARG /= 2
+			ARG += 196
+		ELSE
+			TSTR:6 = 『蛙の気持ち』
+			ARG -= 30
+			ARG += RAND:60
+		ENDIF
+		RETURN ARG
+
+	;サニー
+	CASE 1045
+		;トリオライブのとき
+		IF TFLAG:236 & 2
+			TSTR:6 = 『フェアリーカーニバル・太陽編』
+			ARG -= 33
+			ARG += RAND:333
+		ELSE
+			TSTR:6 = 『太陽燦々』
+			ARG -= 24
+			ARG += RAND:75
+		ENDIF
+		RETURN ARG
+
+	;ルナ
+	CASE 1046
+		;トリオライブのとき
+		IF TFLAG:236 & 2
+			TSTR:6 = 『フェアリーカーニバル・月光編』
+			ARG -= 33
+			ARG += RAND:333
+		ELSE
+			TSTR:6 = 『夜だから眠らない』
+			ARG -= 25
+			ARG += RAND:72
+		ENDIF
+		RETURN ARG
+
+	;スター
+	CASE 1047
+		;トリオライブのとき
+		IF TFLAG:236 & 2
+			TSTR:6 = 『フェアリーカーニバル・流星編』
+			ARG -= 33
+			ARG += RAND:333
+		ELSE
+			LOCAL:3 = RAND:2
+			IF LOCAL:3 == 0
+				TSTR:6 = 『星に願いを』
+				ARG -= 24
+				ARG += RAND:70
+			ELSE
+				TSTR:6 = 『星を見る妖精』
+				ARG -= 10
+				ARG += RAND:50
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;阿求
+	CASE 1048
+		TSTR:6 = 『転生人 ～ Reincarnation』
+		ARG -= 25
+		ARG += RAND:130
+		RETURN ARG
+
+	;蓮子
+	CASE 1049
+		;蓮子
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1050 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:2 # 0
+		;蓮子メリーコンビ
+		IF LOCAL:3 == 1
+			TSTR:6 = 『少女秘封倶楽部』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『時詠み』
+			ARG -= 12
+			ARG += RAND:60
+		ENDIF
+		RETURN ARG
+
+	;メリー
+	CASE 1050
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1049 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:2 # 0
+		;メリー蓮子コンビ
+		IF LOCAL:3 == 1
+			TSTR:6 = 『少女秘封倶楽部』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『夢現』
+			ARG -= 12
+			ARG += RAND:60
+		ENDIF
+		RETURN ARG
+
+	;衣玖さん
+	CASE 1051
+		LOCAL:3 = RAND:3
+		;土曜の夜はもちろん！
+		IF DAY:7 >= 7 && TIME == 1
+			TSTR:6 = 『サタデーナイト・フィーバー！』
+			ARG -= 77
+			ARG += RAND:777
+		ELSEIF LOCAL:3 == 0
+			TSTR:6 = 『フィーバー』
+			ARG -= 22
+			ARG += RAND:144
+		ELSEIF LOCAL:3 == 1
+			;カブキロックスってゲームにあるんだこれ
+			TSTR:6 = 『お嫁サンダー』
+			ARG -= 22
+			ARG += RAND:100
+		ELSE
+			TSTR:6 = 『君の頭上に100万ボルト』
+			ARG -= 22
+			ARG += RAND:88
+		ENDIF
+		RETURN ARG
+
+	;天子
+	CASE 1052
+		TSTR:6 = 『ピーチアップ・ガール』
+		ARG -= 20
+		ARG += RAND:75
+
+	;綿月姉妹(豊姫、依姫)
+	CASE 1053 TO 1054
+		LOCAL:3 = (ASSI >= 0 && (NO:ASSI == 1053 || NO:ASSI == 1054) && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;綿月姉妹でデュエット
+		IF LOCAL:3 == 0
+			TSTR:6 = 『ムーンライトシスターズ』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			LOCAL:3 = RAND:3
+			IF LOCAL:3 == 0
+				TSTR:6 = 『望月』
+				ARG -= 10
+				ARG += RAND:111
+			ELSEIF LOCAL:3 == 1
+				TSTR:6 = 『朧月』
+				ARG -= 25
+				ARG += RAND:126
+			ELSE
+				TSTR:6 = “Lunatic Blue”
+				ARG -= 28
+				ARG += RAND:90
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;レイセン２号
+	CASE 1055
+		LOCAL:3 = RAND:6
+		IF LOCAL:3 == 0
+			TSTR:6 = 『月のカケラ』
+			ARG -= 20
+			ARG += RAND:60
+		ELSE
+			TSTR:6 = 『ムーンライト伝承』
+			ARG -= 14
+			ARG += RAND:50
+		ENDIF
+		RETURN ARG
+
+	;リリーブラック
+	CASE 1056
+		LOCAL:3 = RAND:6
+		IF LOCAL:3 == 0
+			TSTR:6 = 『春の歌』
+			ARG -= 40
+			ARG += RAND:111
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『ツンデレラなうた』
+			IF TALENT:素直 && ABL:従順 >= 4
+				ARG += 55
+				ARG += RAND:111
+			ELSE
+				ARG -= 55
+				ARG += RAND:111
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;キスメ
+	CASE 1057
+		;キスメ
+		TSTR:6 = 『釣瓶落としの冬休み』
+		ARG /= 2
+		ARG += RAND:180
+		RETURN ARG
+
+	;ヤマメさん
+	CASE 1058
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = “Lunatic Underground”
+			ARG += RAND:256
+		ELSE
+			TSTR:6 = “Hi-tension Feaver”
+			ARG += RAND:101
+		ENDIF
+		RETURN ARG
+
+	;パルスィ
+	CASE 1059
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『叶わぬ恋の嫉妬歌』
+			ARG -= 50
+			ARG += RAND:196
+		ELSE
+			TSTR:6 = “Slinking Cat”
+			ARG /= 2
+			ARG += RAND:145
+		ENDIF
+		RETURN ARG
+
+	;勇儀
+	CASE 1060
+		TSTR:6 = 『三歩必殺』
+		ARG -= 35
+		ARG += RAND:85
+		RETURN ARG
+
+	;さとり
+	CASE 1061
+		TSTR:6 = 『少女Ｓ』
+		ARG -= 12
+		ARG += RAND:143
+		RETURN ARG
+
+	;お燐
+	CASE 1062
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『おりんりんワールド』
+			ARG += 31
+			ARG += RAND:60
+		ELSE
+			TSTR:6 = 『おりんりんランド』
+			ARG -= 30
+			ARG += RAND:70
+		ENDIF
+		RETURN ARG
+
+	;おくう、太陽なしおくう
+	CASE 1063
+		;おくう
+		IF CFLAG:0 == 0
+			LOCAL:3 = RAND:32
+			IF LOCAL:3 == 0
+				TSTR:6 = “Melty Kiss”
+				ARG -= 25
+				ARG += RAND:150
+			ELSE
+				TSTR:6 = 『灼熱のファイヤーガール』
+				ARG -= 30
+				ARG += RAND:80
+			ENDIF
+		;太陽なしおくう
+		ELSE
+			TSTR:6 = 『ゆで卵が食べたいな』
+			ARG -= 25
+			ARG += RAND:75
+		ENDIF
+		RETURN ARG
+
+	;こいし
+	CASE 1064
+		LOCAL:3 = RAND:64
+		IF LOCAL:3 == 0
+			TSTR:6 = 『一粒無意識に300メートル』
+			ARG -= 20
+			ARG += RAND:240
+		ELSE
+			TSTR:6 = 『ポッキーCMソング』
+			ARG -= 20
+			ARG += RAND:50
+		ENDIF
+		RETURN ARG
+
+	;半霊
+	CASE 1065
+		TSTR:6 = 『半分幻の恋』
+		ARG -= 30
+		ARG += RAND:70
+		RETURN ARG
+
+	;上海人形
+	CASE 1066
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1067 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # RAND:2
+		;上海＆蓬莱
+		IF LOCAL:3 == 2
+			TSTR:6 = 『聖少女領域　～首吊り紀行～』
+			ARG /= 2
+			ARG += RAND:512
+		ELSEIF LOCAL:3 == 0
+			TSTR:6 = 『上海ドール』
+			ARG -= 27
+			ARG += RAND:143
+		ELSE
+			TSTR:6 = 『人形たちのロンド』
+			ARG -= 10
+			ARG += RAND:123
+		ENDIF
+		RETURN ARG
+
+	;蓬莱人形
+	CASE 1067
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1066 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # RAND:2
+		;蓬莱＆上海
+		IF LOCAL:3 == 2
+			TSTR:6 = 『禁じられた遊び　～上海編～』
+			ARG /= 2
+			ARG += RAND:512
+		ELSEIF LOCAL:3 == 0
+			TSTR:6 = 『マリオネットミュージアム』
+			ARG -= 27
+			ARG += RAND:143
+		ELSE
+			TSTR:6 = 『人形たちのロンド』
+			ARG -= 10
+			ARG += RAND:123
+		ENDIF
+		RETURN ARG
+
+	;朱鷺子
+	CASE 1068
+		TSTR:6 = 『名もなき者の詩』
+		ARG = 150
+		RETURN ARG
+
+	;霖之助
+	CASE 1069
+		LOCAL:3 = RAND:4
+		IF LOCAL:3 == 0
+			TSTR:6 = 『半端者の詩』
+			ARG -= 32
+			ARG += RAND:128
+		ELSE
+			TSTR:6 = 『みんなで行こうよ　香霖堂！』
+			ARG -= 256
+			ARG += RAND:384
+		ENDIF
+		RETURN ARG
+
+	;妖忌
+	CASE 1070
+		TSTR:6 = 『快刀乱麻』
+		ARG -= 32
+		ARG += RAND:64
+		RETURN ARG
+
+	;ナズーリン同志
+	CASE 1071
+		LOCAL:3 = RAND:3
+		IF LOCAL:3 == 0
+			TSTR:6 = 『インターナショナル』
+			ARG -= 30
+			ARG += RAND:111
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『聞け万国の労働者』
+			ARG -= 25
+			ARG += RAND:120
+		ELSE
+			;これはディ○ニーには絶対にないしょだぜ…
+			TSTR:6 = 『ナズーリンマウス・マーチ』
+			ARG -= 200
+			ARG += RAND:320
+		ENDIF
+		RETURN ARG
+
+	;小傘っち
+	CASE 1072
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『傘』
+			ARG -= 40
+			ARG += RAND:90
+		ELSE
+			TSTR:6 = 『忘れ傘には気をつけて』
+			ARG -= 60
+			ARG += RAND:135
+		ENDIF
+		RETURN ARG
+
+	;一輪
+	CASE 1073
+		TSTR:6 = 『尼寺に和尚さんが』
+		ARG -= 75
+		ARG += RAND:80
+		RETURN ARG
+
+	;雲山さん
+	CASE 1074
+		TSTR:6 = 『オヤジの拳骨』
+		ARG -= 35
+		ARG += RAND:98
+		RETURN ARG
+
+	;ムラサ船長
+	CASE 1075
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『われは海の子』
+			ARG -= 30
+			ARG += RAND:90
+		ELSE
+			TSTR:6 = 『海賊の歌』
+			ARG -= 30
+			ARG += RAND:92
+		ENDIF
+		RETURN ARG
+
+	;寅丸の星さん
+	CASE 1076
+		;毘沙門天に祈るお経みたいなもの。
+		TSTR:6 = 『おんべいしらまなやそわか』
+		ARG -= 50
+		ARG += RAND:115
+		RETURN ARG
+
+	;白蓮お姉さま
+	CASE 1077
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = “TSUGUNAI”
+			ARG -= 12
+			ARG += RAND:90
+		ELSE
+			;お、おいっ！
+			TSTR:6 = “大蓮華”
+			ARG -= 10
+			ARG += RAND:88
+		ENDIF
+		RETURN ARG
+
+	;ぬえ
+	CASE 1078
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			;元ネタ（おそらく誰もしらない）を思いっきり改題
+			TSTR:6 = “幻想世界少女と鵺”
+			ARG -= 96
+			ARG += RAND:132
+		ELSE
+			;お、おいっ！　その２
+			TSTR:6 = “ＵＦＯ”
+			ARG -= 100
+			ARG += RAND:100
+		ENDIF
+		RETURN ARG
+
+	;はたて
+	CASE 1079
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = “とっても美味しいホタテ”
+			ARG -= 30
+			ARG += RAND:105
+		ELSE
+			TSTR:6 = “駆け出し記者哀歌”
+			ARG -= 80
+			ARG += RAND:80
+		ENDIF
+		RETURN ARG
+
+	;華扇
+	CASE 1080
+		LOCAL:3 = RAND:3
+		;龍と虎
+		IF LOCAL:3 == 2
+			TSTR:6 = 『龍虎の和吼』
+			ARG -= 30
+			ARG += RAND:200 + (ABL:技巧 > 4 ? RAND:100 # 0)
+		ELSE
+		;２つの鹫
+			TSTR:6 = 『鷲の和鳴』
+			ARG -= 30
+			ARG += RAND:100 + (ABL:技巧 > 4 ? RAND:50 # 0)
+		ENDIF
+		RETURN ARG
+
+	;響子
+	CASE 1081
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1025 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;鳥獣伎楽
+		IF LOCAL:3 == 2
+			TSTR:6 = 『マキシマムザブツモン』
+			ARG -= 69
+			ARG += RAND:609
+		ELSE
+		;ぎゃーてーぎゃーてー
+			TSTR:6 = 『はんにゃしんぎょー』
+			ARG -= 40
+			ARG += RAND:100
+		ENDIF
+		RETURN ARG
+
+	;大江戸人形
+	CASE 1088
+		LOCAL:3 = RAND:256
+		IF LOCAL:3 == 0
+			TSTR:6 = “巨大化音頭”
+			ARG -= 57
+			ARG += RAND:550
+		ELSE
+			TSTR:6 = “江戸の華”
+			ARG -= 50
+			ARG += RAND:99
+		ENDIF
+		RETURN ARG
+
+	;麟
+	CASE 1092
+		TSTR:6 = 『ここから、私の出番ね！』
+		ARG -= 100
+		ARG += RAND:147
+		RETURN ARG
+
+	;こころ
+	CASE 1094
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = “心綺楼”
+			;こころの面は66枚
+			ARG -= 66
+			ARG += RAND:666
+		ELSE
+			TSTR:6 = “暗黒能楽”
+			;66 - 希望の面
+			ARG -= 1
+			ARG += RAND:66
+		ENDIF
+		RETURN ARG
+
+	;弁々
+	CASE 1098
+		IF TFLAG:236 & 4
+			TSTR:6 = 『神鳴りに弦楽』
+			ARG -= 55
+			ARG += RAND:555
+		ELSE
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1099 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:6 # RAND:4
+			;弁々＆八桥コンビ
+			IF LOCAL:3 == 4
+				TSTR:6 = 『浄瑠璃世界』
+			;99姉妹
+				ARG -= 99
+				ARG += RAND:99 * MAX(RAND:9 - 4, 1)
+			ELSEIF LOCAL:3 == 5
+				TSTR:6 = 『星降る唄』
+				ARG += 50
+				ARG += RAND:550
+			ELSEIF LOCAL:3 == 3
+				TSTR:6 = 『泣幽霊』
+				ARG += 30 * (ABL:奉仕精神 + 1)
+			ELSE
+				TSTR:6 = 『祇園精舎の鐘の音』
+				ARG += (RAND:2 == 1 ? -50 # 150)
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;八桥
+	CASE 1099
+		IF TFLAG:236 & 4
+			TSTR:6 = 『神鳴りに弦楽』
+			ARG -= 55
+			ARG += RAND:555
+		ELSE
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1098 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:6 # RAND:4
+			;弁々＆八桥コンビ
+			IF LOCAL:3 == 4
+				TSTR:6 = 『浄瑠璃世界』
+			;99姉妹
+				ARG -= 99
+				ARG += RAND:99 * MAX(RAND:9 - 4, 1)
+			ELSEIF LOCAL:3 == 5
+				TSTR:6 = 『星降る唄』
+				ARG += 50
+				ARG += RAND:550
+			ELSEIF LOCAL:3 == 3
+				TSTR:6 = 『下克上送箏曲』
+				ARG += 30 * (ABL:サドっ気 + 1)
+			ELSE
+				TSTR:6 = 『諸行無常の響』
+				ARG += (RAND:2 == 1 ? -50 # 150)
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;雷鼓
+	CASE 1102
+		IF TFLAG:236 & 4
+			TSTR:6 = 『神鳴りにサンダー』
+			ARG -= 55
+			ARG += RAND:555
+		ELSE
+			LOCAL:3 = RAND:4
+			IF LOCAL:3 == 3
+			;back to purity
+				TSTR:6 = 『Pristine Beat』
+				TIMES ARG, 1.5
+			ELSEIF LOCAL:3 == 2
+				TSTR:6 = 『雷神の怒り』
+				ARG -= 100
+				ARG += RAND:400
+			ELSE
+				TSTR:6 = 『ランドパーカス』
+				ARG -= 50
+				ARG += RAND:200
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;舞
+	CASE 1116
+		IF TFLAG:236 & 8
+			TSTR:6 = 『狂気の能楽』
+			ARG += (RAND:2 == 1 ? -100 # 600)
+		ELSE
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1098 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:4 # RAND:3
+			;舞＆里乃コンビ
+			IF LOCAL:3 == 3
+				TSTR:6 = 『クレイジーバックダンス』
+				ARG += RAND:300 * (TALENT:狂気 || TALENT:ASSI:狂気 ? 2 # 1)
+			ELSEIF LOCAL:3 == 2
+				TSTR:6 = 『タナバタスタードリーム』
+				ARG += RAND:200 * (TALENT:恋慕 ? 2 # 1)
+			ELSE
+				TSTR:6 = 『バンブースピアダンス』
+				ARG -= 20
+				ARG += RAND:120
+			ENDIF
+		ENDIF
+		RETURN ARG
+	
+	;里乃
+	CASE 1117
+		IF TFLAG:236 & 8
+			TSTR:6 = 『狂気の能楽』
+			ARG += (RAND:2 == 1 ? -100 # 600)
+		ELSE
+			LOCAL:3 = (ASSI >= 0 && NO:ASSI == 1098 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:4 # RAND:3
+			;舞＆里乃コンビ
+			IF LOCAL:3 == 3
+				TSTR:6 = 『クレイジーバックダンス』
+				ARG += RAND:300 * (TALENT:狂気 || TALENT:ASSI:狂気 ? 2 # 1)
+			ELSEIF LOCAL:3 == 2
+				TSTR:6 = 『ビハインドナイトメア』
+				ARG += RAND:40 * (ABL:サドっ気 + 1)
+			ELSE
+				TSTR:6 = 『フォゲットユアネーム』
+				ARG -= 20
+				ARG += RAND:120 * (TALENT:恋慕 ? 2 # 1)
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;隠岐奈
+	CASE 1118
+		IF TFLAG:236 & 8
+			TSTR:6 = 『狂気の能楽』
+			ARG += (RAND:2 == 1 ? -100 # 600)
+		ELSE
+			LOCAL:3 = RAND:3
+			IF LOCAL:3 == 2
+				TSTR:6 = 『隠れるか隠れぬか』
+				ARG -= 40
+				ARG += (RAND:2 == 1 ? -50 # 300)
+			ELSE
+				TSTR:6 = 『マターラドゥッカ』
+				ARG -= 20
+				ARG += RAND:40 * (ABL:マゾっ気 + 1)
+			ENDIF
+		ENDIF
+		RETURN ARG
+
+	;魅魔様
+	CASE 2000
+		TSTR:6 = “Darkness Soul”
+		ARG -= 6
+		ARG += RAND:66
+		RETURN ARG
+
+	;里香
+	CASE 2001
+		LOCAL:3 = RAND:256
+		IF LOCAL:3 == 0
+			TSTR:6 = 『あたし、里香ちゃん♪』
+			ARG -= 24
+			ARG += RAND:198
+		ELSE
+			TSTR:6 = 『戦車むすめのこいのうた』
+			ARG -= 12
+			ARG += RAND:66
+		ENDIF
+		RETURN ARG
+
+	;明羅
+	CASE 2002
+		LOCAL:3 = RAND:3
+		IF LOCAL:3 == 0
+			TSTR:6 = 『夕暮埋まり女侍』
+			ARG -= 21
+			ARG += RAND:96
+		ELSE
+			TSTR:6 = 『陽の終わり、月の始まり』
+			ARG -= 13
+			ARG += RAND:108
+		ENDIF
+		RETURN ARG
+
+	;エレン
+	CASE 2003
+		TSTR:6 = 『恋するふわふわ娘』
+		ARG -= 10
+		ARG += RAND:80
+		RETURN ARG
+
+	;小兎姫
+	CASE 2004
+		TSTR:6 = 『プリンセススマイル』
+		ARG -= 22
+		ARG += RAND:88
+		RETURN ARG
+
+	;カナ
+	CASE 2005
+		TSTR:6 = 『カナベラルの夢幻少女』
+		ARG -= 15
+		ARG += RAND:80
+		RETURN ARG
+
+	;理香子
+	CASE 2006
+		TSTR:6 = 『科学神話』
+		ARG -= 45
+		ARG += RAND:70
+		RETURN ARG
+
+	;ちゆり
+	CASE 2007
+		TSTR:6 = 『ちゆちゆチェリー』
+		ARG -= 6
+		ARG += RAND:66
+		RETURN ARG
+
+	;夢美教授
+	CASE 2008
+		LOCAL:3 = RAND:4
+		IF LOCAL:3 == 0
+			TSTR:6 = 『スロトベリーダンス』
+			ARG /= 5
+			LOCAL:3 = 1 + RAND:15
+			REPEAT LOCAL:3
+				ARG += RAND:15
+			REND
+		ELSE
+			TSTR:6 = “Strawberry Crisis!!”
+			ARG -= 12
+			ARG += RAND:111
+		ENDIF
+		RETURN ARG
+
+	;オレンジ
+	CASE 2009
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『蜜柑色の夏休み』
+			ARG -= 22
+			ARG += RAND:96
+		ELSE
+			TSTR:6 = 『ぴゅっぴゅっぴゅ～のぴゅ～』
+			ARG -= 34
+			ARG += RAND:70
+		ENDIF
+		RETURN ARG
+
+	;くるみ
+	CASE 2010
+		TSTR:6 = 『紅い湖のパヴァーヌ』
+		ARG -= 45
+		ARG += RAND:80
+		RETURN ARG
+
+	;エリー
+	CASE 2011
+		TSTR:6 = 『夢幻館の門前へ』
+		ARG -= 25
+		ARG += RAND:77
+		RETURN ARG
+
+	;夢月
+	CASE 2012
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 2013 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;夢幻デュエット
+		IF LOCAL:3 == 2
+			TSTR:6 = 『夢幻幻想Duet　～夢～』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『夢幻の月』
+			ARG -= 24
+			ARG += RAND:120
+		ENDIF
+		RETURN ARG
+
+	;幻月
+	CASE 2013
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 2012 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;幻夢デュエット
+		IF LOCAL:3 == 2
+			TSTR:6 = 『夢幻幻想Duet　～幻～』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『夢幻の月』
+			ARG -= 24
+			ARG += RAND:120
+		ENDIF
+		RETURN ARG
+
+	;サラ
+	CASE 2014
+		TSTR:6 = 『夢列車』
+		ARG -= 31
+		ARG += RAND:98
+		RETURN ARG
+
+	;ルイズ
+	CASE 2015
+		;旅行好きってことで幻想郷に繋がっていそうな場所を軒並み
+		LOCAL:3 = RAND:6
+		IF LOCAL:3 == 0
+			;ログにあった月世界旅行に一文字加えて
+			TSTR:6 = 『月面世界旅行』
+			ARG /= 2
+			ARG *= 1 + RAND:3
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『幻想世界旅行』
+			ARG -= 25
+			ARG += RAND:96
+		ELSEIF LOCAL:3 == 2
+			TSTR:6 = 『地底世界旅行』
+			ARG -= 20
+			ARG += RAND:61
+		ELSEIF LOCAL:3 == 3
+			TSTR:6 = 『冥界旅行』
+			ARG -= 15
+			ARG += RAND:41
+		ELSEIF LOCAL:3 == 4
+			TSTR:6 = 『天界旅行』
+			ARG -= 10
+			ARG += RAND:36
+		ELSE
+			TSTR:6 = 『魔界旅行』
+			ARG -= 5
+			ARG += RAND:21
+		ENDIF
+		RETURN ARG
+
+	;ユキ
+	CASE 2016
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 2017 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;ユキマイコンビ
+		IF LOCAL:3 == 2
+			TSTR:6 = 『ふたりは○リキュア♪ Max Heart!』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = “Black in Mind”
+			ARG -= 24
+			ARG += RAND:84
+		ENDIF
+		RETURN ARG
+
+	;マイ
+	CASE 2017
+		LOCAL:3 = (ASSI >= 0 && NO:ASSI == 2016 && ABL:ASSI:レズ中毒 >= 3 && ABL:レズ中毒 >= 3) ? RAND:3 # 0
+		;マイユキコンビ
+		IF LOCAL:3 == 2
+			TSTR:6 = 『ふたりは○リキュア♪ Splash Star!』
+			ARG /= 2
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = “Judas Kiss”
+			ARG -= 24
+			ARG += RAND:84
+		ENDIF
+		RETURN ARG
+
+	;夢子さん
+	CASE 2018
+		TSTR:6 = 『メイドガール』
+		ARG -= 10
+		ARG += RAND:100
+		RETURN ARG
+
+	;神綺様
+	CASE 2019
+		TSTR:6 = “Song of GOD”
+		ARG /= 2
+		ARG += RAND:164
+		RETURN ARG
+
+	;中天使
+	CASE 2026
+		TSTR:6 = “Holy Gospel”
+		ARG -= 25
+		ARG += RAND:60
+		RETURN ARG
+
+	;ＶＩＶＩＴ
+	CASE 2028
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『サボテンとメイド』
+			ARG -= 18
+			ARG += RAND:64
+		ELSE
+			TSTR:6 = 『ビロード・エアガール』
+			ARG -= 44
+			ARG += RAND:155
+		ENDIF
+		RETURN ARG
+
+	;比良乃
+	CASE 2029
+		TSTR:6 = 『恋の巫術に乱されて』
+		ARG -= 25
+		ARG += RAND:95
+		RETURN ARG
+
+	;ミリア
+	CASE 2030
+		LOCAL:3 = RAND:3
+		IF LOCAL:3 == 0
+			TSTR:6 = 『最速のシルフィード』
+			ARG -= 10
+			ARG += RAND:55
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『新幻想』
+			ARG -= 33
+			ARG += RAND:111
+		ELSE
+			TSTR:6 = 『純真プリムローズ』
+			ARG -= 22
+			ARG += RAND:99
+		ENDIF
+		RETURN ARG
+
+	;マリー
+	CASE 2034
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『機械仕掛けのマリー・サーカス』
+			ARG -= 22
+			ARG += RAND:88
+		ELSE
+			TSTR:6 = 『オルレアンの聖騎士』
+			ARG -= 15
+			ARG += RAND:45
+		ENDIF
+		RETURN ARG
+
+	;伊佐美
+	CASE 2039
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			;大丈夫、"飲み"じゃなくて"呑み"だ
+			TSTR:6 = 『日本全国酒呑み音頭』
+			ARG -= 23
+			ARG += RAND:86
+		ELSE
+			TSTR:6 = 『酔いどれブルース』
+			ARG -= 41
+			ARG += RAND:41
+		ENDIF
+		RETURN ARG
+
+	;辰巳
+	CASE 2040
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			TSTR:6 = 『黄昏方面隊歌』
+			ARG -= 8
+			ARG += RAND:56
+		ELSE
+			TSTR:6 = 『軍艦（寿司的な意味で）マーチ』
+			ARG -= 13
+			ARG += RAND:91
+		ENDIF
+		RETURN ARG
+
+	;ルミ
+	CASE 2041
+		LOCAL:3 = RAND:3
+		IF LOCAL:3 == 0
+			TSTR:6 = 『借財大王 ～ツケた金返せよ～』
+			ARG -= 32
+			ARG += RAND:256
+		ELSEIF LOCAL:3 == 1
+			TSTR:6 = 『ケツケリ01』
+			ARG -= 64
+			ARG += RAND:512
+		ELSE
+			TSTR:6 = 『酒と泪と男と女とツケとＭ男と罵倒と蹴りと部屋とＹシャツと私』
+			ARG -= 128
+			ARG += RAND:16
+		ENDIF
+		RETURN ARG
+
+	;天治
+	CASE 2042
+		LOCAL:3 = RAND:2
+		;土曜の夜は俺とお前でＷフィーバー！！　衣玖さんがいないとソロフィーバー！
+		IF DAY:7 >= 7 && TIME == 1 && ASSI >= 0 && NO:ASSI == 1051
+			TSTR:6 = 『サタデーナイト・ダブル・フィーバー！！』
+			ARG -= 111
+			ARG += RAND:1111
+		ELSEIF DAY:7 >= 7 && TIME == 1
+			TSTR:6 = 『サタデーナイト・フィーバー！』
+			ARG -= 77
+			ARG += RAND:777
+		ELSEIF LOCAL:3 == 0
+			TSTR:6 = 『ジャイヴ・トーキング』
+			ARG -= 102
+			ARG += RAND:801 / 4
+		ELSE
+			TSTR:6 = 『ステイング・アライブ』
+			ARG -= 102
+			ARG += RAND:801 / 10
+		ENDIF
+		RETURN ARG
+	
+	;息子、娘
+	CASE 2048 TO 2049
+		TSTR:6 = 『お父さんのために！』
+		ARG -= 80
+		ARG += RAND:66
+		RETURN ARG
+
+	CASE 3000 TO 3050
+		;名無しキャラ
+		LOCAL:3 = RAND:2
+		IF LOCAL:3 == 0
+			IF TALENT:呪精 && RAND:2 == 0
+				;種族「ゾンビフェアリー」用
+				TSTR:6 = 『呪精鬱々として』
+				ARG -= 64
+				ARG += RAND:81
+			ELSEIF TALENT:妖精
+				;ひまわり妖精他種族「妖精」用
+				TSTR:6 = 『妖精燦々として』
+				ARG -= 32
+				ARG += RAND:81
+			ELSEIF TALENT:人形
+				;アリスの人形他種族「人形」用
+				TSTR:6 = 『人形達の輪舞』
+				ARG -= 8
+				ARG += RAND:110
+			ELSEIF TALENT:嫉妬しやすい || TALENT:嫉妬
+				;嫉妬しやすいor嫉妬持ち用
+				TSTR:6 = 『ジェラシーストーム』
+				ARG -= 16
+				ARG += RAND:100
+			ELSE
+				TSTR:6 = 『名もなき者の詩』
+				ARG = 150
+			ENDIF
+		ELSE
+			TSTR:6 = 『名もなき者の詩』
+			ARG = 150
+		ENDIF
+		RETURN ARG
+
+	;へる子
+	CASE 5097
+		TSTR:6 = 『地獄の黙示録』
+		ARG -= 666
+		ARG += RAND:6
+		RETURN ARG
+
+;		テンプレ用
+	;キャラ
+;	CASE  
+;		TSTR:6 = 『(歌名)』
+;		ARG -= 
+;		ARG += RAND:
+;		テンプレ用2
+	;キャラ
+;	CASE  
+;		LOCAL:3 = RAND:2
+;		IF LOCAL:3 == 0
+;			TSTR:6 = 『(歌名)』
+;			ARG -= 
+;			ARG += RAND:
+;		ELSE
+;			TSTR:6 = 『(歌名)』
+;			ARG -= 
+;			ARG += RAND:
+;		ENDIF
+ENDSELECT
+RETURN ARG
+
+@TRIO_COMPOSITION(first_chara, second_chara, third_chara)
+#DIM first_chara
+#DIM second_chara
+#DIM third_chara
+#LOCALSIZE 1
+#FUNCTION
+VARSET LOCAL
+
+IF (NO:TARGET == first_chara && NO:ASSI == second_chara) || (NO:TARGET == second_chara && NO:ASSI == first_chara)
+	LOCAL = GETCHARA(third_chara)
+ELSEIF (NO:TARGET == first_chara && NO:ASSI == third_chara) || (NO:TARGET == third_chara && NO:ASSI == first_chara)
+	LOCAL = GETCHARA(second_chara)
+ELSEIF (NO:TARGET == second_chara && NO:ASSI == third_chara) || (NO:TARGET == third_chara && NO:ASSI == second_chara)
+	LOCAL = GETCHARA(first_chara)
+ENDIF
+IF ABLE_TO_TRIO(LOCAL)
+	TFLAG:237 = LOCAL
+	RETURNF 1
+ENDIF
+RETURNF 0
+
+@ABLE_TO_TRIO(chara_id)
+#DIM chara_id
+#LOCALSIZE 1
+#FUNCTION
+
+;master or not exist
+SIF chara_id <= 0 || CFLAG:chara_id:4 || TALENT:chara_id:死亡
+	RETURNF 0
+;sleeping or resistant or too scared
+SIF  EQUIP:chara_id:睡眠薬 && MARK:chara_id:反発刻印 && MARK:chara_id:恐怖刻印 == 3 
+	RETURNF 0
+;not available for assistant
+SIF CFLAG:chara_id:1 < 2
+	RETURNF 0
+RETURNF 1

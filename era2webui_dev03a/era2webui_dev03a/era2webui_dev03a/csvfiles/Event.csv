@@ -1,0 +1,48 @@
+﻿"名称","プロンプト","ネガティブ","解像度","キャラ描画","顔描画","胸描画","ヴァギナ描画","アナル描画","主人以外が相手","備考"
+";特殊シーン",";pythonコード中に直接条件分岐などが記入されているイベント",,,,,,,,,
+"汎用調教","nude,upper body ,lying,bust shot,motion lines,navel,Feels good sexually","(penis)",,1,1,1,0,0,,"train.csvでプロンプトが空欄のとき、ここを参照する"
+"BEFORE","solo focus,wide shot,1girl sitting on floor",,"%正方形%",1,1,1,0,0,,"調教開始時に描画"
+"AFTER","solo focus,wide shot,1girl sitting on floor",,"%正方形%",1,1,1,0,0,,"調教終了時に描画。体力に余力がある状態"
+"AFTER疲労","nsfw,nude,1girl, (lying:1.3),navel,nipple,pussy,splead legs,mind break",,"%正方形%",1,1,1,1,1,,"体力がないとき"
+,,,,,,,,,,
+"AFTERピロートーク","(pov),(upper body),(under blanket),(lying on side),(dutch angle:1.4),(pillow talk),(tender smile,blush),lying in the same bed with the nude girl",,"%横長%",1,1,1,0,0,,"恋慕時で体力に余力があるとき"
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+";一般シーン",";ERB中に CALL OUTPUT_TXT() を追加し、引数でシーン名称を指定すると描画できる",,,,,,,,,
+"奴隷売却","hand that counts the coins,close up,A few gold coins","girl","%正方形%",0,0,0,0,0,,"ちゃんと書くなら陥落素質で分岐が要るだろう"
+,,,,,,,,,,
+"料理","A girl with a plate of food in each hand is behind the desk,((A table lined with dishes is in front of you)),((apron)),Steam from freshly prepared food,in dining room",,"%正方形%",1,1,1,0,0,,
+"毒料理","(evil smile),A girl with a plate of food in each hand is behind the desk,((A table lined with dishes is in front of you)),((apron)),Steam from freshly prepared food,in dining room","troubled eyebrows,eating food","%正方形%",1,1,1,0,0,,
+"工作","A girl at large work table, doing crafts,(Various crafts made of bamboo and wood on the desk),Work props,craft tools",,"%正方形%",1,1,1,0,0,,"小学生レベルの図工"
+"ライブ失敗","(A girl singing with a microphone in her hand:1.3),In the park,people passing by,outdoor,sky,trees,(long face)",,"%正方形%",1,1,1,0,0,,"ライブ失敗"
+"ライブ成功","(A girl singing with a microphone in her hand:1.3),delight,In the park,(crowd listening to her singing),outdoor,sky,trees,{|wide shot|cowboy shot|full shot|side view},{|dutch angle}",,"%正方形%",1,1,1,0,0,,
+"ライブ大成功","(A girl singing with a microphone in her hand:1.3),A packed crowd, psyllium lights, on glittering stage,wide shot,panorama,dramatic backlighting",,"%横長%",1,1,1,0,0,,"ステージ盛りすぎた"
+,,,,,,,,,,
+"朝フェラ","<lora:underCoversPOVSexAct_v10:0.6:NC>,1boy,bedroom, blush, breasts, clothed female nude male, dutch angle,  hetero, indoors, looking down, nude, saliva, solo focus,  penis, (under blanket),blurry background,(fellatio)","(headwear:1.3)",,1,1,1,0,0,,
+"朝の新妻プレイ","<lora:underCoversPOVSexAct_v10:0.6:NC>,(apron on naked body:1.3),1boy,guided penetration,vaginal sex,pussy,(straddling),bedroom, blush, breasts, clothed female nude male,  hetero, indoors, looking down, nude, saliva, solo focus,  penis, blanket,blurry background","(headwear:1.3)",,1,1,1,0,0,,
+"朝パイズリ","<lora:underCoversPOVSexAct_v10:0.6:NC>,1boy,bedroom, blush,(paizuri:1.3), (breasts squeezed together:1.3), clothed female nude male, dutch angle,  hetero, indoors, looking down, nude, saliva, solo focus,  penis, (under blanket),blurry background","(headwear:1.3)",,1,1,1,0,0,,
+"朝騎乗位","<lora:underCoversPOVSexAct_v10:0.6:NC>,1boy,guided penetration,vaginal sex,navel,pussy,(straddling),bedroom, blush, breasts, clothed female nude male,  hetero, indoors, looking down, nude, saliva, solo focus,  penis, blanket,blurry background","(headwear:1.3)",,1,1,1,0,0,,
+"朝騎乗位アナル","<lora:underCoversPOVSexAct_v10:0.6:NC>,1boy,guided penetration,anal sex,navel,pussy,(straddling),bedroom, blush, breasts, clothed female nude male,  hetero, indoors, looking down, nude, saliva, solo focus,  penis, blanket,blurry background","(headwear:1.3)",,1,1,1,0,0,,
+"キスで起こされる","<lora:underCoversPOVSexAct_v10:0.6:NC>,1boy,bedroom, blush, clothed female nude male,   hetero, indoors, nude,  solo focus,kissing lips,(pov kiss:1.2),   (under blanket),blurry background","(headwear:1.3),penis",,1,1,0,0,0,,
+"朝の足コキ","(FOOT JOB),1girl,1boy, penis,(FOOTJOB_POSITIONV2:0.5)","vaginal sex,inseration",,1,1,0,0,0,,
+"朝の３Ｐ","<lora:underCoversPOVSexAct_v10:0.6:NC>,1boy,guided penetration,vaginal sex,navel,pussy,(straddling),bedroom, blush, breasts, clothed female nude male,  hetero, indoors, looking down, nude, saliva, solo focus,  penis, blanket,blurry background","(headwear:1.3)",,1,1,0,0,0,,"キャラ指定3Pは描けない"
+,,,,,,,,,,
+"購入前のカタログ","(reference sheet:1.2),(simple background),standing,full body,head to toes,side view,uterus,ovaries,(x-ray),hymen","nsfw,nude,symmetry","%横長%",1,0,1,0,0,,"表情をオフにしている"
+,,,,,,,,,,
+"育児部屋臨月","solo focus,dutch angle,A girl lovingly stroking her pregnant belly, sitting on bed,(pajamas,long sleeves), blanket","nsfw",,1,1,1,0,0,,
+"育児部屋抱卵","solo focus,dutch angle,(A girl holding a huge egg in arms:1.4),lovingly stroking, sitting on bed,(pajamas,long sleeves), blanket","nsfw,pregnancy",,1,1,1,0,0,,"滅多にまともな絵にならない"
+"育児部屋","solo focus,dutch angle,A girl sitting, pajamas,(holding a baby like her:1.8),(tender)","nsfw",,1,1,1,0,0,,
+,,,,,,,,,,
+"AVパッケージ","Sexy girl in revealing outfits,(porn video package cover),(blu-lay package design:1.2),(title logo text:1.3),(18+,age restriction sign:1.3),(simple background:1.2)",,"%縦長%",1,1,1,0,0,1,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+"輪姦","nsfw,A girl fucked silly,group sex,(gangbang),4boys,3boys,penis,vaginal sex,hand job,fellatio,blow job,cum on body,cum on hair,cum in pussy,cum in mouth,facial,bukkake,Surrounded by male's lower body",,"%縦長%,%横長%",1,1,1,0,0,1,
