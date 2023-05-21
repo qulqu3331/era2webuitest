@@ -56,7 +56,8 @@ class App:
 
         # iniファイル読み込み
         self.config = configparser.ConfigParser()
-        self.config.read("./config.ini", 'UTF-8')
+        self.inipath = os.path.dirname(__file__) + "\config.ini"
+        self.config.read(self.inipath, 'UTF-8')
         # 監視フォルダ
         self.wdog_sdimg_Path = self.config.get("Paths", "image", fallback="")
         # 表示倍率
@@ -118,7 +119,7 @@ class App:
             print(f"Selected folder: {self.wdog_sdimg_Path}")
             # iniに記入
             self.config.set("Paths", "image", self.wdog_sdimg_Path)
-            with open("config.ini", "w", encoding='UTF-8') as configfile:
+            with open(self.inipath, "w", encoding='UTF-8') as configfile:
                 self.config.write(configfile)
             # ラベル更新
             self.label_sdimg["text"] = self.wdog_sdimg_Path
@@ -132,7 +133,7 @@ class App:
         self.scaling = float(simpledialog.askstring('倍率変更', '拡大率を数値で入力して下さい。0.5～1.0程度を推奨'))
         # iniに記入
         self.config.set("Viewer", "画像表示の拡大率", str(self.scaling))
-        with open("config.ini", "w", encoding='UTF-8') as configfile:
+        with open(self.inipath, "w", encoding='UTF-8') as configfile:
             self.config.write(configfile)
         self.restartwatchdog()
 

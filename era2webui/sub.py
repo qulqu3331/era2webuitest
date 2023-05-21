@@ -8,7 +8,7 @@ import re
 import tkinter as tk
 from tkinter import filedialog
 import configparser
-
+from selenium.webdriver.common.by import By
 
 
 # ブラウザ操作用 webdriver、ポジ、ネガを引数に取ってgenerate
@@ -21,49 +21,37 @@ def gen_Image(driver,prompt,negative,gen_width,gen_height):
          return False 
     
     print("title OK")
-    # WebUIはseleniumから普通に読み書きできない。JavaScriptで読み書きする。
-    # 拡張機能のせいかJSPathが環境により異なるらしい。shadowRootのありなし2通りに対応している。
 
-
-    # JSPathを文字列に格納 別のJSPathに手動で書き換えるならここ
-    JSPath = 'document.querySelector(\"body > gradio-app\").shadowRoot.querySelector'
-
-    try:
-        #最初の試行
-        driver.execute_script(f"{JSPath}(\"#txt2img_prompt > label > textarea\").focus() ;")
-    except:
-        # エラーだったらJSPathを変更
-        JSPath = 'document.querySelector'
-        try:
-            #2回目の試行            
-            driver.execute_script(f"{JSPath}(\"#txt2img_prompt > label > textarea\").focus() ;")
-        except Exception as e:
-            print(f"エラー詳細: {e}")
-            print("WebUIのプロンプト欄右クリックで「検証」 からの右クリック>「Copy」>「JSPath」でコピーされる文字列を確認して下さい。")
-            print("下記2パターン以外の場合、sub.pyのコード書き換えが必要です。")
-            print("document.querySelector(\"body > gradio-app\").shadowRoot.querySelector(\"#txt2img_prompt > label > textarea\")")
-            print("document.querySelector(\"#txt2img_prompt > label > textarea\")")
-
-
-    # promptの内容をテキストボックスに書き込み
-    driver.execute_script(f"{JSPath}(\"#txt2img_prompt > label > textarea\").value = \"{prompt}\" ;")
-    # ここまでだとテキストの変更を認識しない。「テキスト欄になにかしら入力」を力技で行う
     actions = ActionChains(driver)
+
+    # ポジティブプロンプト
+    element_posi = driver.find_element(By.XPATH,'//*[@id="txt2img_prompt"]/label/textarea')
+    print(element_posi)
+    driver.execute_script(f'arguments[0].value = "{prompt}"', element_posi)
+    #力技で変更を認識させる（末尾にスペースを入力）
+    driver.execute_script("arguments[0].focus()", element_posi)
     actions.send_keys(Keys.SPACE).perform()
 
-    driver.execute_script(f"{JSPath}(\"#txt2img_neg_prompt > label > textarea\").focus() ;")
-    driver.execute_script(f"{JSPath}(\"#txt2img_neg_prompt > label > textarea\").value = \"{negative}\" ;")   
-    # ここまでだとテキストの変更を認識しない2
+    # ネガティブプロンプト
+    element_nega = driver.find_element(By.XPATH,'//*[@id="txt2img_neg_prompt"]/label/textarea')
+    driver.execute_script(f'arguments[0].value = "{negative}"', element_nega)
+    #力技で変更を認識させる（末尾にスペースを入力）
+    driver.execute_script("arguments[0].focus()", element_nega)
     actions.send_keys(Keys.SPACE).perform()
+
 
     if gen_width != 0:
-        driver.execute_script(f"{JSPath}(\"#txt2img_width > div.w-full.flex.flex-col > div > input\").focus() ;")
-        driver.execute_script(f"{JSPath}(\"#txt2img_width > div.w-full.flex.flex-col > div > input\").value = \"{gen_width}\" ;") 
-        #力技で変更を認識させる。
+        element_width = driver.find_element(By.XPATH,'//*[@id="txt2img_width"]/div[2]/div/input')
+        driver.execute_script("arguments[0].setAttribute('style','color: red;')", element_width)
+        #力技で変更を認識させる（↑↓とキーを押す）
+        driver.execute_script("arguments[0].focus()", element_width)
         actions.send_keys(Keys.UP).perform()
         actions.send_keys(Keys.DOWN).perform()
-        driver.execute_script(f"{JSPath}(\"#txt2img_height > div.w-full.flex.flex-col > div > input\").focus() ;")
-        driver.execute_script(f"{JSPath}(\"#txt2img_height > div.w-full.flex.flex-col > div > input\").value = \"{gen_height}\" ;")
+
+        element_height = driver.find_element(By.XPATH,'//*[@id="txt2img_height"]/div[2]/div/input')
+        driver.execute_script(f"arguments[0].value = '{gen_height}'", element_height)
+        #力技で変更を認識させる（↑↓とキーを押す）
+        driver.execute_script("arguments[0].focus()", element_height)
         actions.send_keys(Keys.UP).perform()
         actions.send_keys(Keys.DOWN).perform()
 

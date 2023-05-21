@@ -96,13 +96,14 @@ if __name__ == '__main__':
 
     # iniファイル読み込み
     config_ini = configparser.ConfigParser()
-    config_ini.read("./config.ini", 'UTF-8')
+    inipath = os.path.dirname(__file__) + "\config.ini"
+    config_ini.read(inipath, 'UTF-8')
     dir = config_ini.get("Paths", "erasav", fallback="")
     # ダイアログを開く
     target_dir = filedialog.askdirectory(title = "監視するsavフォルダを選択",initialdir = dir)
     # iniに記入
     config_ini.set("Paths", "erasav", target_dir)
-    with open("config.ini", "w", encoding='UTF-8') as configfile:
+    with open(inipath, "w", encoding='UTF-8') as configfile:
         config_ini.write(configfile)
 
     if os.path.isdir(target_dir) == False:
