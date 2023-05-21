@@ -8,8 +8,8 @@ from sub import gen_Image
 import configparser
 from tkinter import filedialog
 from tkinter import messagebox
-from eratohoYM.suberatohoYM import promptmaker
-#from eraImascgpro.subcgpro import promptmaker
+#from eratohoYM.suberatohoYM import promptmaker
+from eraImascgpro.subcgpro import promptmaker
 
 from selenium import webdriver
 import sys

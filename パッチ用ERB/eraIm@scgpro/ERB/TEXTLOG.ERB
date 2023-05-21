@@ -1,0 +1,397 @@
+﻿;=============================================================================
+;調教中のパラメータをテキスト出力
+;JSON形式
+;時刻,キャラ名,素質,好感度,刻印,行為,絶頂,PALAM増減,PALAM累積値,ほかいろんなフラグ
+;GLOBAL:880 連続呼び出し防止用のタイマー
+;GLOBAL:881 出力テキストにつく連番
+;引数
+;ARGS どの場面から呼ばれたかを表す文字列 。"scene"要素としてそのまま文字列出力
+;ARG 描画キャラの番号 省略したらTARGET
+;ローカル変数
+;LOCALS  txt出力する文字列
+;LOCAL:0～2 カウンタ等に適当に使用
+;LOCAL:3 TARGETを一時保管しているので使ったらだめ
+;変数
+;FLAG:880 立ち絵表示の予約フラグ
+;0:なにもしない,1:ターゲット切替,2:移動
+;=============================================================================
+@OUTPUT_TXT(ARGS,ARG = 0)
+#DIMS SCENE
+
+;基本的には第1引数だけ指定して呼び出す。
+;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
+
+SCENE = %ARGS%
+
+;引数TACHIEで呼ばれたら、予約があるときのみ反応する（呼び出し元:SHOW_STATUS関数）
+IF ARGS == "TACHIE"
+	IF FLAG:880 == 1
+		SCENE = ターゲット切替
+		PRINTFORML %CALLNAME:target%を選択した
+		WAIT
+		FLAG:880 = 0
+	ELSEIF FLAG:880 == 2
+		SCENE = マスター移動
+		PRINTFORML 移動直後です
+		WAIT
+		FLAG:880 = 0
+	ELSE
+		;予約なしで呼ばれたらキャンセル
+		RETURN 0
+	ENDIF
+ENDIF
+
+;調教メニューお断り
+SIF TFLAG:224 == 555
+	RETURN 0
+
+;タイマーで200ミリ秒未満の連続実行を防ぐ
+GETMILLISECOND
+LOCAL = RESULT
+SIF GLOBAL:880 - LOCAL > -200
+	RETURN 0
+
+
+;連続実行防止タイマー更新
+GLOBAL:880 = LOCAL
+
+
+;対象がTARGETでない場面での呼び出しに対応するため、TAEGETを退避しておく。最後に戻す
+LOCAL:3 = TARGET
+;引数ありならTARGETを一時的に変更。引数を省略した場合はそのままTARGETを対象にする。
+SIF ARG != 0
+	TARGET = ARG
+
+
+;jsonの最初の波括弧を記述------------------------------------------------------
+LOCALS = \{
+
+;タイムスタンプ 時刻ミリ秒-----------------------------------------------------
+;txtとプロンプトを紐づけるIDにする。今のところ使ってない
+LOCALS = %LOCALS%"timestamp":{GLOBAL:880},
+
+;シーン------------------------------------------------------------------------
+;シーン文字列を書き出す
+LOCALS = %LOCALS%"scene":"%SCENE%",
+
+
+
+;TALENT(取得しているものだけ書き出し)-------------------------------------------
+;書式は "talent":["a","b","c",...]
+
+;素質を数えるカウンタ
+LOCAL:2 = 0
+
+LOCALS = %LOCALS%"talent":[
+;AV女優1332までループ。303～1009は空き
+REPEAT 1333
+	IF COUNT >303
+		SIF COUNT < 1010
+			CONTINUE
+	ENDIF
+
+	LOCAL=COUNT
+	SIF STRLENS(TALENTNAME:LOCAL) <= 0
+		CONTINUE
+	IF TALENT:TARGET:(LOCAL) == 1
+		LOCALS = %LOCALS%"%TALENTNAME:(LOCAL)%",
+		LOCAL:2 += 1
+	ENDIF
+	LOCAL += 1
+REND
+;余分な","を取り除くために末尾1文字を消す処理（素質が1つもなければ実行しない）
+SIF LOCAL:2 >= 1
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+
+LOCALS = %LOCALS%],
+
+
+;ABL(すべて書き出し)------------------------------------------------------
+;書式は "abl":{"a":Lv,"b":Lv,"c":Lv,...}
+LOCALS = %LOCALS%"abl":\{
+REPEAT 75
+	LOCAL=COUNT
+	SIF STRLENS(ABLNAME:LOCAL) <= 0
+		CONTINUE
+	LOCALS = %LOCALS%"%ABLNAME:(LOCAL)%":{ABL:TARGET:LOCAL},
+	LOCAL += 1
+REND
+;1文字消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;刻印-----------------------------------------------------------------------------------
+LOCALS = %LOCALS%"mark":\{
+REPEAT 7
+	LOCAL=COUNT
+	SIF STRLENS(MARKNAME:LOCAL) <= 0
+		CONTINUE
+	LOCALS = %LOCALS%"%MARKNAME:(LOCAL)%":{MARK:TARGET:LOCAL},
+	LOCAL += 1
+REND
+;1文字消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;このコマンドで上昇したPALAM-------------------------------------------------------
+
+LOCALS = %LOCALS%"palam_up":\{
+REPEAT 33
+	LOCAL = COUNT
+	SIF STRLENS(PALAMNAME:LOCAL) <= 0
+		CONTINUE
+	;上昇値が負の数なら0にする
+	UP:LOCAL = MAX(UP:LOCAL, 0)
+	;下降値が負の数なら0にする
+	DOWN:LOCAL = MAX(DOWN:LOCAL, 0)
+	;変数を統一
+	LOCAL:1 = UP:LOCAL - DOWN:LOCAL
+	LOCALS = %LOCALS%"%PALAMNAME:LOCAL%":{LOCAL:1},
+REND
+;1文字消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;現在PALAM(呼び出し位置が上昇前なので、UPを足して上昇後の値にする。)----------------------
+LOCALS = %LOCALS%"palam":\{
+REPEAT 33
+	LOCAL = COUNT
+	SIF STRLENS(PALAMNAME:LOCAL) <= 0
+		CONTINUE
+	LOCAL:2 = PALAM:LOCAL + UP:LOCAL
+	LOCALS = %LOCALS%"%PALAMNAME:LOCAL%":{LOCAL:2},
+REND
+;1文字消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+
+;TEQUIP------------------------------------------------------------------
+;値が1以上のものすべてについて、変数の番号をそのまま書き出す。
+LOCALS = %LOCALS%"equip":\{
+LOCAL:2 = 0
+;11クリキャップから40膣鏡まで
+REPEAT 41
+	SIF	COUNT < 11
+		CONTINUE
+	
+	LOCAL = COUNT	
+	SIF TEQUIP:LOCAL < 1
+		CONTINUE
+	LOCALS = %LOCALS%"{LOCAL}":{TEQUIP:LOCAL},
+	LOCAL:2 += 1
+REND
+SIF LOCAL:2 >= 1
+	;1文字消す
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+;------------------------------------------------------------------------
+;コマンドの成功失敗
+;YMだとフラグが見当たらないので判定値で計算
+;判定のないコマンドではこの値は更新されない
+
+IF TFLAG:240 < TFLAG:241
+	LOCALS = %LOCALS%"success":0,
+ELSE
+	LOCALS = %LOCALS%"success":1,
+ENDIF
+;PRINTFORML {TFLAG:240} >= {TFLAG:241}
+
+
+;------------------------------------------------------------------------
+
+
+
+
+;キャラ名称-------------------------------------------------------------
+LOCALS = %LOCALS%"target":"%NAME:(TARGET)%",
+
+
+
+;ここから単項目で数値型---------------------------------------------------
+LOCALS = %LOCALS%"キャラ固有番号":{NO},
+LOCALS = %LOCALS%"コマンド":{SELECTCOM},
+LOCALS = %LOCALS%"前回コマンド":{PREVCOM},
+LOCALS = %LOCALS%"PLAYER":{PLAYER},
+LOCALS = %LOCALS%"時間":{TIME},
+LOCALS = %LOCALS%"日付":{DAY},
+LOCALS = %LOCALS%"体力":{BASE:0},
+LOCALS = %LOCALS%"気力":{BASE:1},
+LOCALS = %LOCALS%"ムード":{BASE:10},
+LOCALS = %LOCALS%"理性":{BASE:11},
+LOCALS = %LOCALS%"怒り":{BASE:12},
+LOCALS = %LOCALS%"満足":{BASE:13},
+LOCALS = %LOCALS%"最大体力":{MAXBASE:0},
+LOCALS = %LOCALS%"最大気力":{MAXBASE:1},
+LOCALS = %LOCALS%"現在位置":{CFLAG:MASTER:現在位置},
+LOCALS = %LOCALS%"好感度":{CFLAG:2},
+LOCALS = %LOCALS%"妊娠フラグ":{CFLAG:4},
+LOCALS = %LOCALS%"キャラの通し番号":{CFLAG:5},
+LOCALS = %LOCALS%"お仕置きモード":{CFLAG:11},
+LOCALS = %LOCALS%"NTR_調教者":{CFLAG:12},
+LOCALS = %LOCALS%"娼婦紋":{CFLAG:19},
+LOCALS = %LOCALS%"軟禁者":{CFLAG:21},
+LOCALS = %LOCALS%"NTRカウンターセクハラ":{CFLAG:23},
+LOCALS = %LOCALS%"処女喪失中":{CFLAG:28},
+LOCALS = %LOCALS%"他人のムード":{CFLAG:43},
+LOCALS = %LOCALS%"他人との行為の終了時刻":{CFLAG:44},
+LOCALS = %LOCALS%"他人との行為":{CFLAG:45},
+LOCALS = %LOCALS%"輪姦内容":{CFLAG:46},
+LOCALS = %LOCALS%"物陰":{CFLAG:60},
+LOCALS = %LOCALS%"乙女の秘密":{CFLAG:69},
+LOCALS = %LOCALS%"にんっしんっ":{CFLAG:70},
+LOCALS = %LOCALS%"出産日":{CFLAG:72},
+LOCALS = %LOCALS%"膣内射精フラグ":{CFLAG:280},
+LOCALS = %LOCALS%"A射精フラグ":{CFLAG:282},
+LOCALS = %LOCALS%"睡眠":{CFLAG:313},
+LOCALS = %LOCALS%"衰弱":{CFLAG:316},
+LOCALS = %LOCALS%"うふふ":{CFLAG:317},
+LOCALS = %LOCALS%"怒り":{CFLAG:318},
+LOCALS = %LOCALS%"同室":{CFLAG:319},
+LOCALS = %LOCALS%"同行":{CFLAG:320},
+LOCALS = %LOCALS%"幽閉":{CFLAG:321},
+LOCALS = %LOCALS%"不機嫌":{CFLAG:322},
+LOCALS = %LOCALS%"風呂":{CFLAG:323},
+LOCALS = %LOCALS%"情事目撃":{CFLAG:324},
+LOCALS = %LOCALS%"自慰中":{CFLAG:326},
+LOCALS = %LOCALS%"睡眠深度":{CFLAG:380},
+LOCALS = %LOCALS%"NTR睡姦":{CFLAG:381},
+LOCALS = %LOCALS%"覚醒":{CFLAG:382},
+LOCALS = %LOCALS%"挿入":{CFLAG:383},
+LOCALS = %LOCALS%"発情度":{CFLAG:389},
+LOCALS = %LOCALS%"発情時間":{CFLAG:390},
+LOCALS = %LOCALS%"髪の長さ":{CFLAG:500},
+LOCALS = %LOCALS%"髪の長さ指定":{CFLAG:501},
+LOCALS = %LOCALS%"髪オプション１":{CFLAG:502},
+LOCALS = %LOCALS%"髪オプション２":{CFLAG:503},
+LOCALS = %LOCALS%"髪原色":{CFLAG:504},
+LOCALS = %LOCALS%"髪色":{CFLAG:505},
+LOCALS = %LOCALS%"目色右":{CFLAG:506},
+LOCALS = %LOCALS%"目色左":{CFLAG:507},
+LOCALS = %LOCALS%"目つき":{CFLAG:508},
+LOCALS = %LOCALS%"瞳オプション１":{CFLAG:509},
+LOCALS = %LOCALS%"瞳オプション２":{CFLAG:510},
+LOCALS = %LOCALS%"肌原色":{CFLAG:511},
+LOCALS = %LOCALS%"肌色":{CFLAG:512},
+LOCALS = %LOCALS%"体オプション１":{CFLAG:515},
+LOCALS = %LOCALS%"体オプション２":{CFLAG:516},
+LOCALS = %LOCALS%"体オプション３":{CFLAG:517},
+LOCALS = %LOCALS%"体オプション４":{CFLAG:518},
+LOCALS = %LOCALS%"体オプション５":{CFLAG:519},
+LOCALS = %LOCALS%"射精箇所":{TFLAG:1},
+LOCALS = %LOCALS%"SELECTCOM保存":{TFLAG:3},
+LOCALS = %LOCALS%"破瓜フラグ":{TFLAG:4},
+LOCALS = %LOCALS%"押し倒し":{TFLAG:5},
+LOCALS = %LOCALS%"お掃除フラグ":{TFLAG:8},
+LOCALS = %LOCALS%"V挿入継続フラグ":{TFLAG:10},
+LOCALS = %LOCALS%"A挿入継続フラグ":{TFLAG:11},
+LOCALS = %LOCALS%"逆レイプ継続フラグ":{TFLAG:12},
+LOCALS = %LOCALS%"反発刻印":{TFLAG:21},
+LOCALS = %LOCALS%"苦痛刻印":{TFLAG:22},
+LOCALS = %LOCALS%"快楽刻印":{TFLAG:23},
+LOCALS = %LOCALS%"屈服刻印":{TFLAG:24},
+LOCALS = %LOCALS%"奉仕快楽フラグ":{TFLAG:30},
+LOCALS = %LOCALS%"特殊COM":{TFLAG:50},
+LOCALS = %LOCALS%"好感度":{TFLAG:97},
+LOCALS = %LOCALS%"NOWTARGET":{TFLAG:98},
+LOCALS = %LOCALS%"調教中COMABLE管理":{TFLAG:100},
+LOCALS = %LOCALS%"調教自動実行管理":{TFLAG:101},
+LOCALS = %LOCALS%"COMABLE管理":{TFLAG:102},
+LOCALS = %LOCALS%"現在のTARGET":{TFLAG:104},
+LOCALS = %LOCALS%"ビデオカメラ":{TFLAG:105},
+LOCALS = %LOCALS%"電話フラグ":{TFLAG:159},
+LOCALS = %LOCALS%"電話相手":{TFLAG:160},
+LOCALS = %LOCALS%"電話相手仮存在":{TFLAG:161},
+LOCALS = %LOCALS%"会話フラグ":{TFLAG:170},
+LOCALS = %LOCALS%"コマンド成功度":{TFLAG:193},
+LOCALS = %LOCALS%"精子量":{TFLAG:220},
+LOCALS = %LOCALS%"輪姦内容":{TFLAG:221},
+LOCALS = %LOCALS%"射精対象フラグ":{TCVAR:0},
+LOCALS = %LOCALS%"射精箇所フラグ":{TCVAR:2},
+LOCALS = %LOCALS%"射精快感強度":{TCVAR:4},
+LOCALS = %LOCALS%"お掃除フラグ":{TCVAR:9},
+LOCALS = %LOCALS%"射精したフラグ":{TCVAR:10},
+LOCALS = %LOCALS%"射精した箇所フラグ":{TCVAR:11},
+LOCALS = %LOCALS%"コンドーム":{TCVAR:13},
+LOCALS = %LOCALS%"破瓜":{TCVAR:15},
+LOCALS = %LOCALS%"V挿入管理フラグ":{TCVAR:100},
+LOCALS = %LOCALS%"A挿入管理フラグ":{TCVAR:101},
+LOCALS = %LOCALS%"Vに中出しされたフラグ":{TCVAR:102},
+LOCALS = %LOCALS%"Vに中出ししたキャラの番号":{TCVAR:103},
+LOCALS = %LOCALS%"Aに中出しされたフラグ":{TCVAR:104},
+LOCALS = %LOCALS%"Aに中出ししたキャラの番号":{TCVAR:105},
+LOCALS = %LOCALS%"快楽強度":{TCVAR:106},
+LOCALS = %LOCALS%"体勢":{TCVAR:120},
+LOCALS = %LOCALS%"位置関係":{TCVAR:122},
+LOCALS = %LOCALS%"口の汚れ":{STAIN:0},
+LOCALS = %LOCALS%"手の汚れ":{STAIN:1},
+LOCALS = %LOCALS%"Ｐの汚れ":{STAIN:2},
+LOCALS = %LOCALS%"Ｖの汚れ":{STAIN:3},
+LOCALS = %LOCALS%"Ａの汚れ":{STAIN:4},
+LOCALS = %LOCALS%"Ｂの汚れ":{STAIN:5},
+LOCALS = %LOCALS%"膣内の汚れ":{STAIN:6},
+LOCALS = %LOCALS%"腸内の汚れ":{STAIN:7},
+LOCALS = %LOCALS%"Ｃ絶頂":{NOWEX:0},
+LOCALS = %LOCALS%"Ｖ絶頂":{NOWEX:1},
+LOCALS = %LOCALS%"Ａ絶頂":{NOWEX:2},
+LOCALS = %LOCALS%"Ｂ絶頂":{NOWEX:3},
+LOCALS = %LOCALS%"二重絶頂":{NOWEX:4},
+LOCALS = %LOCALS%"三重絶頂":{NOWEX:5},
+LOCALS = %LOCALS%"四重絶頂":{NOWEX:6},
+LOCALS = %LOCALS%"噴乳":{NOWEX:10},
+LOCALS = %LOCALS%"放尿":{NOWEX:12},
+LOCALS = %LOCALS%"絶頂演技":{NOWEX:14},
+LOCALS = %LOCALS%"下半身下着１":{EQUIP:下半身下着１},
+LOCALS = %LOCALS%"下半身下着２":{EQUIP:下半身下着２},
+LOCALS = %LOCALS%"下半身上着１":{EQUIP:下半身上着１},
+LOCALS = %LOCALS%"下半身上着２":{EQUIP:下半身上着２},
+LOCALS = %LOCALS%"スカート":{EQUIP:スカート},
+LOCALS = %LOCALS%"上半身下着１":{EQUIP:上半身下着１},
+LOCALS = %LOCALS%"上半身下着２":{EQUIP:上半身下着２},
+LOCALS = %LOCALS%"上半身上着１":{EQUIP:上半身上着１},
+LOCALS = %LOCALS%"上半身上着２":{EQUIP:上半身上着２},
+LOCALS = %LOCALS%"ボディースーツ":{EQUIP:ボディースーツ},
+LOCALS = %LOCALS%"ワンピース":{EQUIP:ワンピース},
+LOCALS = %LOCALS%"着物":{EQUIP:着物},
+LOCALS = %LOCALS%"レオタード":{EQUIP:レオタード},
+
+LOCALS = %LOCALS%"催眠":{TEQUIP:300},
+LOCALS = %LOCALS%"下半身着衣状況":{TEQUIP:0},
+LOCALS = %LOCALS%"上半身着衣状況":{TEQUIP:1},
+LOCALS = %LOCALS%"下半身ずらし状態":{TEQUIP:2},
+LOCALS = %LOCALS%"上半身はだけ状態":{TEQUIP:3},
+LOCALS = %LOCALS%"マスターがＶ挿入":{MASTER_POSE(6,1)},
+LOCALS = %LOCALS%"マスターがＡ挿入":{MASTER_POSE(7,1)},
+
+
+
+
+;末尾の,を消去してから波括弧を閉じる
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\}
+;PRINTFORML %LOCALS%
+;SAVETEXT関数でsavフォルダに出力される。
+;SAVETEXT 文字列 連番 
+SAVETEXT LOCALS, GLOBAL:881
+
+;後始末 ARGを省略していたら意味のない処理
+TARGET = LOCAL:3
+
+;出力テキストの連番は0～4でループさせる
+GLOBAL:881 = GLOBAL:881 + 1
+SIF GLOBAL:881 == 5
+	GLOBAL:881 = 0
+	
+PRINTFORML {SELECTCOM}
+;-------------------------------------------------------------------------------
+;SHOWSTATUS関数中での立ち絵表示を予約する	
+@SET_TACHIE_FLAG(ARGS)
+	IF ARGS == "ターゲット切替"
+		FLAG:880 = 1
+	ELSEIF ARGS == "マスター移動"
+		FLAG:880 = 2	
+	ENDIF
+	

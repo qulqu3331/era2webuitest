@@ -1,0 +1,602 @@
+;-----------------------------------------------------------
+;移動
+;-----------------------------------------------------------
+@COM400
+#DIMS ROOMNAME
+#DIM PAGE
+
+CALL TURN_RESET
+
+;遠距離移動中の処理
+IF TFLAG:195
+	IF TFLAG:195 == CFLAG:MASTER:現在位置
+		NEXTCOM = -1
+		TFLAG:195 = 0
+		FOR LOCAL,1,CHARA_ACTIVE
+			SIF CFLAG:LOCAL:同行
+				CFLAG:LOCAL:現在位置 = CFLAG:MASTER:現在位置
+		NEXT
+		RETURN 0
+	ENDIF
+	;キャラの位置更新(NEXTCOM設定中は@SHOW_STATUSが走らないのでこっちで処理)
+	CALL MOVEMENT_WORKING(TIME)
+	CALL RIVAL_MOVEMENT_WORKING(TIME)
+	CALL CHARA_MOVEMENT
+	TFLAG:300 = DATETIME()
+	;キャラをCFLAG:310の昇順に並び替え
+	VARSET TARGET
+	CALL SORT_CFLAG(310)
+	LOCAL:1 = 0
+	CALL NTR_CHK_GOWITH(10)
+	FOR LOCAL,1,CHARA_ACTIVE
+		SIF NTR_HAS_CHARA_VISITOREX(RESULT:LOCAL)
+			CONTINUE
+		SIF CFLAG:MASTER:現在位置 != CFLAG:(RESULT:LOCAL):現在位置
+			CONTINUE
+		LOCAL:1 ++
+		TARGET:(LOCAL:1) = RESULT:LOCAL
+	NEXT
+	
+	LOCAL:2 = 0
+	;誰かいないかチェック
+	FOR LOCAL,1,CHARA_ACTIVE
+		SIF TARGET:LOCAL <= 0
+			CONTINUE
+		SIF CFLAG:(TARGET:LOCAL):同行
+			CONTINUE
+		LOCAL:2 = TARGET:LOCAL
+	NEXT
+	IF LOCAL:2
+		PRINTFORML %GETPLACENAME(CFLAG:MASTER:現在位置)%で%CALLNAME:(LOCAL:2)%と出会った
+		;STRLENSU CALLNAME:(LOCAL:2)
+		;PRINTFORMW 対象:%CALLNAME:(LOCAL:2)% パンツ:%CSTR:MASTER:12% %SUBSTRINGU(CSTR:MASTER:12, 0, RESULT)%
+		IF STRLENS(CSTR:MASTER:12) && 収集品死守戦発生(LOCAL:2) && !CFLAG:(LOCAL:2):睡眠
+			PRINTL 
+			CALL 収集品死守戦開始, LOCAL:2
+			IF RESULT == 1
+				PRINTFORMW %CALLNAME:MASTER%は%CALLNAME:(LOCAL:2)%に見とがめられ身体検査をされた…
+				PRINTFORMW 
+				PRINTFORMW 
+				PRINTFORMW 
+				PRINTFORMW 収集品を没収された
+				SIF GETBIT (CFLAG:(LOCAL:2):MASTERの弱味,0)
+					PRINTFORMW %CALLNAME:(LOCAL:2)%に弱みを握られた
+				CALL KOJO_EVENT(11, LOCAL:2, 0)
+				SETBIT CFLAG:(LOCAL:2):MASTERの弱味 ,0
+				CSTR:MASTER:12 =
+				NEXTCOM = -1
+				RETURN 0
+			ENDIF
+		ELSEIF FLAG:貞操帯鍵購入フラグ && RAND:2 && CFLAG:TARGET:NTR貞操帯反応
+			PRINTL 
+			PRINTFORMW %CALLNAME:TARGET%に見とがめられ身体検査をされた…
+			PRINTFORMW 
+			PRINTFORMW 
+			PRINTFORMW 
+			PRINTFORMW 貞操帯の鍵を発見された。
+			CALL NTR_LOCK_REACTION(TARGET)
+		ELSE
+			;立ち止まりなし
+			IF GETBIT(FLAG:雑多設定,3)
+				IF CFLAG:(LOCAL:2):現在位置 == FLAG:訪問者の現在位置 && FLAG:訪問者のムード != 0
+					PRINTFORMW %CALLNAME:(LOCAL:2)%は誰かと隠れるように何かしていたようだ
+				ELSEIF CFLAG:(LOCAL:2):現在位置 == FLAG:訪問者の現在位置
+					PRINTFORMW %CALLNAME:(LOCAL:2)%は誰かと話していたようだ
+				ELSE
+					CALL KOJO_EVENT(10, LOCAL:2, 0)
+				ENDIF
+			ENDIF
+			;立ち止まり有り
+			IF !GETBIT(FLAG:雑多設定,3)
+				PRINTL ……　どうしますか？
+				PRINTL [0] そのまま移動する
+				PRINTL [1] 立ち止まる
+				INPUT
+			ENDIF
+			
+			IF RESULT == 0 || GETBIT(FLAG:雑多設定,3)
+			;無視する場合
+			;何もしないでいいかな…無視されて怒らせる？
+				IF CFLAG:(LOCAL:2):現在位置 == FLAG:訪問者の現在位置 && FLAG:訪問者のムード != 0
+					PRINTFORMW %CALLNAME:(LOCAL:2)%は誰かと隠れるように何かしていたようだ
+				ELSEIF CFLAG:(LOCAL:2):現在位置 == FLAG:訪問者の現在位置
+					PRINTFORMW %CALLNAME:(LOCAL:2)%は誰かと話していたようだ
+				ELSE
+					CALL KOJO_EVENT(10, LOCAL:2, 0)
+				ENDIF
+			ELSE
+			;実際は0以外全部立ち止まる扱い
+				IF CFLAG:(LOCAL:2):現在位置 == FLAG:訪問者の現在位置 && FLAG:訪問者のムード != 0
+					IF IS_AIR_MASTER(LOCAL:2) < FLAG:訪問者のムード
+						PRINTFORMW %CALLNAME:(LOCAL:2)%は誰かと隠れるように何かしていたようだが、%CALLNAME:MASTER%が来て中断したようだ
+						CALL NTR_RESET_VISITOR_ACTION(LOCAL:2)
+					ENDIF
+				ELSEIF CFLAG:(LOCAL:2):現在位置 == FLAG:訪問者の現在位置
+					PRINTFORMW %CALLNAME:(LOCAL:2)%は誰かと話していたようだ
+					CALL NTR_RESET_VISITOR_ACTION(LOCAL:2)
+				ELSE
+					CALL KOJO_EVENT(10, LOCAL:2, 1)
+				ENDIF
+				NEXTCOM = -1
+				RETURN 0
+			ENDIF
+		ENDIF
+	ENDIF
+		LOCAL:1 = IN_ROOM("MIN", 18, "CFLAG", 6)
+	;遠距離移動
+	IF CAN_MOVE(CFLAG:MASTER:現在位置, TFLAG:195)
+		IF TFLAG:195 != 場所_あなたの家 && TFLAG:195 > 場所番号最大値初期数 && FLAG:(300 + TFLAG:195) && !HAS_DUPLICATE_KEY(TFLAG:195)
+			;あなた以外の私室 and 合鍵無し
+			PRINTW 内側から鍵が掛けられている…
+			PRINTL
+			;遠距離移動フラグ消去
+			NEXTCOM = -1
+			RETURN 0
+		;学校
+		ELSEIF TFLAG:195 == 場所_学校 
+			;学生でなければ通学出来ない
+			;学校に行くようにしたため、学校に入れなきゃきついので、バランス調整のため、
+			;IF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME > 360 && TIME < 1080 && JOB_SCHOOL(MASTER) != 2
+			IF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME > 360 && TIME < 1080 && JOB_SCHOOL(MASTER) != 2
+				;PRINTL 許可なく入校したら面倒な事になるだろう…
+				PRINTL 関係者という事で入校することを許してもらった…
+				;遠距離移動フラグ消去
+				CFLAG:MASTER:現在位置 = (TFLAG:195)
+				NEXTCOM = -1
+				;RETURN 0
+			;登校時間前、下校時間後は誰も入れない
+			ELSEIF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME > 300 && TIME < 360 || TIME > 1080 && TIME < 1320
+				PRINTL 校門はかたく閉ざされている…
+				;遠距離移動フラグ消去
+				NEXTCOM = -1
+				RETURN 0
+			;深夜の間は誰でも侵入できる
+			ELSEIF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME < 300 || TIME >= 1320
+				PRINTFORMW この時間なら学校に侵入出来るだろう…
+				PRINTL
+				CFLAG:MASTER:現在位置 = (TFLAG:195)
+				;遠距離移動フラグ消去
+				NEXTCOM = -1
+			;それ以外の場合、休日は駄目
+			ELSEIF DAY%7 >= 5
+				PRINTL 今日は休日だった…
+				;遠距離移動フラグ消去
+				NEXTCOM = -1
+				RETURN 0
+			ELSE
+				CFLAG:MASTER:現在位置 = (TFLAG:195)
+				;遠距離移動フラグ消去
+				NEXTCOM = -1
+			ENDIF
+		;それ以外の場所
+		ELSE
+			;あなたの現在位置に移動先を代入
+			CFLAG:MASTER:現在位置 = (TFLAG:195)
+			;部屋が施錠されている and 施錠されている部屋の合鍵を持っている
+			IF FLAG:(300 + TFLAG:195)
+				;施錠されている
+				IF TFLAG:195 == 場所_あなたの家
+					;あなた私室はいつでも開けられる
+					PRINTFORML %"内側から鍵が掛けられている……"+CALLNAME:MASTER+"は鍵を開けて入った"%
+				ELSEIF HAS_DUPLICATE_KEY(TFLAG:195)
+					;合鍵があれば開けられる
+					PRINTFORML %"内側から鍵が掛けられている……"+CALLNAME:MASTER+"は合鍵を使って入った"%
+				ENDIF
+			ENDIF
+			PRINTFORML 
+			FOR LOCAL, 1, CHARA_ACTIVE
+				;ターゲットと訪問者が一緒 and 訪問者のムードが会話以外(キス以上) and あなたとターゲットが一緒
+				IF CFLAG:LOCAL:現在位置 == FLAG:訪問者の現在位置 && FLAG:訪問者のムード != 0 && CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置
+					;性交以外
+					IF 1 <= FLAG:訪問者との行為 && FLAG:訪問者との行為 <= 6
+						PRINTFORML 【%GETPLACENAME(FLAG:21)%】で%CALLNAME:LOCAL%は%NTR_NAME(他人)%と何かしていたようだが、%CALLNAME:MASTER%が来て中断したようだ
+						PRINTFORML %CALLNAME:LOCAL%の顔が若干赤い気がする
+						PRINTFORMW 
+						CALL NTR_RESET_VISITOR_ACTION(LOCAL)
+					;性交時 and (1/3 or 空気度が4以上 or 性交時の覗きバレ)
+					ELSEIF 7 <= FLAG:訪問者との行為 && FLAG:訪問者との行為 <= 13 && (RAND:3 == 0 || IS_AIR_MASTER(LOCAL) >= 4 || (CFLAG:LOCAL:覗き発覚回数 > 0 && CFLAG:LOCAL:覗き発覚時行為 >= 7))
+						TRYCALLFORM NTR_INFIDELITY(LOCAL)
+					;性交時
+					ELSEIF 7 <= FLAG:訪問者との行為 && FLAG:訪問者との行為 <= 13
+						PRINTFORML 【%GETPLACENAME(FLAG:21)%】で%CALLNAME:LOCAL%は%NTR_NAME(他人)%と何かしていたようだが近づいてくる%CALLNAME:MASTER%に気づき、慌てて行為を中断したようだ
+						PRINTFORML %CALLNAME:LOCAL%の顔が若干赤く衣服が乱れている
+						PRINTFORMW 
+						CALL NTR_RESET_VISITOR_ACTION(LOCAL)
+					ENDIF
+				;ターゲットと訪問者が一緒 and あなたとターゲットが一緒
+				ELSEIF CFLAG:LOCAL:現在位置 == FLAG:訪問者の現在位置 && CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置
+					PRINTFORMW %CALLNAME:LOCAL%は誰かと話していたようだ
+					CALL NTR_RESET_VISITOR_ACTION(LOCAL)
+				;あなたとターゲットが一緒 and 睡眠中
+				ELSEIF CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置 && CFLAG:LOCAL:睡眠
+					PRINTFORMW %CALLNAME:LOCAL%は眠っている
+					CALL KOJO_EVENT(7,LOCAL,2)
+				ENDIF
+			NEXT
+			;遠距離移動フラグ消去
+			NEXTCOM = -1
+		ENDIF
+		FOR LOCAL,1,CHARA_ACTIVE
+			SIF CFLAG:LOCAL:同行
+				CFLAG:LOCAL:現在位置 = CFLAG:MASTER:現在位置
+		NEXT
+	ELSE
+		;現在位置を更新し、次も移動の扱いにする
+		CFLAG:MASTER:現在位置 = FARMOVE(MASTER, TFLAG:195)
+		NEXTCOM = 400
+	ENDIF
+	SIF FLAG:訪問者同行フラグ
+		FLAG:訪問者の現在位置 = CFLAG:MASTER:現在位置
+
+	;現在位置の情景描写
+	CALL MAP_MOBMATION
+
+	TIME += 3
+	RETURN 0
+ENDIF
+
+;プレイヤーの位置から表示するマップを変更
+CALL GET_PLAYER_MAP
+PAGE = RESULT
+
+$LOOP_PAGE
+
+CLEARLINE 1
+PRINTL 移動場所選択
+CALL SET_TACHIE_FLAG("マスター移動")
+DRAWLINE
+CALL MAP_PRINT_0
+CALLFORM MAP_PRINT_{PAGE}
+PRINTL
+DRAWLINE
+
+PRINTFORML 現在{CFLAG:MASTER:現在位置}:%GETPLACENAME(CFLAG:MASTER:現在位置)%にいます
+PRINTL
+SIF !CAN_MOVE(CFLAG:MASTER:現在位置, CFLAG:MASTER:開始位置) && CFLAG:MASTER:現在位置 != CFLAG:MASTER:開始位置
+PRINTL  [0] - 私室へ戻る
+FOR LOCAL,0, 場所番号最大値初期数
+	IF CAN_MOVE(CFLAG:MASTER:現在位置, LOCAL) || LOCAL == 場所_事務所玄関
+		SIF LOCAL < 10
+			PRINTS " "
+		PRINTFORMLC [{LOCAL}] - %GETPLACENAME(LOCAL)%
+		;居場所筒抜けモードだと、隣に誰が居るか分かる
+		IF !GETBIT(FLAG:ＮＴＲパッチ設定,31)
+			PRINTL 
+			CONTINUE
+		ENDIF
+		LOCALS:1 = 
+		SIF LOCAL > 9
+			LOCALS:1 += " "
+		FOR LOCAL:9, 1, CHARA_ACTIVE
+			SIF CFLAG:(LOCAL:9):現在位置 == LOCAL
+				LOCALS:1 += ", " + CALLNAME:(LOCAL:9)
+		NEXT
+		PRINTFORML %LOCALS:1%
+	ENDIF
+NEXT
+PRINT [100] - 戻る
+$INPUT_LOOP
+INPUTS
+SIF RESULTS == ""
+	GOTO INPUT_LOOP
+RESULT = TOINT(RESULTS) - (TOINT(RESULTS) == 0 && RESULTS != "0")
+IF RESULT == -1
+	REPLACE RESULTS, CALLNAME:MASTER, "%CALLNAME:MASTER%"
+	FOR LOCAL, 1, 18
+		SIF GETPLACENAME(LOCAL) == RESULTS
+			RESULT = LOCAL
+	NEXT
+ENDIF
+
+IF RESULT == 0
+	;直接ワープで戻るのはよくないので置換
+	RESULT = CFLAG:MASTER:開始位置
+ENDIF
+
+
+IF RESULT == 100 || RESULT == CFLAG:MASTER:現在位置
+	RETURN 0
+;マップ変更
+ELSEIF RESULT >= 1000 && RESULT <= 1001
+	PAGE = RESULT - 1000
+	GOTO LOOP_PAGE
+ELSEIF RESULT == 0
+	;どうしようもなければワープで戻る
+	CFLAG:MASTER:現在位置 = CFLAG:MASTER:開始位置
+ELSEIF RESULT < 0 || RESULT > 移動可能_場所番号最大値
+	CLEARLINE 1
+	REUSELASTLINE 
+	GOTO INPUT_LOOP
+;移動先が隣の場所
+ELSEIF CAN_MOVE(CFLAG:MASTER:現在位置, RESULT)
+	SIF FLAG:1840 < 2
+		FLAG:1840 = 0
+	;MASTER自室は常に入れる
+	IF RESULT == 場所_あなたの家
+		FLAG:(300 + 場所_あなたの家) = 0
+	ENDIF
+	;各私室 and 合鍵無し
+	IF RESULT > 場所番号最大値初期数 &&  FLAG:(300 + RESULT) && !HAS_DUPLICATE_KEY(RESULT)
+		PRINTW 内側から鍵が掛けられている…
+		PRINTL
+		RESTART
+	;学校
+	ELSEIF RESULT == 場所_学校
+		;学生でなければ通学出来ない
+		;IF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME > 360 && TIME < 1080 && JOB_SCHOOL(MASTER) != 2
+			;PRINTL 許可なく入校したら面倒な事になるだろう…
+			;RETURN 0
+		IF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME > 360 && TIME < 1080 && JOB_SCHOOL(MASTER) != 2
+			PRINTL 関係者という事で入校することを許してもらった…
+			PRINTL
+			CFLAG:MASTER:現在位置 = RESULT
+		;登校時間前、下校時間後は誰も入れない
+		ELSEIF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME > 300 && TIME < 360 || TIME > 1080 && TIME < 1320
+			PRINTL 校門はかたく閉ざされている…
+			RETURN 0
+		;深夜の間は誰でも侵入できる
+		ELSEIF CFLAG:MASTER:現在位置 == 場所_繁華街 && TIME < 300 || TIME >= 1320
+			PRINTFORMW この時間なら学校に侵入出来るだろう…
+			PRINTL
+			CFLAG:MASTER:現在位置 = RESULT
+		;それ以外の場合、休日は駄目
+		ELSEIF DAY%7 >= 5
+			PRINTL 今日は休日だった…
+			;遠距離移動フラグ消去
+			NEXTCOM = -1
+			RETURN 0
+		ELSE
+			CFLAG:MASTER:現在位置 = RESULT
+		ENDIF
+	;それ以外の場所
+	ELSE
+		CFLAG:MASTER:現在位置 = RESULT
+		;部屋が施錠されている and 施錠されている部屋の合鍵を持っている
+		SIF FLAG:(300 + RESULT) && HAS_DUPLICATE_KEY(RESULT)
+			PRINTFORML 合鍵を使って入った
+		PRINTFORML 
+			FOR LOCAL, 1, CHARA_ACTIVE
+				;ターゲットと訪問者が一緒 and 訪問者のムードが会話以外(キス以上) and あなたとターゲットが一緒
+				IF CFLAG:LOCAL:現在位置 == FLAG:訪問者の現在位置 && FLAG:訪問者のムード != 0 && CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置
+					;性交以外
+					IF 1 <= FLAG:訪問者との行為 && FLAG:訪問者との行為 <= 6
+						PRINTFORML 【%GETPLACENAME(FLAG:21)%】で%CALLNAME:LOCAL%は%NTR_NAME(他人)%と何かしていたようだが、%CALLNAME:MASTER%が来て中断したようだ
+						PRINTFORML %CALLNAME:LOCAL%の顔が若干赤い気がする
+						PRINTFORMW 
+						CALL NTR_RESET_VISITOR_ACTION(LOCAL)
+					;性交時 and (1/3 or 空気度が4以上 or 性交時の覗きバレ)
+					ELSEIF 7 <= FLAG:訪問者との行為 && FLAG:訪問者との行為 <= 13 && (RAND:3 == 0 || IS_AIR_MASTER(LOCAL) >= 4 || (CFLAG:LOCAL:覗き発覚回数 > 0 && CFLAG:LOCAL:覗き発覚時行為 >= 7))
+						TRYCALLFORM NTR_INFIDELITY(LOCAL)
+					;性交時
+					ELSEIF 7 <= FLAG:訪問者との行為 && FLAG:訪問者との行為 <= 13
+						PRINTFORML 【%GETPLACENAME(FLAG:21)%】で%CALLNAME:LOCAL%は%NTR_NAME(他人)%と何かしていたようだが近づいてくる%CALLNAME:MASTER%に気づき、慌てて行為を中断したようだ
+						PRINTFORML %CALLNAME:LOCAL%の顔が若干赤く衣服が乱れている
+						PRINTFORMW 
+						CALL NTR_RESET_VISITOR_ACTION(LOCAL)
+					ENDIF
+				ELSEIF CFLAG:LOCAL:現在位置 == FLAG:訪問者の現在位置 && CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置 && CFLAG:LOCAL:睡眠
+				    PRINTFORMW 睡眠中の%CALLNAME:LOCAL%が%NTR_NAME(他人)%に襲われている
+				;ターゲットと訪問者が一緒 and あなたとターゲットが一緒
+				ELSEIF CFLAG:LOCAL:現在位置 == FLAG:訪問者の現在位置 && CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置
+					PRINTFORMW %CALLNAME:LOCAL%は誰かと話していたようだ
+					CALL NTR_RESET_VISITOR_ACTION(LOCAL)
+				;あなたとターゲットが一緒 and 睡眠中
+				ELSEIF CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置 && CFLAG:LOCAL:睡眠
+					PRINTFORMW %CALLNAME:LOCAL%は眠っている
+					CALL KOJO_EVENT(7,LOCAL,2)
+				ENDIF
+			NEXT
+	ENDIF
+	FOR LOCAL,1,CHARA_ACTIVE
+		SIF CFLAG:LOCAL:同行
+			CFLAG:LOCAL:現在位置 = CFLAG:MASTER:現在位置
+	NEXT
+	CALL NTR_CHK_GOWITH(10)
+ELSE
+	SIF FLAG:1840 < 2
+		FLAG:1840 = 0
+	;目的地が離れているので、最終目的地として設定
+	TFLAG:195 = RESULT
+	;現在位置を更新し、次も移動の扱いにする
+	CFLAG:MASTER:現在位置 = FARMOVE(MASTER,TFLAG:195)
+	NEXTCOM = 400
+ENDIF
+SIF FLAG:訪問者同行フラグ
+	FLAG:訪問者の現在位置 = CFLAG:MASTER:現在位置
+
+;現在位置の情景描写
+CALL MAP_MOBMATION
+
+TIME += 3
+PREVCOM = 400
+STR:0 = 移動
+RETURN 0
+
+[SKIPSTART]
+;MASTER遠距離移動
+;ARG:0	最終目的地
+;RETURN	今回移動するところ
+@FARMOVE(ARG:0)
+;LOCAL一覧
+;0	現在の位置
+;1	暫定目的地
+
+;現在位置取得
+LOCAL:0 = CFLAG:MASTER:現在位置
+
+;暫定目的地決定
+LOCAL:1 = ARG:0
+$LOOP
+;暫定目的地に直接移動できる場合
+IF CAN_MOVE(CFLAG:MASTER:現在位置, LOCAL:1)
+	;そこに移動
+	RETURN LOCAL:1
+ENDIF
+
+GOTO LOOP
+[SKIPEND]
+
+;収集品死守戦発生条件
+@収集品死守戦発生(ARG)
+#FUNCTION
+;ARG 対象キャラ番号
+;怪しまれる確率設定
+;基礎値 主人公の収集経験(MAX100)
+LOCAL = MIN(CFLAG:MASTER:収集品死守戦フラグ, 100)
+
+LOCAL:1 = 0
+;収集品が対象の物なら察知確率上昇
+STRLENSU CALLNAME:ARG
+IF SUBSTRINGU(CSTR:MASTER:12, 0, RESULT) == CALLNAME:ARG
+	;但し好感度が高いと上昇値が減少
+	IF CFLAG:ARG:好感度 <= 50
+		LOCAL:1 += 20
+	ELSEIF CFLAG:ARG:好感度 <= 100
+		LOCAL:1 += 15
+	ELSEIF CFLAG:ARG:好感度 <= 200
+		LOCAL:1 += 10
+	ELSEIF CFLAG:ARG:好感度 <= 300
+		LOCAL:1 += 5
+	ENDIF
+;そうでなければ対象が恋慕を取得していると上昇
+ELSE
+	;チルノ、大妖精は自分に関係がない場合は怪しまない
+	SIF (ARG == 8 || ARG == 9)
+		RETURNF 0
+		
+	IF TALENT:ARG:恋慕 && !TALENT:ARG:親愛
+		;加えて好感度が高いとさらに上昇値が増加
+		IF CFLAG:ARG:好感度 >= 3000
+			LOCAL:1 += 25
+		ELSEIF CFLAG:ARG:好感度 >= 2000
+			LOCAL:1 += 20
+		ELSEIF CFLAG:ARG:好感度 >= 1000
+			LOCAL:1 += 15
+		ELSE
+			LOCAL:1 += 10
+		ENDIF
+	ENDIF
+ENDIF
+
+;出会ったキャラ別の察知能力
+SELECTCASE ARG
+	CASE 1
+		LOCAL:1 += 60
+	CASE 2
+		LOCAL:1 += 45
+	CASE 3
+		LOCAL:1 += 40
+	CASE 4
+		LOCAL:1 += 70
+	CASE 5
+		LOCAL:1 += 35
+	CASE 6
+		LOCAL:1 += 20
+	CASE 7
+		LOCAL:1 += 30
+	CASE 8
+		LOCAL:1 += 5
+	CASE 9
+		LOCAL:1 += 10
+ENDSELECT
+
+;確率設定
+SIF RAND:LOCAL >= LOCAL:1
+	RETURNF 0
+RETURNF 1
+
+;収集品死守戦開始
+@収集品死守戦開始, ARG, ARG:1
+;ARG キャラ名
+;ARG:1 怪しまれた時の状態(0=移動中, 1=移動していない)
+IF ARG:1
+	;ちょいと適当すぎるか？
+	PRINTFORMW %CALLNAME:ARG%に突然何かを隠していないかと尋ねられた
+ELSE
+	PRINTFORMW %CALLNAME:ARG%は%CALLNAME:MASTER%を呼び止め、何かを隠していないかと尋ねられた
+ENDIF
+PRINTFORMW このままでは持っているコレクションを見つけられてしまう！
+PRINTFORML どうする？
+PRINTL
+SIF !ARG:1
+	PRINTL [0] 逃げる
+PRINTL [1] 話を逸らす
+;PRINTL [2] 
+$LOOP_死守戦開始
+INPUT
+IF RESULT == 0 && !ARG:1
+	PRINTFORMW %CALLNAME:MASTER%は一瞬相手の気を逸らすと、全力でその場から走り去った
+	LOCAL = 0
+	LOCAL:1 = 0
+	;対象の戦闘技能とMASTERの戦闘技能の差で判定
+	;差が+4以上なら逃走失敗、-4以下なら逃走確定
+	SELECTCASE (ABL:ARG:交渉能力 - ABL:MASTER:交渉能力)
+		CASE IS > 3
+			LOCAL = 1
+		CASE 3
+			LOCAL:1 = 90
+		CASE 2
+			LOCAL:1 = 70
+		CASE 1
+			LOCAL:1 = 60
+		CASE 0
+			LOCAL:1 = 50
+		CASE -1
+			LOCAL:1 = 40
+		CASE -2
+			LOCAL:1 = 20
+		CASE -3
+			LOCAL:1 = 10
+	ENDSELECT
+	;差が+4以上又は-4以下でなければ確率
+	SIF LOCAL:1 && RAND:100 < LOCAL:1
+		LOCAL = 1
+	IF LOCAL
+		PRINTFORMW しかし、%CALLNAME:ARG%に直ぐに追いつかれてしまった…
+		RETURN 1
+	ELSE
+		PRINTFORMW どうやら%CALLNAME:ARG%から逃げることが出来たようだ…
+		;好感度5%削減
+		TIMES CFLAG:ARG:好感度, 0.95
+		RETURN 0
+	ENDIF
+ELSEIF RESULT == 1
+	PRINTFORMW %CALLNAME:MASTER%は持ち前の話術でなんとかその場を乗り切る事にした
+	IF RAND:100 >= (EXP:MASTER:会話経験 - CFLAG:ARG:収集品死守戦フラグ)
+		PRINTFORMW しかし、うまく誤魔化す事は出来なかった…
+		RETURN 1
+	ELSE
+		IF ARG:1
+			PRINTFORMW なんとか%CALLNAME:ARG%を誤魔化す事に成功した
+		ELSE
+			PRINTFORMW なんとか誤魔化す事に成功し、%CALLNAME:MASTER%は早々と%GETPLACENAME(CFLAG:MASTER:現在位置)%を後にした…
+		ENDIF
+		;一度ごまかしに成功するにつれてごまかされにくくなる
+		CFLAG:ARG:収集品死守戦フラグ += 10
+		RETURN 0
+	ENDIF
+ELSE
+	CLEARLINE 1
+	GOTO LOOP_死守戦開始
+ENDIF
+;-----------------------------------------------------------
+;コマンド実行条件
+;-----------------------------------------------------------
+@COM_ABLE400
+	;実行判定
+	SIF !TFLAG:100
+		RETURN 0
+	;一括管理
+	SIF GLOBAL_COMABLE(400)
+		RETURN RESULT
+	SIF CFLAG:MASTER:現在位置 > 場所番号最大値
+		RETURN 0
+	SIF CFLAG:うふふ == 2
+		RETURN 0
+	;奢り中は移動できない
+	FOR LOCAL, 1, CHARA_ACTIVE
+		SIF TEQUIP:LOCAL:奢り中 || TEQUIP:LOCAL:パーティー中
+			RETURN 0
+	NEXT
+	
+RETURN 1

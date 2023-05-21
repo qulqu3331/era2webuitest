@@ -1,0 +1,22 @@
+﻿置換前,置換後,備考
+汎用拒否,"1girl,(her arms hugging herself),(~:-\(:1.2),frown,(wide shot:1.1),(slit almond eyes:1.2)",プロンプト中に書かれた、%で囲われた文字列に対して置換処理を行う。（例　%汎用拒否%）
+汎用拒否ネガ,"fellatio,hand job",
+,,
+,,
+高身長,<lora:Squeezer2:-0.2>,ちょっぴり大人になる。副作用で巨乳になる。学習が弱いけどロリに描かれると違和感の強いキャラに（小町とか
+,,
+,,
+シンデレラ1,"<lyco:theIdolmSTERCinderellaGirls_v12:0.6>,idolmaster cinderella girls",
+シンデレラ2,"<lyco:deresute-unvoiced-v1.2:0.5>,idolmaster cinderella girls",
+シンデレラ3,"<lora:u149-v3.1:0.6>,idolmaster cinderella girls",
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+正方形,512x512,解像度欄も置換対象とする。
+縦長,512x640,
+横長,640x512,

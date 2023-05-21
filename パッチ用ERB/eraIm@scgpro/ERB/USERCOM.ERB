@@ -1,0 +1,335 @@
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@SHOW_USERCOM
+	#DIM  姿勢フラグ
+	#DIM  コマンド番号
+	#DIMS コマンド名称
+	コマンド番号 = 0
+	TFLAG:100 = !TFLAG:101
+	IF TCVAR:MASTER:112 == 1
+		姿勢フラグ = MASTER_POSE(6,1,1)
+	ELSEIF TCVAR:MASTER:112 == 2
+		姿勢フラグ = MASTER_POSE(7,1,1)
+	ELSE
+		姿勢フラグ = 0
+	ENDIF
+	FOR コマンド番号,0,700
+		RESULT = 0
+		SIF コマンド番号 == 200 && TFLAG:COMABLE管理 == 2
+			PRINTL
+		SIF コマンド番号 == 350 && TFLAG:COMABLE管理 != 2
+			PRINTL
+		SIF コマンド番号 == 400 && TFLAG:COMABLE管理 != 2
+			PRINTL
+		TRYCALLFORM COM_ABLE{コマンド番号}
+		IF RESULT
+			IF (コマンド番号 == 42 && TEQUIP:11) || (コマンド番号 == 43 && TEQUIP:12) || (コマンド番号 == 44 && TEQUIP:13) || (コマンド番号 == 45 && TEQUIP:14) || (コマンド番号 == 46 && TEQUIP:15) || (コマンド番号 == 47 && TEQUIP:16) || (コマンド番号 == 48 && TEQUIP:17)
+				PRINTFORMC %TRAINNAME:コマンド番号%解除[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 81 && 姿勢フラグ
+				PRINTFORMC お掃除フェラ[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 10 && TALENT:TARGET:母乳体質
+				PRINTFORMC 母乳飲み[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 60 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC 対面立位[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 61 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC 背面立位[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 62 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC 対面立位アナル[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 63 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC 背面立位アナル[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 97 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 97 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC 正常位される[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 <= 1 ) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && !TALENT:PLAYER:マゾ) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 <= 2) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && !TALENT:サド)
+				PRINTFORMC 対面立位させる[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC 対面立位される[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 98 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 98 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC 後背位される[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 <= 1 ) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && !TALENT:PLAYER:マゾ) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 <= 2) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && !TALENT:サド)
+				PRINTFORMC 背面立位させる[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC 背面立位される[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 200
+				IF EQUIP:上半身上着１
+					コマンド名称 = %CLOTHNAME(服種類_上半身上着１,EQUIP:上半身上着１)%
+				ELSEIF EQUIP:上半身上着２
+					コマンド名称 = %CLOTHNAME(服種類_上半身上着２,EQUIP:上半身上着２)%
+				ELSEIF EQUIP:ボディースーツ
+					コマンド名称 = %CLOTHNAME(服種類_ボディースーツ,EQUIP:ボディースーツ)%
+				ELSEIF EQUIP:ワンピース
+					コマンド名称 = %CLOTHNAME(服種類_ワンピース,EQUIP:ワンピース)%
+				ELSEIF EQUIP:着物
+					コマンド名称 = %CLOTHNAME(服種類_着物,EQUIP:着物)%
+				ELSEIF EQUIP:レオタード
+					コマンド名称 = %CLOTHNAME(服種類_レオタード,EQUIP:レオタード)%
+				ENDIF
+				IF CFLAG:うふふ == 3
+					PRINTFORMC %コマンド名称%を脱ぐ[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC %コマンド名称%を脱がす[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 201
+				IF EQUIP:下半身上着１
+					コマンド名称 = %CLOTHNAME(服種類_下半身上着１,EQUIP:下半身上着１)%
+				ELSEIF EQUIP:下半身上着２
+					コマンド名称 = %CLOTHNAME(服種類_下半身上着２,EQUIP:下半身上着２)%
+				ELSEIF EQUIP:スカート
+					コマンド名称 = スカート
+				ENDIF
+				IF CFLAG:うふふ == 3
+					PRINTFORMC %コマンド名称%を脱ぐ[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC %コマンド名称%を脱がす[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 202
+				IF EQUIP:上半身下着２ == 普段着_サラシ
+					PRINTFORMC サラシを外す[{コマンド番号,3}]
+				ELSEIF EQUIP:上半身下着２ == 普段着_ビキニ || EQUIP:上半身下着２ == 普段着_ビキニ_マイクロ
+					PRINTFORMC ビキニ(上)を外す[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC ブラジャーを外す[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 203
+				IF EQUIP:下半身下着１
+					コマンド名称 = %PANTSNAME(EQUIP:下半身下着１)%
+				ELSEIF 0 < EQUIP:下半身下着２ && EQUIP:下半身下着２ < 100
+					コマンド名称 = パンティ
+				ELSEIF EQUIP:下半身下着２ == 普段着_ビキニパンツ || EQUIP:下半身下着２ == 普段着_ビキニパンツ_マイクロ
+					コマンド名称 = ビキニ(下)
+				ELSE
+					コマンド名称 = %PANTSNAME(EQUIP:下半身下着２)%
+				ENDIF
+				IF CFLAG:うふふ == 3
+					PRINTFORMC %コマンド名称%を脱がす[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC %コマンド名称%を脱がす[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 300 && (TCVAR:TARGET:会話不能 == 1 && TEQUIP:TARGET:奢り中 == 0)
+				SETCOLOR 色設定_テキスト_無効
+				PRINTFORMC 会話[{コマンド番号,3}]
+				RESETCOLOR
+			ELSEIF コマンド番号 == 301
+				IF CFLAG:MASTER:現在位置 == 場所_喫茶店
+					コマンド名称 = お茶を注文する
+				ELSE
+					コマンド名称 = お茶を淹れる
+				ENDIF
+				PRINTFORMC %コマンド名称%[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 350
+				IF CFLAG:MASTER:現在位置 == 場所_ラブホ
+					コマンド名称 = ラブホテルに入る
+				ELSEIF CFLAG:MASTER:現在位置 == 場所_公園トイレ
+					コマンド名称 = 個室に連れ込む
+					;ベッドがない
+				ELSEIF !BEDROOM(CFLAG:PLAYER:現在位置)
+					コマンド名称 = 抱き寄せる
+				ELSE
+					コマンド名称 = 押し倒す
+				ENDIF
+				SIF GET_TARGETNUM() > 1 && GET_TARGETWAKEUP() > 1
+					コマンド名称 = まとめて%コマンド名称%
+				PRINTFORMC %コマンド名称%[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 403 && BATHROOM(CFLAG:MASTER:現在位置)
+				IF CFLAG:MASTER:現在位置 == 場所_シャワールーム
+					PRINTFORMC シャワーを浴びる[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC お風呂でくつろぐ[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 480
+			;事務員に相談する
+				PRINTFORMC %CALLNAME%と相談[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 490 && CFLAG:MASTER:現在位置 > 場所番号最大値
+				PRINTFORMC %"移動する["%{コマンド番号,3}%"]"%
+			ELSEIF STRLENS(TRAINNAME:コマンド番号)
+				PRINTFORMC %TRAINNAME:コマンド番号%[{コマンド番号,3}]
+			ENDIF
+		ENDIF
+	NEXT
+	SIF !TFLAG:100
+		GOTO SKIP
+	PRINTL
+	PRINTC 履歴表示[800]
+	PRINTC 汚れ表示[801]
+	SIF GET_TARGETNUM() > 1
+		PRINTC 相手を変える[802]
+	PRINTL
+	PRINTC 能力表示[803]
+	PRINTC 能力表示(マスター)[804]
+	PRINTC コマンドフィルタ[809]
+	PRINTC 1日の終了 [888]
+	PRINTL
+	IF CFLAG:うふふ
+		SIF EQUIP:PLAYER:0
+			PRINTC 服を脱ぐ[820]
+		IF CFLAG:うふふ == 2 || CFLAG:うふふ == 4
+			PRINTC 抜け出す[999]
+		ELSEIF CFLAG:うふふ == 3
+			PRINTC 自慰終了[999]
+		ELSE
+			PRINTC 逢引終了[999]
+		ENDIF
+	ENDIF
+	$SKIP
+	IF PREVCOM >= 0
+		PRINTL 
+		PRINT ＜
+		SIF TARGET
+			PRINTFORM 対象：%CALLNAME:TARGET% 
+		PRINT 前回調教コマンド:
+		PRINTS STR:0
+		SIF TFLAG:150
+			PRINT (助手)
+		PRINTL ＞
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@USERCOM
+	IF RESULT == -10 && GETBIT(FLAG:雑多設定,11) == 0
+		SETBIT FLAG:雑多設定,11
+		RETURN 0
+	ELSEIF RESULT == -10 && GETBIT(FLAG:雑多設定,11) == 1
+		CLEARBIT FLAG:雑多設定,11
+		RETURN 0
+	ELSEIF RESULT == -20 && GETBIT(FLAG:雑多設定,12) == 0
+		SETBIT FLAG:雑多設定,12
+		RETURN 0
+	ELSEIF RESULT == -20 && GETBIT(FLAG:雑多設定,12) == 1
+		CLEARBIT FLAG:雑多設定,12
+		RETURN 0
+	ELSEIF RESULT >= 0 && RESULT <= 700
+		IF RESULT == 351
+			CALL COM_ABLE351
+			SIF !RESULT
+				RETURN 0
+			PRINTL 連れ出す/離れる
+			STR:0 = 連れ出す/離れる
+			CALL COM351
+			RETURN RESULT
+		ENDIF
+		SIF TRAINNAME:RESULT == ""
+			RETURN 0
+		SELECTCOM = RESULT
+		TFLAG:3 = SELECTCOM
+		TRYCALLFORM COM_ABLE{SELECTCOM}
+		SIF RESULT == 0
+			RETURN 0
+		RESULT = 1
+		IF FLAG:従順一時保存
+			CALL CAN_COM998
+			GOTO CANCOMSKIP2
+		ENDIF
+		TRYCALLFORM CAN_COM{SELECTCOM}(1)
+		IF RESULT == 0
+			TRYCALLFORM CAN_COM{SELECTCOM}
+			RETURN 0
+		ENDIF
+		$CANCOMSKIP2
+		DOTRAIN 999
+	ELSEIF RESULT >= 701 && RESULT <= 799 && CHARA_ACTIVE > RESULT - 700 && CFLAG:(RESULT - 700):同室
+		TFLAG:104 = RESULT - 700
+		CALL SET_TACHIE_FLAG("ターゲット切替")
+		RETURN 1
+	ELSEIF RESULT == 800
+		CALL SHOW_EQUIP
+		RETURN 1
+	ELSEIF RESULT == 801
+		CALL STAIN_INFO
+		RETURN 1
+	ELSEIF RESULT == 802
+		CALL TARGET_CHANGE
+		RETURN 1
+	ELSEIF RESULT == 803
+		CALL PRINT_STATE(TARGET,1)
+		WAIT
+		RETURN 1
+	ELSEIF RESULT == 804
+		CALL PRINT_STATE(MASTER)
+		WAIT
+		RETURN 1
+	ELSEIF RESULT == 809
+		CALL OPTION_COMMAND_FILTER
+	ELSEIF RESULT == 820 && CFLAG:うふふ && EQUIP:PLAYER:0
+		EQUIP:PLAYER:0 = 0
+		CALL CLOTHES_SETTING_TRAIN(PLAYER)
+		RETURN 1
+	ELSEIF RESULT == 888
+		SELECTCASE CFLAG:MASTER:現在位置
+			CASE 場所_訪問者宅,場所_売春宿
+				
+			CASEELSE
+				CFLAG:MASTER:現在位置 = CFLAG:MASTER:開始位置
+		ENDSELECT
+		FLAG:訪問者の現在位置 = 0
+		FLAG:訪問者同行フラグ = 0
+		;起床後即888実行時の補正
+		IF TIME == CFLAG:MASTER:通常起床時間
+			TIME += 1
+		ENDIF
+		
+		FOR LOCAL,0,CHARA_ACTIVE
+			IF CFLAG:LOCAL:現在位置 >= 場所_事務所玄関 && CFLAG:LOCAL:現在位置 <= 場所番号最大値初期数 && CFLAG:LOCAL:NTR追加猶予 > 0 && CFLAG:LOCAL:睡眠 == 0
+				CFLAG:LOCAL:NTR追加猶予 -= 1
+			ENDIF
+			IF CFLAG:LOCAL:現在位置 >= 場所_事務所玄関 && CFLAG:LOCAL:現在位置 <= 場所番号最大値初期数 && CFLAG:LOCAL:スカウト不可能 > 0 && CFLAG:LOCAL:睡眠 == 0
+				CFLAG:LOCAL:スカウト不可能 -= 1
+			ENDIF
+		NEXT
+					
+		BEGIN AFTERTRAIN
+	ELSEIF RESULT == 999 && CFLAG:うふふ
+		;なんらかの不具合でTARGET:1があなたになった場合の救済措置として条件を追加
+		IF TARGET:1 != 0
+			IF CFLAG:(TARGET:1):うふふ == 2 && BASE:(TARGET:1):満足 < MAXBASE:(TARGET:1):満足
+				PRINTFORMW %CALLNAME:(TARGET:1)%が離してくれない…
+				RETURN 1
+			ENDIF
+		ENDIF
+		CALL うふふ全解除()
+		CALL TOUCH_SET(0,0,0,1)
+		RETURN 1
+	ENDIF
+	RETURN 0
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@TARGET_CHANGE
+	PRINT 配色：
+	SETCOLOR 色設定_自社所属
+	PRINT 自社所属　　　　
+	IF FLAG:ライバル事務所モード
+		SETCOLOR 色設定_ライバル所属
+		PRINT ライバル事務所所属
+	ENDIF
+	RESETCOLOR
+	PRINTL
+	PRINTFORML %CALLNAME:TARGET%の相手をしています
+	PRINTL [0] - 戻る
+	FOR LOCAL,1,CHARA_ACTIVE
+		IF CFLAG:LOCAL:同室 && !TALENT:LOCAL:ＥＮＥＭＹ
+			CALL 所属色設定(LOCAL)
+			PRINTFORML [{LOCAL, 2, RIGHT}] - %CALLNAME:LOCAL%
+			RESETCOLOR
+		ENDIF
+	NEXT
+	INPUT
+	IF RESULT <= 0 || RESULT >= CHARA_ACTIVE
+		RETURN 0
+	ELSEIF CFLAG:RESULT:同室
+		TFLAG:104 = RESULT
+		;うふふ解除? ヘッダー部の対象変更では解除されないため削除
+		;SIF RESULT != TARGET
+		;	CFLAG:うふふ = 0
+		;	CFLAG:物陰   = 0
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@SHOW_EQUIP
+
+	CLEARLINE 1
+	PRINTFORMW 前回:[{PREVCOM}]
