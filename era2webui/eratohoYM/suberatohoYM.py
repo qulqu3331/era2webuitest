@@ -5,7 +5,6 @@ from emo import Expression
 import re
 from sub import get_df
 from sub import get_df_2key
-from sub import get_kaizoudo
 from sub import get_width_and_height
 from sub import chikan
 
@@ -62,6 +61,12 @@ def promptmaker(order):
     negative = ""
 
     flags = {"drawchara":0,"drawface":0,"drawbreasts":0,"drawvagina":0,"drawanus":0}
+
+    flags["主人以外が相手"] = 0
+    csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Event.csv')
+    csv_eve = pd.read_csv(filepath_or_buffer=csvfile_path)
+    if get_df(csv_eve,"名称",order["scene"],"主人以外が相手") == 1:
+        flags["主人以外が相手"] = 1
 
     # Effect.csvとEvent.csvを読みこんでおく
     csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Effect.csv')
@@ -360,16 +365,17 @@ def promptmaker(order):
     # 置換機能の関数を呼ぶ
     # プロンプト中に%で囲まれた文字列があれば置換する機能
     # 失敗するとErrorというプロンプトが残る
-    prompt = chikan(prompt)
-    negative = chikan(negative)
-
+    ReplaceList= os.path.join(os.path.dirname(__file__), 'csvfiles\\ReplaceList.csv')
+    prompt = chikan(prompt,ReplaceList)
+    negative = chikan(negative,ReplaceList)
+    
+    # 解像度文字列を解釈する関数
+    gen_width,gen_height = get_width_and_height(kaizoudo,ReplaceList)
 
     # 重複カンマを1つにまとめる
     prompt = re.sub(',+',',',prompt)
     negative = re.sub(',+',',',negative)
 
-    # 解像度文字列を解釈する関数
-    gen_width,gen_height = get_width_and_height(kaizoudo)
     
     return prompt,negative,gen_width,gen_height
 # *********************************************************************************************************
@@ -567,3 +573,17 @@ def stain(order,flags):
 # milkはときどきグラスが出る
 
 
+# 解像度をcsvから読む
+# シーン分岐ごとに読む
+def get_kaizoudo(order):
+    # TRAINとその他のEVENTで読み取るcsvが異なる
+    if order["scene"] == "TRAIN":
+        csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Train.csv')
+        csvfile = pd.read_csv(filepath_or_buffer=csvfile_path)
+        kaizoudo = str(get_df(csvfile,"コマンド番号",str(order["コマンド"]),"解像度"))
+    else:
+        csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Event.csv')
+        csvfile = pd.read_csv(filepath_or_buffer=csvfile_path)
+        kaizoudo = str(get_df(csvfile,"名称",str(order["scene"]),"解像度"))
+    
+    return kaizoudo

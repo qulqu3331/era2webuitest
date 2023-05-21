@@ -11,7 +11,7 @@ from api import gen_Image_api
 import configparser
 from tkinter import filedialog
 from tkinter import messagebox
-from suberatohoYM import promptmaker
+from eratohoYM.suberatohoYM import promptmaker
 from selenium import webdriver
 import sys
 import subprocess
@@ -106,7 +106,8 @@ if __name__ == '__main__':
 
     # iniファイル読み込み
     config_ini = configparser.ConfigParser()
-    config_ini.read("./config.ini", 'UTF-8')
+    inipath = os.path.dirname(__file__) + "\config.ini"
+    config_ini.read(inipath, 'UTF-8')
     dir = config_ini.get("Paths", "erasav", fallback="")
     target_dir = ""
     
@@ -119,7 +120,7 @@ if __name__ == '__main__':
     
     # iniに記入
     config_ini.set("Paths", "erasav", target_dir)
-    with open("config.ini", "w", encoding='UTF-8') as configfile:
+    with open(inipath, "w", encoding='UTF-8') as configfile:
         config_ini.write(configfile)
 
     if os.path.isdir(target_dir) == False:

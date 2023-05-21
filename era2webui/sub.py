@@ -26,7 +26,6 @@ def gen_Image(driver,prompt,negative,gen_width,gen_height):
 
     # ポジティブプロンプト
     element_posi = driver.find_element(By.XPATH,'//*[@id="txt2img_prompt"]/label/textarea')
-    print(element_posi)
     driver.execute_script(f'arguments[0].value = "{prompt}"', element_posi)
     #力技で変更を認識させる（末尾にスペースを入力）
     driver.execute_script("arguments[0].focus()", element_posi)
@@ -113,8 +112,7 @@ def get_df_2key(dataframe,key,value,subkey,subvalue,column):
 
 # 置換機能
 # 文字列中に%で囲まれた部分があればReplaceList.csvに基づいて置換する機能
-def chikan(text):
-    csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\ReplaceList.csv')
+def chikan(text,csvfile_path):
     csv_chi = pd.read_csv(filepath_or_buffer=csvfile_path)
     # 正規表現で置換対象("%"で挟まれた文字列)をリスト化
     置換対象 =re.findall('%.*?%',text)
@@ -148,27 +146,14 @@ class readconfig:
             return self.selectedDir
 
 
-# 解像度をcsvから読む
-# シーン分岐ごとに読む
-def get_kaizoudo(order):
-    # TRAINとその他のEVENTで読み取るcsvが異なる
-    if order["scene"] == "TRAIN":
-        csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Train.csv')
-        csvfile = pd.read_csv(filepath_or_buffer=csvfile_path)
-        kaizoudo = str(get_df(csvfile,"コマンド番号",str(order["コマンド"]),"解像度"))
-    else:
-        csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Event.csv')
-        csvfile = pd.read_csv(filepath_or_buffer=csvfile_path)
-        kaizoudo = str(get_df(csvfile,"名称",str(order["scene"]),"解像度"))
-    
-    return kaizoudo
-
+# 解像度文字列の取得関数はバリアントごとのcsvを読むのでバリアント個別ファイルに移動
+# ちょっと違和感あるので戻すかも
 
 # 解像度文字列を解釈する関数
-def get_width_and_height(kaizoudo):
+def get_width_and_height(kaizoudo,Replacelist):
 
     # 解像度欄でも置換機能を使えるようにする。%で囲まれた文字列があると置換を試みる。
-    kaizoudo = chikan(kaizoudo)
+    kaizoudo = chikan(kaizoudo,Replacelist)
 
     # 読み出した結果が空欄やエラーの場合は0,0を返す。解像度の変更はスキップされる。
     if kaizoudo in ("","Error"):

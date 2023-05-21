@@ -33,11 +33,9 @@ def Expression(order,flags):
             NotMaster = True
             print("助手とか")
     else:
-        csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Event.csv')
-        csv_eve = pd.read_csv(filepath_or_buffer=csvfile_path)
-        if get_df(csv_eve,"名称",order["scene"],"主人以外が相手") == 1:
+        if flags["主人以外が相手"] == 1:
             NotMaster = True
-            print("ちぇっく")
+            print("主人以外が相手のイベント")
 
     #睡眠薬または失神中
     # 4 : 昏睡
