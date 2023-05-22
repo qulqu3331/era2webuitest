@@ -225,12 +225,18 @@ def promptmaker(order):
             negative += get_df(csv_cha,"キャラ名","描画キャラ上書き","ネガティブ") + ","
         else:
             #割り込みがなければ通常のキャラプロンプト読み込み処理
+         
             chaName = order["target"]
-            prompt += "\(" + get_df(csv_cha,"キャラ名",chaName,"プロンプト") + ":" + str(get_df(csv_cha,"キャラ名",chaName,"プロンプト強調")) + "\),"
-            prompt += "\(" + get_df(csv_cha,"キャラ名",chaName,"プロンプト2") + "\),"
-            prompt += get_df(csv_cha,"キャラ名",chaName,"キャラLora") + ","
-            prompt += get_df(csv_cha,"キャラ名",chaName,"目つきLora") + ","
-            negative += get_df(csv_cha,"キャラ名",chaName,"ネガティブ") +  ","
+            # 未確定名のときは誰だかわからなくする
+            if chaName == "？？？":
+                prompt += "(voxel,3D:1.8),"
+            else:
+                prompt += "\(" + get_df(csv_cha,"キャラ名",chaName,"プロンプト") + ":" + str(get_df(csv_cha,"キャラ名",chaName,"プロンプト強調")) + "\),"
+                prompt += "\(" + get_df(csv_cha,"キャラ名",chaName,"プロンプト2") + "\),"
+                prompt += get_df(csv_cha,"キャラ名",chaName,"キャラLora") + ","
+                prompt += get_df(csv_cha,"キャラ名",chaName,"目つきLora") + ","
+                negative += get_df(csv_cha,"キャラ名",chaName,"ネガティブ") +  ","
+
 
 
         # エフェクト等 TFLAGは調教終了時には初期化されない。TRAINに限定しないと料理中に射精とかが起こる
@@ -326,7 +332,6 @@ def promptmaker(order):
     prompt = re.sub(',+',',',prompt)
     negative = re.sub(',+',',',negative)
 
-    
     return prompt,negative,gen_width,gen_height
 # *********************************************************************************************************
 # ----------ここまでpromptmaker----------------------------------------------------------------------------------

@@ -8,8 +8,8 @@ from sub import gen_Image
 import configparser
 from tkinter import filedialog
 from tkinter import messagebox
-from eratohoYM.suberatohoYM import promptmaker
-#from eraImascgpro.subcgpro import promptmaker
+#from eratohoYM.suberatohoYM import promptmaker
+from eraImascgpro.subcgpro import promptmaker
 
 from selenium import webdriver
 import sys
@@ -60,6 +60,12 @@ def TaskExecutor(queue,driver):
             
             # プロンプト整形
             prompt,negative,gen_width,gen_height = promptmaker(orders[1])
+
+            # add_prompt.txtの内容をpromptに追記する
+            script_dir = os.path.dirname(__file__)
+            file_path = os.path.join(script_dir, 'add_prompt.txt')
+            f = open(file_path, "r", encoding='utf-8')
+            prompt += f.read()
 
             if 解像度自動変更 == 0:
                 gen_width = 0
