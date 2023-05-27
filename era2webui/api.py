@@ -2,6 +2,7 @@ import asyncio
 import httpx
 import json
 from tqdm import tqdm
+import os
 
 # プロンプトメーカーが作成したデータ受け取ってプロンプトを作成し、幅と高さを指定
 async def gen_Image_api(prompt, negative, gen_width, gen_height):
@@ -9,7 +10,7 @@ async def gen_Image_api(prompt, negative, gen_width, gen_height):
     url = "http://127.0.0.1:7860"
 
     # 生成設定ファイルのパス
-    t2iconfig_path = "t2i_config.json"
+    t2iconfig_path = os.path.dirname(__file__) + "\\t2i_config.json"
 
     # JSONファイルから設定を読み込み
     with open(t2iconfig_path, "r") as file:

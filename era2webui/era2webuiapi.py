@@ -12,6 +12,7 @@ import configparser
 from tkinter import filedialog
 from tkinter import messagebox
 from eratohoYM.suberatohoYM import promptmaker
+# from eraImascgpro.subcgpro import promptmaker
 from selenium import webdriver
 import sys
 import subprocess
@@ -61,6 +62,13 @@ def TaskExecutor(queue,driver):
             # プロンプト整形
             prompt,negative,gen_width,gen_height = promptmaker(orders[1])
 
+            # add_prompt.txtの内容をpromptに追記する
+            if add_prompt機能:
+                script_dir = os.path.dirname(__file__)
+                file_path = os.path.join(script_dir, 'add_prompt.txt')
+                f = open(file_path, "r", encoding='utf-8')
+                prompt += f.read()
+
             if 解像度自動変更 == 0:
                 gen_width = 0
                 gen_height = 0
@@ -102,17 +110,39 @@ def run_imageviewer():
 if __name__ == '__main__':
 
     # ダイアログで監視対象フォルダを選ばせる。
-    # 選択したパスをiniに保存しておいて初期表示する。
+    # ダイアログ表示はconfigファイルでスキップ設定可能
 
     # iniファイル読み込み
     config_ini = configparser.ConfigParser()
     inipath = os.path.dirname(__file__) + "\config.ini"
     config_ini.read(inipath, 'UTF-8')
+
+    # iniに項目がなかったら追加する
+    if not config_ini.has_section('Paths'):
+        config_ini.add_section('Paths')
+    if not config_ini.has_section('Viewer'):
+        config_ini.add_section('Viewer')
+    if not config_ini.has_section('Generater'):
+        config_ini.add_section('Generater')
+    if not 'erasav' in config_ini['Paths']:
+        config_ini.set('Paths', 'erasav', '')
+    if not 'image' in config_ini['Paths']:
+        config_ini.set('Paths', 'image', '')
+    if not '画像表示の拡大率' in config_ini['Viewer']:
+        config_ini.set('Viewer', '画像表示の拡大率', "1.0")
+    if not 'savフォルダの選択をスキップ' in config_ini['Generater']:
+        config_ini.set('Generater', 'savフォルダの選択をスキップ', "0")
+    if not '解像度自動変更' in config_ini['Generater']:
+        config_ini.set('Generater', '解像度自動変更', "1")
+    if not 'キューの最大サイズ' in config_ini['Generater']:
+        config_ini.set('Generater', 'キューの最大サイズ', "2")
+    if not 'add_prompt機能' in config_ini['Generater']:
+        config_ini.set('Generater', 'add_prompt機能', "1")
+
     dir = config_ini.get("Paths", "erasav", fallback="")
-    target_dir = ""
-    
-    #config.iniに記入がある場合はsavディレクトリ選択ダイアログは開かない
-    if dir:
+    # スキップ設定を読む
+    skip = int(config_ini.get("Generater", "savフォルダの選択をスキップ", fallback=0))
+    if skip and os.path.isdir(dir):
         target_dir = dir
     else:
         # ダイアログを開く
@@ -123,6 +153,7 @@ if __name__ == '__main__':
     with open(inipath, "w", encoding='UTF-8') as configfile:
         config_ini.write(configfile)
 
+    # ダイアログを×で閉じたときに呼ばれる
     if os.path.isdir(target_dir) == False:
         print("指定された監視フォルダ " + target_dir + " が見つかりません。終了します")
         sys.exit()
@@ -131,9 +162,11 @@ if __name__ == '__main__':
     threading.Thread(target=run_imageviewer()).start()
 
     # キューの最大サイズ
-    QUEUE_MAX_SIZE = int(config_ini.get("Generater", "キューの最大サイズ", fallback=""))
+    QUEUE_MAX_SIZE = int(config_ini.get("Generater", "キューの最大サイズ", fallback=2))
     # 解像度切り替え
-    解像度自動変更 = int(config_ini.get("Generater", "解像度自動変更", fallback=""))
+    解像度自動変更 = int(config_ini.get("Generater", "解像度自動変更", fallback=0))
+    # 外付けボタンによるプロンプト追加機能
+    add_prompt機能 = int(config_ini.get("Generater", "add_prompt機能", fallback=0))
 
     # キューの初期化
     order_queue = []
@@ -146,7 +179,7 @@ if __name__ == '__main__':
             driver = webdriver.Chrome(options=options)
             return driver
         except Exception as e:
-            print("ブラウザを掴めなかったので終了します。chromeを-remote-debugging-port=9222オプションで開いておいてね")
+            print("ブラウザを掴むのに失敗。chromeを-remote-debugging-port=9222オプションで開いておいてね")
             print(f"APIエラー詳細: {e}")
             return None
     
@@ -163,23 +196,22 @@ if __name__ == '__main__':
 
 
     # ブラウザが取得できなかった場合はAPIで動作 
-    api_result = check_api()
-    if api_result is True:
-        print("API利用可能")
-        driver = None
+    print("Chromeへの接続を試行")
+    driver = check_browser()
+    
+    if driver is not None:
+        print("ブラウザモードで作動")
+        print("取得したwebdriver:" + str(driver))
     else:
-        print(f"APIの接続不能")
-        print("Chromeへの接続を試行")
-        driver = check_browser()
-        
-        if driver is not None:
-            print("ブラウザモードで作動")
-            print("取得したwebdriver:" + str(driver))
-        
+        api_result = check_api()
+        if api_result is True:
+            print("API利用可能")
+            driver = None
         else:
+            print(f"APIの接続不能")
             print("ブラウザ､APIともに使用不能")
             sys.exit()
-
+        
 
     # ファイル監視の開始
     file_handler = FileHandler(order_queue)
