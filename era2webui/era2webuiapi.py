@@ -129,6 +129,8 @@ if __name__ == '__main__':
         config_ini.set('Paths', 'erasav', '')
     if not 'image' in config_ini['Paths']:
         config_ini.set('Paths', 'image', '')
+    if not '画像ビューア自動起動' in config_ini['Viewer']:
+        config_ini.set('Viewer', '画像ビューア自動起動', "1")
     if not '画像表示の拡大率' in config_ini['Viewer']:
         config_ini.set('Viewer', '画像表示の拡大率', "1.0")
     if not 'savフォルダの選択をスキップ' in config_ini['Generater']:
@@ -159,15 +161,18 @@ if __name__ == '__main__':
         print("指定された監視フォルダ " + target_dir + " が見つかりません。終了します")
         sys.exit()
 
-    # 画像ビューアを起動 ビューアは独立して動作する
-    threading.Thread(target=run_imageviewer()).start()
-
     # キューの最大サイズ
     QUEUE_MAX_SIZE = int(config_ini.get("Generater", "キューの最大サイズ", fallback=2))
     # 解像度切り替え
     解像度自動変更 = int(config_ini.get("Generater", "解像度自動変更", fallback=0))
     # 外付けボタンによるプロンプト追加機能
     add_prompt機能 = int(config_ini.get("Generater", "add_prompt機能", fallback=0))
+    # 画像ビューア自動起動
+    画像ビューア自動起動 = int(config_ini.get("Viewer", "画像ビューア自動起動", fallback=0))
+
+    # 画像ビューアを起動 ビューアは独立して動作する
+    if 画像ビューア自動起動:
+        threading.Thread(target=run_imageviewer()).start()
 
     # キューの初期化
     order_queue = []
