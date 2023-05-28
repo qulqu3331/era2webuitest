@@ -141,6 +141,8 @@ if __name__ == '__main__':
         config_ini.set('Generater', 'キューの最大サイズ', "2")
     if not 'add_prompt機能' in config_ini['Generater']:
         config_ini.set('Generater', 'add_prompt機能', "1")
+    if not 'apiモードで起動する' in config_ini['Generater']:
+        config_ini.set('Generater', 'apiモードで起動する', "0")
 
     dir = config_ini.get("Paths", "erasav", fallback="")
     # スキップ設定を読む
@@ -169,6 +171,8 @@ if __name__ == '__main__':
     add_prompt機能 = int(config_ini.get("Generater", "add_prompt機能", fallback=0))
     # 画像ビューア自動起動
     画像ビューア自動起動 = int(config_ini.get("Viewer", "画像ビューア自動起動", fallback=0))
+    # apiモードで起動する
+    apiモードで起動する = int(config_ini.get("Generater", "apiモードで起動する", fallback=0))
 
     # 画像ビューアを起動 ビューアは独立して動作する
     if 画像ビューア自動起動:
@@ -182,6 +186,7 @@ if __name__ == '__main__':
         options = webdriver.ChromeOptions()
         options.add_experimental_option("debuggerAddress", "127.0.0.1:9222") #あらかじめポート9222指定のchromeでWebUIを開いておく
         try:
+            print("ブラウザ取得の試行 タイムアウトまで長いので、ブラウザモードを使わない場合はconfig.iniで設定することを推奨。")
             driver = webdriver.Chrome(options=options)
             return driver
         except Exception as e:
@@ -203,12 +208,16 @@ if __name__ == '__main__':
 
     # ブラウザが取得できなかった場合はAPIで動作 
     print("Chromeへの接続を試行")
-    driver = check_browser()
+    if not apiモードで起動する:
+        driver = check_browser()
+    else:
+        driver = None
     
     if driver is not None:
         print("ブラウザモードで作動")
         print("取得したwebdriver:" + str(driver))
     else:
+        print("Chromeへの接続失敗。apiの試行")
         api_result = check_api()
         if api_result is True:
             print("API利用可能")
