@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 
 # ボタンが押されたときのイベントハンドラ
+# 押すたびにテキストファイルを書き換える
 def on_button_click(button):
     if button['relief'] == 'raised':
         button.configure(relief='sunken')
@@ -11,10 +12,16 @@ def on_button_click(button):
     selected = [button['text'] for button in buttons if button['relief'] == 'sunken']
     print(','.join(selected))
 
-    script_dir = os.path.dirname(__file__)
-    file_path = os.path.join(script_dir, 'add_prompt.txt')
+    file_path = os.path.join(os.path.dirname(__file__), 'add_prompt.txt')
     with open(file_path, "w", encoding='utf-8') as f:
         f.write(','.join(selected))
+
+# プログラムを閉じるときにテキストファイルを空にする
+def click_close():
+    file_path = os.path.join(os.path.dirname(__file__), 'add_prompt.txt')
+    with open(file_path, "w", encoding='utf-8') as f:
+        f.write('')
+    root.destroy()
 
 # メインウィンドウの作成
 root = tk.Tk()
@@ -64,5 +71,6 @@ for i in range(n):
             row += 1
             col = 0
 
+root.protocol("WM_DELETE_WINDOW", click_close)
 # メインループを開始
 root.mainloop()
