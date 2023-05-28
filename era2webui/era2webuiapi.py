@@ -35,7 +35,9 @@ class FileHandler(FileSystemEventHandler):
     def txt_event(self, event):
         # ファイルが作成されたらキューに追加する
         print("\ntxt検知")
-        with open(event.src_path, 'r') as f:
+
+        # 文字コードはeraの出力の時点でUTF-8(BOM付)にする。ERB中、SAVETEXTの第4引数を1にすればいい。
+        with open(event.src_path, 'r', encoding='utf-8_sig') as f:
             try:
                 # ファイルをjsonとして読み込む
                 content = json.load(f)
@@ -64,8 +66,7 @@ def TaskExecutor(queue,driver):
 
             # add_prompt.txtの内容をpromptに追記する
             if add_prompt機能:
-                script_dir = os.path.dirname(__file__)
-                file_path = os.path.join(script_dir, 'add_prompt.txt')
+                file_path = os.path.join(os.path.dirname(__file__), 'add_prompt.txt')
                 f = open(file_path, "r", encoding='utf-8')
                 prompt += f.read()
 
