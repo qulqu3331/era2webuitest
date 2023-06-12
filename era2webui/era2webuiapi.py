@@ -11,8 +11,8 @@ from api import gen_Image_api
 import configparser
 from tkinter import filedialog
 from tkinter import messagebox
-from eratohoYM.suberatohoYM import promptmaker
-# from eraImascgpro.subcgpro import promptmaker
+# from eratohoYM.suberatohoYM import promptmaker
+from eraImascgpro.subcgpro import promptmaker
 from selenium import webdriver
 import sys
 import subprocess
