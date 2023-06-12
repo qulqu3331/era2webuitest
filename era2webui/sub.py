@@ -41,7 +41,7 @@ def gen_Image(driver,prompt,negative,gen_width,gen_height):
 
     if gen_width != 0:
         element_width = driver.find_element(By.XPATH,'//*[@id="txt2img_width"]/div[2]/div/input')
-        driver.execute_script("arguments[0].setAttribute('style','color: red;')", element_width)
+        driver.execute_script(f"arguments[0].value = '{gen_width}'", element_width)
         #力技で変更を認識させる（↑↓とキーを押す）
         driver.execute_script("arguments[0].focus()", element_width)
         actions.send_keys(Keys.UP).perform()
