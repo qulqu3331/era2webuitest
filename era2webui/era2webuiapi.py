@@ -110,6 +110,9 @@ def run_imageviewer():
     
 if __name__ == '__main__':
 
+    # 作業ディレクトリを本プログラムがあるフォルダに変更
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     # ダイアログで監視対象フォルダを選ばせる。
     # ダイアログ表示はconfigファイルでスキップ設定可能
 
