@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import random
-from emo import Expression
+from eraImascgpro.emo import Expression
 import re
 from sub import get_df
 from sub import get_df_2key
@@ -236,7 +236,7 @@ def promptmaker(order):
         # エフェクト等 TFLAGは調教終了時には初期化されない。TRAINに限定しないと料理中に射精とかが起こる
         if order["scene"] == "TRAIN":
             #射精
-            # prompt += cumshot(order)
+            prompt += cumshot(order)
         
             # ヴァギナ描画onのとき
             if flags["drawvagina"] == 1:
@@ -286,9 +286,9 @@ def promptmaker(order):
         order["eyecolor"] = get_df(csv_cha,"キャラ名",order["target"],"目の色")
 
         #表情ブレンダー
-        # p,n = Expression(order,flags)
-        # prompt += p
-        # negative += n
+        p,n = Expression(order,flags)
+        prompt += p
+        negative += n
     #ここまでキャラ描画フラグがonのときの処理
 
 
@@ -450,45 +450,40 @@ def get_location(order):
 
     return prompt, negative
 
-# 射精 コメントアウト中
+# 射精
 def cumshot(order):
+    射精箇所 = order["射精箇所"]
     prompt = ""
-    if order["膣内に射精"] > 0:
+    #ビット　1=膣内 2=アナル 3=手淫 4=口淫 5=パイズリ 6=素股 7=足コキ 8=体表 9=アナル奉仕
+
+    if 射精箇所 & 1 != 0:
         prompt += "(cum in pussy,internal ejaculation),"    
-    if order["アナルに射精"] > 0:
+    if 射精箇所 & 2 != 0:
         prompt += "(cum in ass),"
-    if order["髪に射精"] > 0:
-        prompt += "(cum on hair,projectile cum),"
-    if order["顔に射精"] > 0:
-        prompt += "(cum on face,facial,projectile cum),"
-    if order["口に射精"] > 0:
+    if 射精箇所 & 4 != 0:
+        prompt += "(cum on hand, ejaculation, projectile cum),"
+    if 射精箇所 & 8 != 0:
         prompt += "(cum in mouth),"
-    if order["胸に射精"] > 0:
-        prompt += "(cum on breasts,projectile cum),"
-    if order["腹に射精"] > 0:
-        prompt += "(cum on stomach,projectile cum),"
-    if order["腋に射精"] > 0:
-        prompt += "(cum on armpit,projectile cum),"
-    if order["手に射精"] > 0:
-        prompt += "(cum on hand,projectile cum),"
-    if order["秘裂に射精"] > 0:
-        prompt += "(cum on lower body,projectile cum),"
-    if order["竿に射精"] > 0:
-        prompt += "(cum on penis,projectile cum),"
-    if order["尻に射精"] > 0:
-        prompt += "(cum on ass,projectile cum),"
-    if order["太腿に射精"] > 0:
-        prompt += "(cum on thigh,projectile cum),"
-    if order["足で射精"] > 0: # ここだけ「足 "で"」
-        prompt += "(cum on feet,projectile cum),"
+    if 射精箇所 & 16 != 0:
+        prompt += "(cum on breasts, ejaculation, projectile cum),"
+    if 射精箇所 & 32 != 0:
+        prompt += "(cum on lower body, ejaculation, projectile cum),"
+    if 射精箇所 & 64 != 0:
+        prompt += "(cum on feet, ejaculation, projectile cum),"
+    if 射精箇所 & 128 != 0:
+        prompt += "(cum on stomach, ejaculation, projectile cum),"
+    if 射精箇所 & 256 != 0:
+        prompt += "(ejaculation, projectile cum),"
     #射精エフェクト
-    if order["主人が射精"] > 0:
+    if 射精箇所 != 0:
         csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Effect.csv')
         csv_efc = pd.read_csv(filepath_or_buffer=csvfile_path)
-        if order["主人が射精"] == 1:
+
+        if order["MASTER射精量"] <= 1:
             prompt += get_df(csv_efc,"名称","主人が射精","プロンプト") + ","
         else:
             prompt += get_df(csv_efc,"名称","主人が大量射精","プロンプト") + ","
+
     return prompt
 
 #汚れ
@@ -596,8 +591,6 @@ def clothing(order,flags):
     if (パンツ露出フラグ == 0 and 秘部露出フラグ == 0) or 下半身はだけフラグ == 1:
         clothings = ["下半身上着１","下半身上着２","スカート"]
         for clo in clothings:
-            print(clo)
-            print(order[clo])
             clothNo = str(order[clo])
             if order[clo] != 0:
                 prompt += "(wearing "  + 今日の服(order,clothNo) + " " + get_df(csv_clo,"番号",clothNo,"プロンプト") + ":1.3),"
