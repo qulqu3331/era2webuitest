@@ -1,18 +1,25 @@
-<lora:flat:1>
-<lora:flat:0.5>
-<lora:flat:-0.5>
-<lora:flat:-1>
+[SL]<lora:flat:[2]>
+[SL]<lora:outline:[2]>
 ;コロンで開始した行は見出し行になる
-<lora:outline:1>
-<lora:outline:0.5>
-;-----
-(photorealistic:1.5)
+;体型--------------------------------------
+[SL]<lora:fat:[2]>
+[SL]<lora:ShBr:[2]>
+[SL]<lora:ShTh:[2]>
+;頭身 SmHeV2は頭身上げるときに首が太くならないやつ---------------------
+[SL]<lora:SmHe:[2]>
+[SL]<lora:SmHeV2:[2]>
+;目つき----------------------------------------
+[SL]<lora:jitome_v10:[2]>
+[SL]<lora:kirame_v10:[2]>
+[SL]<lora:mekakure_v10:[2]>
+[SL]<lora:tareme_v10:[2]>
+[SL]<lora:yonpaku_v10:[2]>
+[SL]<lora:specular_v2:[2]>
+<lora:shoujo_n90:0.8>
 (lineart:1.5)
 (sketch:2.0)
 (watercolor:2.0)
 (thick outline:1.5)
-(megami magazine:1.5)
-(manga time kirara:1.5)
 (high contrast:1.5)
 (pixel art:1.5)
 (voxel,3D:1.8)
