@@ -12,7 +12,6 @@ def on_button_click(button):
         button.configure(relief='raised')
 
     selected = [button['text'] for button in buttons if button['relief'] == 'sunken']
-    print(','.join(selected))
 
     file_path = os.path.join(os.path.dirname(__file__), 'add_prompt.txt')
     with open(file_path, "w", encoding='utf-8') as f:
@@ -21,7 +20,14 @@ def on_button_click(button):
 #スライダーを動かしたときの処理
 def on_slider_change(value, button):
     button['text'] = button_data[button]['before'] + str(value) + button_data[button]['after']
-    button.configure(relief='raised')
+    # ボタンが押されている場合は即反映　ファイル書き込み頻度大丈夫なんやろか
+    if button['relief'] == 'sunken':
+        selected = [button['text'] for button in buttons if button['relief'] == 'sunken']
+
+        file_path = os.path.join(os.path.dirname(__file__), 'add_prompt.txt')
+        with open(file_path, "w", encoding='utf-8') as f:
+            f.write(','.join(selected))
+
 
 # プログラムを閉じるときにテキストファイルを空にする
 def click_close():
@@ -84,7 +90,6 @@ for i in range(n):
             subframe.grid(row=row, column=0, columnspan=max_columns)
             #元の文字列の、2つめの[]内の文字列を取得しておく
             maxweight = float(re.findall("(?<=\[).+?(?=\])", words[i])[1])
-            print (maxweight)
             #ボタン
             button = tk.Button(subframe, text='0', relief='raised', font=('Helvetica', 9))
             button.pack(side='left')
