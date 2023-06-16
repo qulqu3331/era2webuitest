@@ -108,7 +108,7 @@ for i in range(n):
         subframe.grid(row=row + 1, column=0, columnspan=max_columns)
 
         # 次の行から新しいフレームにボタンを配置する
-        row += 1
+        row += 2
         col = 0
 
     # 通常の処理

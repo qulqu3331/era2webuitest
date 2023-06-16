@@ -358,13 +358,13 @@ def Expression(order,flags):
 
         #無感情 expressionlessは口を閉じる効果が高い。八の字眉傾向
         # empty eyes 
-        chk_list = ["無関心","感情乏しい","抑圧"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-            if order["絶頂の強度"] == 0:
-                eyeprompt += "(empty eyes),"
-                prompt += "expressionless,"
-                negative += "((blush)),troubled eyebrows,"
+        # chk_list = ["無関心","感情乏しい","抑圧"]
+        # and_list = set(order['talent']) & set(chk_list)
+        # if (len(and_list)) > 0:
+        #     if order["絶頂の強度"] == 0:
+        #         eyeprompt += "(empty eyes),"
+        #         prompt += "expressionless,"
+        #         negative += "((blush)),troubled eyebrows,"
 
 
         #狂気 強調しないと滅多に光らないはず。キレたときとか条件付きで光るようにした方がいいかも。した。
