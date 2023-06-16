@@ -2,9 +2,14 @@
 ;FIXME:関数の説明を書いてください
 ;@return 1:xxx,0:xxx
 @SHOW_USERCOM
-	#DIM  姿勢フラグ
-	#DIM  コマンド番号
-	#DIMS コマンド名称
+#DIM  姿勢フラグ
+#DIM  コマンド番号
+#DIMS コマンド名称
+;-----------------------------------------------------------
+;位置情景文章の呼び出し (eraVIPRPG から移植)
+
+	CALL MAP_MESSAGE
+;-----------------------------------------------------------
 	コマンド番号 = 0
 	TFLAG:100 = !TFLAG:101
 	IF TCVAR:MASTER:112 == 1
@@ -230,7 +235,7 @@
 		DOTRAIN 999
 	ELSEIF RESULT >= 701 && RESULT <= 799 && CHARA_ACTIVE > RESULT - 700 && CFLAG:(RESULT - 700):同室
 		TFLAG:104 = RESULT - 700
-		CALL SET_TACHIE_FLAG("ターゲット切替")
+		CALL SET_TACHIE_FLAG("ターゲット切替")		
 		RETURN 1
 	ELSEIF RESULT == 800
 		CALL SHOW_EQUIP
