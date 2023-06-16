@@ -37,6 +37,11 @@
 		ELSE
 			TEQUIP:LOCAL:Ａセックス = -1
 		ENDIF
+		IF TEQUIP:LOCAL:尿道 == 1
+			TEQUIP:LOCAL:Ｕセックス = MASTER
+		ELSE
+			TEQUIP:LOCAL:Ｕセックス = -1
+		ENDIF
 		;逆レイプ
 		SIF TEQUIP:LOCAL:ペニス == 6
 			TEQUIP:PLAYER:Ｖセックス = LOCAL
@@ -91,9 +96,11 @@
 		;-------------------------------------------------
 		;性技、好感度、ムード、理性のチェック
 		;-------------------------------------------------
+		;獲得ソースの倍率に影響する (反感などのマイナスソース含む)
 		FOR LOCAL:1,0,100
-			SOURCE:LOCAL:(LOCAL:1) = SOURCE:LOCAL:(LOCAL:1) *  MASTER_FAVOR_CHECK(LOCAL,LOCAL:1) * TECHNIQUE_CHECK(LOCAL,LOCAL:1) / 10000
-			SOURCE:LOCAL:(LOCAL:1) = SOURCE:LOCAL:(LOCAL:1) *  MOOD_CHECK(LOCAL,LOCAL:1) * REASON_CHECK(LOCAL,LOCAL:1) / 10000
+			SOURCE:LOCAL:(LOCAL:1) = SOURCE:LOCAL:(LOCAL:1) * MASTER_FAVOR_CHECK(LOCAL,LOCAL:1) * TECHNIQUE_CHECK(LOCAL,LOCAL:1) / 10000
+			SOURCE:LOCAL:(LOCAL:1) = SOURCE:LOCAL:(LOCAL:1) * MOOD_CHECK(LOCAL,LOCAL:1) * REASON_CHECK(LOCAL,LOCAL:1) / 10000
+			;興奮度を追加すると獲得ソースが100倍とかになるので、上の式には含まない
 		NEXT
 		;-------------------------------------------------
 		;中毒充足のチェック
@@ -137,6 +144,18 @@
 		;-------------------------------------------------
 		CALL SOURCE_快Ｂ(LOCAL)
 		;-------------------------------------------------
+		;快Ｍのソース
+		;-------------------------------------------------
+		CALL SOURCE_快Ｍ(LOCAL)
+		;-------------------------------------------------
+		;快Ｎのソース
+		;-------------------------------------------------
+		CALL SOURCE_快Ｎ(LOCAL)
+		;-------------------------------------------------
+		;快Ｕのソース
+		;-------------------------------------------------
+		CALL SOURCE_快Ｕ(LOCAL)
+		;-------------------------------------------------
 		;与快Ｃのソース
 		;-------------------------------------------------
 		SIF !(HAS_PENIS(PLAYER))
@@ -153,6 +172,18 @@
 		;与快Ｂのソース
 		;-------------------------------------------------
 		CALL SOURCE_与快Ｂ(LOCAL)
+		;-------------------------------------------------
+		;与快Ｍのソース
+		;-------------------------------------------------
+		CALL SOURCE_与快Ｍ(LOCAL)
+		;-------------------------------------------------
+		;与快Ｎのソース
+		;-------------------------------------------------
+		CALL SOURCE_与快Ｎ(LOCAL)
+		;-------------------------------------------------
+		;与快Ｕのソース
+		;-------------------------------------------------
+		CALL SOURCE_与快Ｕ(LOCAL)
 	NEXT
 	;童貞喪失
 	IF !TALENT:PLAYER:1
@@ -182,13 +213,16 @@
 		CUP:TARGET:快Ｖ /= 2
 		CUP:TARGET:快Ａ /= 2
 		CUP:TARGET:快Ｂ /= 2
+		CUP:TARGET:快Ｍ /= 2
+		CUP:TARGET:快Ｎ /= 2
+		CUP:TARGET:快Ｕ /= 2
 	ENDIF
 	FOR LOCAL,0,CHARA_ACTIVE
 		;装着系は後で考える
 		SIF LOCAL > 0 && !CFLAG:LOCAL:同室
 			CONTINUE
 		CALL SOURCE_CVAB_EXTRA(LOCAL)
-		BASE:LOCAL:勃起 = BASE:LOCAL:勃起 + CUP:LOCAL:快Ｃ / 5 + CUP:TARGET:快Ｖ / 10 + CUP:TARGET:快Ａ / 10 + CUP:TARGET:快Ｂ / 10
+		BASE:LOCAL:勃起 = BASE:LOCAL:勃起 + CUP:LOCAL:快Ｃ / 5 + CUP:TARGET:快Ｖ / 10 + CUP:TARGET:快Ａ / 10 + CUP:TARGET:快Ｂ / 10 + CUP:TARGET:快Ｍ / 10 + CUP:TARGET:快Ｎ / 10 + CUP:TARGET:快Ｕ / 10
 		;-------------------------------------------------
 		;絶頂処理
 		;-------------------------------------------------
@@ -1259,6 +1293,12 @@ RETURN 0
 		PRINTFORM 快Ａ({SOURCE:快Ａ})
 	SIF SOURCE:快Ｂ > 0
 		PRINTFORM 快Ｂ({SOURCE:快Ｂ})
+	SIF SOURCE:快Ｍ > 0
+		PRINTFORM 快Ｍ({SOURCE:快Ｍ})
+	SIF SOURCE:快Ｎ > 0
+		PRINTFORM 快Ｎ({SOURCE:快Ｎ})
+	SIF SOURCE:快Ｕ > 0
+		PRINTFORM 快Ｕ({SOURCE:快Ｕ})
 	SIF SOURCE:情愛 > 0
 		PRINTFORM 情愛({SOURCE:情愛})
 	SIF SOURCE:性行動 > 0
@@ -1311,6 +1351,9 @@ CALL SOURCE_快Ｃ(ARG)
 CALL SOURCE_快Ｖ(ARG)
 CALL SOURCE_快Ａ(ARG)
 CALL SOURCE_快Ｂ(ARG)
+CALL SOURCE_快Ｍ(ARG)
+CALL SOURCE_快Ｎ(ARG)
+CALL SOURCE_快Ｕ(ARG)
 CALL ORGASM_ADD(ARG,TCVAR:ARG:行為者)
 IF TCVAR:ARG:行為者 > CHARA_ACTIVE
 	;ORGASM_ADDを呼んだ直後なら R で本来の快楽強度が取得できる

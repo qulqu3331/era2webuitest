@@ -24,22 +24,24 @@ SIF TFLAG:COMABLE管理 == 2
 	;-------------------------------------------------
 	;料理の時間経過
 	;-------------------------------------------------
-SIF TFLAG:所持料理 > 0
-	CALL CHECK_COOKING
+	SIF TFLAG:所持料理 > 0
+		CALL CHECK_COOKING
 	;-------------------------------------------------
 	;キャラの態度
 	;-------------------------------------------------
-CALL CHARA_ATTITUDE
+	CALL CHARA_ATTITUDE
 	;-------------------------------------------------
 	;時間経過、キャラの移動
 	;-------------------------------------------------
 	;行動回数の算出(平均して20分に一回になるようにする)
 	;行動回数について、学校に行ったキャラがほとんど何もできなくなるため、行動回数の時間を半分にしてみる
 	;また行動回数の時間は定数で管理して、変更しやすくなるように
-行動回数 = (TIME_PROGRESS(TFLAG:300) - (TIME_PROGRESS(TFLAG:300) % 行動時間)) / 行動時間
-	;PRINTFORML CHECK {行動回数} {DATETIME()} {TFLAG:300} {(DATETIME() - TFLAG:300)} {(DATETIME() - TFLAG:300) % 行動時間}
-SIF ((RAND:行動時間) < (TIME_PROGRESS(TFLAG:300) % 行動時間))
-	行動回数 += 1
+
+	行動回数 = (TIME_PROGRESS(TFLAG:300) - (TIME_PROGRESS(TFLAG:300) % 行動時間)) / 行動時間
+		;PRINTFORML CHECK {行動回数} {DATETIME()} {TFLAG:300} {(DATETIME() - TFLAG:300)} {(DATETIME() - TFLAG:300) % 行動時間}
+	SIF ((RAND:行動時間) < (TIME_PROGRESS(TFLAG:300) % 行動時間))
+		行動回数 += 1
+
 IF TFLAG:195
 		;TFLAGを戻す
 	TFLAG:195 = 0
@@ -69,6 +71,7 @@ ELSEIF 行動回数
 	NEXT
 ENDIF
 TFLAG:300 = DATETIME()
+
 CFLAG:MASTER:睡眠 = 0
 	;MASTERと同室フラグ
 FOR LOCAL,1,CHARA_ACTIVE
@@ -101,158 +104,170 @@ FOR LOCAL,1,CHARA_ACTIVE
 	ENDIF
 NEXT
 	;調教ターゲット＆馴れ合い強度設定
-CALL INFO_SetTarget
+	CALL INFO_SetTarget
+
 	;ウフフ終了TEQUIP処理
-FOR LOCAL,0,CHARA_ACTIVE
-	IF !CFLAG:LOCAL:うふふ || CFLAG:LOCAL:現在位置 != CFLAG:LOCAL:前ターン位置
-		CALL CLOTHES_RESET(LOCAL)
-		CALL CLOTHES_SETTING_TRAIN(LOCAL)
-		FOR LOCAL:1,10,150
-			TEQUIP:LOCAL:(LOCAL:1) = 0
-		NEXT
-	ENDIF
-	IF BATHROOM(CFLAG:LOCAL:現在位置)
-		EQUIP:LOCAL:0 = 0
-		IF CFLAG:LOCAL:うふふ || TCVAR:LOCAL:130 > 2
-			TEQUIP:(LOCAL):お風呂場プレイ = 1
+	FOR LOCAL,0,CHARA_ACTIVE
+		IF !CFLAG:LOCAL:うふふ || CFLAG:LOCAL:現在位置 != CFLAG:LOCAL:前ターン位置
+			CALL CLOTHES_RESET(LOCAL)
+			CALL CLOTHES_SETTING_TRAIN(LOCAL)
+			FOR LOCAL:1,10,150
+				TEQUIP:LOCAL:(LOCAL:1) = 0
+			NEXT
+		ENDIF
+		IF BATHROOM(CFLAG:LOCAL:現在位置)
+			EQUIP:LOCAL:0 = 0
+			IF CFLAG:LOCAL:うふふ || TCVAR:LOCAL:130 > 2
+				TEQUIP:(LOCAL):お風呂場プレイ = 1
+			ELSE
+				TEQUIP:(LOCAL):お風呂場プレイ = 0
+			ENDIF
+			CALL CLOTHES_SETTING_TRAIN(LOCAL)
 		ELSE
 			TEQUIP:(LOCAL):お風呂場プレイ = 0
 		ENDIF
-		CALL CLOTHES_SETTING_TRAIN(LOCAL)
-	ELSE
-		TEQUIP:(LOCAL):お風呂場プレイ = 0
-	ENDIF
-	IF OPENPLACE(CFLAG:LOCAL:現在位置)
-		IF CFLAG:LOCAL:うふふ == 1
-			TEQUIP:(LOCAL):野外プレイ = OPENPLACE(CFLAG:LOCAL:現在位置)
+		IF OPENPLACE(CFLAG:LOCAL:現在位置)
+			IF CFLAG:LOCAL:うふふ == 1
+				TEQUIP:(LOCAL):野外プレイ = OPENPLACE(CFLAG:LOCAL:現在位置)
+			ELSE
+				TEQUIP:(LOCAL):野外プレイ = 0
+			ENDIF
 		ELSE
 			TEQUIP:(LOCAL):野外プレイ = 0
 		ENDIF
-	ELSE
-		TEQUIP:(LOCAL):野外プレイ = 0
-	ENDIF
-NEXT
+	NEXT
 	;-------------------------------------------------
 	;情報表示
 	;-------------------------------------------------
-CALL OUTPUT_TXT("TACHIE")
-DRAWLINE
+	CALL OUTPUT_TXT("TACHIE")
+	DRAWLINE
+
 	;現在時刻と睡眠可否の表示
-CALL INFO_PrintCurrentTime(MASTER)
+	CALL INFO_PrintCurrentTime(MASTER)
+
 	;現在位置と汚れ状態の表示
-CALL INFO_PrintCurrentPosition(MASTER)
+	CALL INFO_PrintCurrentPosition(MASTER)
+
 	;右上に画像表示。アイコンと立ち絵がかぶる場合(あれば)立ち絵優先
-IF FLAG_画像設定:0
-	LOCAL = 0
-	IF GETBIT(FLAG_画像設定:3, 0)
-		CALL スプライト判定("Image", TARGET, CFLAG:立ち絵)
-		IF RESULT
-			LOCAL = 1
-			CALL キャラ表示("Image", TARGET, CFLAG:立ち絵, "右", (GETCONFIG("一行の高さ") * -2), 0, 100, , 1000)
+	IF FLAG_画像設定:0
+		LOCAL = 0
+		IF GETBIT(FLAG_画像設定:3, 0)
+			CALL スプライト判定("Image", TARGET, CFLAG:立ち絵)
+			IF RESULT
+				LOCAL = 1
+				CALL キャラ表示("Image", TARGET, CFLAG:立ち絵, "右", (GETCONFIG("一行の高さ") * -2), 0, 100, , 1000)
+			ENDIF
 		ENDIF
+		IF FLAG_画像設定:1 == 0 && !LOCAL
+			CALL キャラ表示("Icon", TARGET, CFLAG:アイコン, "右", (GETCONFIG("一行の高さ") * -2), 0, 100)
+		ENDIF
+	ELSE
+		PRINTL
 	ENDIF
-	IF FLAG_画像設定:1 == 0 && !LOCAL
-		CALL キャラ表示("Icon", TARGET, CFLAG:アイコン, "右", (GETCONFIG("一行の高さ") * -2), 0, 100)
-	ENDIF
-ELSE
-	PRINTL
-ENDIF
 	;-------------------------------------------------
 	;TARGET情報とモード切り替え
 	;-------------------------------------------------
-CALL INFO_SetTrainMode
+	CALL INFO_SetTrainMode
+
 	;特殊プレイ状況を表示する
-CALL SHOW_EQUIP_2
+	CALL SHOW_EQUIP_2
+
 	;HP、MP、勃起、精力のバーを表示する
-CALL INFO_PrintHPMPBar(TARGET,MASTER)
-	;ターゲットがいるならムードと理性の表示
-IF TARGET > 0
-	CALL INFO_PrintTargetCloth(TARGET)
-	SIF  GETBIT(FLAG:雑多設定,7) && !CFLAG:TARGET:名前フラグ && !TALENT:TARGET:ＥＮＥＭＹ
-		CALL INFO_PrintTargetTalent(TARGET)
-	CALL INFO_PrintTargetMood(TARGET)
-	CALL INFO_PrintTargetReason(TARGET)
-	SELECTCASE GETBIT(FLAG:雑多設定,11)
-		CASE 0
-			DRAWLINE
-			PRINTFORML [-10] - %CALLNAME:TARGET%の状態を見る
-		CASE 1
-				;何か行動中か、使用中には表示する
-			IF (TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3) && CHK_TEQUIP(TARGET) || CHK_DAILY(TARGET)
+	CALL INFO_PrintHPMPBar(TARGET,MASTER)
+
+	;ターゲットがいるならムードと理性と興奮度の表示
+	IF TARGET > 0
+		CALL INFO_PrintTargetCloth(TARGET)
+		SIF  GETBIT(FLAG:雑多設定,7) && !CFLAG:TARGET:名前フラグ && !TALENT:TARGET:ＥＮＥＭＹ
+			CALL INFO_PrintTargetTalent(TARGET)
+			;ムード
+			CALL INFO_PrintTargetMood(TARGET)
+			;理性
+			CALL INFO_PrintTargetReason(TARGET)
+			;興奮度
+			CALL INFO_PrintTargetKOUHUN(TARGET)
+		SELECTCASE GETBIT(FLAG:雑多設定,11)
+			CASE 0
 				DRAWLINE
-			ENDIF
-				;日常的ないつでも呼び出していいやつ（うふふ時には消去）
-			IF CHK_DAILY(TARGET) && !(CHK_TEQUIP(TARGET) && (TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3))
-				CALL SHOW_DAILY(TARGET)
-			ENDIF
-			IF TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3 && CHK_TEQUIP(TARGET)
-					;うふふ中
-				CALL SHOW_EQUIP_1(TARGET)
-			ENDIF
-			DRAWLINE
-			CALL INFO_PrintTargetFeeling(TARGET)
-			CALL INFO_PrintPalams(TARGET)
-			DRAWLINE
-			PRINTFORML [-10] - %CALLNAME:TARGET%の状態を閉じる
-	ENDSELECT
-ENDIF
-DRAWLINE
+				PRINTFORML [-10] - %CALLNAME:TARGET%の状態を見る
+			CASE 1
+					;何か行動中か、使用中には表示する
+				IF (TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3) && CHK_TEQUIP(TARGET) || CHK_DAILY(TARGET)
+					DRAWLINE
+				ENDIF
+					;日常的ないつでも呼び出していいやつ（うふふ時には消去）
+				IF CHK_DAILY(TARGET) && !(CHK_TEQUIP(TARGET) && (TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3))
+					CALL SHOW_DAILY(TARGET)
+				ENDIF
+				IF TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3 && CHK_TEQUIP(TARGET)
+						;うふふ中
+					CALL SHOW_EQUIP_1(TARGET)
+				ENDIF
+				DRAWLINE
+				CALL INFO_PrintTargetFeeling(TARGET)
+				CALL INFO_PrintPalams(TARGET)
+				DRAWLINE
+				PRINTFORML [-10] - %CALLNAME:TARGET%の状態を閉じる
+		ENDSELECT
+	ENDIF
+	DRAWLINE
+
 	;●マスター状態呼び出し
-SELECTCASE GETBIT(FLAG:雑多設定,12)
-	CASE 0
-		PRINTFORML [-20] - %CALLNAME:MASTER%の状態を見る
-		DRAWLINE
-	CASE 1
-		PRINTFORML %CALLNAME:MASTER+"の状態："+SHOW_EQUIP_3(MASTER)%
-		CALL INFO_PrintPalams(MASTER)
-			;IF TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3
-			;	;うふふ中
-			;	DRAWLINE
-			;	CALL SHOW_EQUIP_1(TARGET)
-			;ENDIF
-			;日常的ないつでも呼び出していいやつ
-			;CALL SHOW_DAILY(TARGET)
-		DRAWLINE
-		IF TFLAG:COMABLE管理 == 3 || TFLAG:COMABLE管理 == 4
+	SELECTCASE GETBIT(FLAG:雑多設定,12)
+		CASE 0
+			PRINTFORML [-20] - %CALLNAME:MASTER%の状態を見る
+			DRAWLINE
+		CASE 1
+			PRINTFORML %CALLNAME:MASTER+"の状態："+SHOW_EQUIP_3(MASTER)%
+			CALL INFO_PrintPalams(MASTER)
+				;IF TFLAG:COMABLE管理 == 2 || TFLAG:COMABLE管理 == 3
+				;	;うふふ中
+				;	DRAWLINE
+				;	CALL SHOW_EQUIP_1(TARGET)
+				;ENDIF
+				;日常的ないつでも呼び出していいやつ
+				;CALL SHOW_DAILY(TARGET)
+			DRAWLINE
+			IF TFLAG:COMABLE管理 == 3 || TFLAG:COMABLE管理 == 4
 				;カウンター
 				;;別系統を呼び出すようにしたら、いろいろ楽かと思って
-			IF TALENT:PLAYER:肉便器
-				FOR LOCAL,1,CHARA_ACTIVE
-					TRYCALL PREGNACY_S_EVENT(LOCAL)
-				NEXT
-			ELSE
-				FOR LOCAL,1,CHARA_ACTIVE
-					SIF TARGET:LOCAL <= 0
-						CONTINUE
-					CALL EVENT_COUNTER(TARGET:LOCAL,LOCAL)
-					CALL EVENT_COUNTER_POSE(TARGET:LOCAL,LOCAL)
-				NEXT
-				CALL EVENT_COUNTER_COMBINATION
-				FOR LOCAL,1,CHARA_ACTIVE
-					SIF TARGET:LOCAL <= 0
-						CONTINUE
-					CALL EVENT_COUNTER_SOURCE(TARGET:LOCAL,LOCAL)
-				NEXT
-				FOR LOCAL,1,CHARA_ACTIVE
-					TRYCALL PREGNACY_S_EVENT(LOCAL)
-				NEXT
+				IF TALENT:PLAYER:肉便器
+					FOR LOCAL,1,CHARA_ACTIVE
+						TRYCALL PREGNACY_S_EVENT(LOCAL)
+					NEXT
+				ELSE
+					FOR LOCAL,1,CHARA_ACTIVE
+						SIF TARGET:LOCAL <= 0
+							CONTINUE
+						CALL EVENT_COUNTER(TARGET:LOCAL,LOCAL)
+						CALL EVENT_COUNTER_POSE(TARGET:LOCAL,LOCAL)
+					NEXT
+					CALL EVENT_COUNTER_COMBINATION
+					FOR LOCAL,1,CHARA_ACTIVE
+						SIF TARGET:LOCAL <= 0
+							CONTINUE
+						CALL EVENT_COUNTER_SOURCE(TARGET:LOCAL,LOCAL)
+					NEXT
+					FOR LOCAL,1,CHARA_ACTIVE
+						TRYCALL PREGNACY_S_EVENT(LOCAL)
+					NEXT
+				ENDIF
 			ENDIF
-		ENDIF
-		PRINTFORML [-20] - %CALLNAME:MASTER%の状態を閉じる
-		DRAWLINE
-ENDSELECT
+			PRINTFORML [-20] - %CALLNAME:MASTER%の状態を閉じる
+			DRAWLINE
+	ENDSELECT
+
 	;マスター状態の下にアイコン表示
-IF FLAG_画像設定:0 && FLAG_画像設定:1 == 2
-	CALL キャラ表示("Icon", TARGET, CFLAG:アイコン, "左", 0, 0, 100, 550)
-	IF RESULT
-		FOR LOCAL, 0, 5
-			PRINTL 
-		NEXT
+	IF FLAG_画像設定:0 && FLAG_画像設定:1 == 2
+		CALL キャラ表示("Icon", TARGET, CFLAG:アイコン, "左", 0, 0, 100, 550)
+		IF RESULT
+			FOR LOCAL, 0, 5
+				PRINTL 
+			NEXT
+		ENDIF
 	ENDIF
-ENDIF
 
 RETURN 0
-
 ;-------------------------------------------------------------------------------
 ;HPバーを表示する
 ;@return 1:xxx,0:xxx
@@ -775,63 +790,85 @@ NEXT
 ;強度 0:スキンシップまで ,1:軽いセクハラしてくる ,2:セクハラしてくる ,3+:押し倒してくる
 ;@return 0
 @CHARA_ATTITUDE
-	;0:ループ用キャラ番号、1:馴れ合い基準値、2:最大馴れ合いランク制限
+
+;0:ループ用キャラ番号、1:馴れ合い基準値、2:最大馴れ合いランク制限
 VARSET LOCAL
 FOR LOCAL,1,CHARA_ACTIVE
-		;このタイミングで全員の好感度マイナスを０に補正
+	;このタイミングで全員の好感度マイナスを０に補正
 	CFLAG:LOCAL:好感度 = MAX(0,CFLAG:LOCAL:好感度)
-		;同時に全員の屈服度マイナスを０に補正
+	
+	;同時に全員の屈服度マイナスを０に補正
 	CFLAG:LOCAL:屈服度 = MAX(0,CFLAG:LOCAL:屈服度)
-		;基本的に馴れ合い強度の上限は1
+	
+	;基本的に馴れ合い強度の上限は1
 	LOCAL:2 = 1
-		;恋慕(20)、屈服刻印(LV×3)、快楽刻印(LV×3)、親密(LV×10、最大100)、欲望(LV×10、最大100)、欲情(LV×5)、好意(LV×5)、ムード(最大30)、理性の低さ(最大33)
-		;;上記に、管理人(20)も加える
+	
+	;恋慕(20)、屈服刻印(LV×3)、快楽刻印(LV×3)、親密(LV×10、最大100)、欲望(LV×10、最大100)、欲情(LV×5)、好意(LV×5)、ムード(最大30)、理性の低さ(最大33)
+	;;上記に、管理人(20)も加える
 	LOCAL:1 = TALENT:LOCAL:管理人 * 20 +  TALENT:LOCAL:恋慕 * 20 + MARK:LOCAL:屈服刻印 * 3 + MARK:LOCAL:快楽刻印 * 3 + MIN(ABL:LOCAL:親密 * 10, 100) + MIN(ABL:LOCAL:欲望 * 10, 100) + GETPALAMLV(PALAM:LOCAL:欲情, 15) * 5 + GETPALAMLV(PALAM:LOCAL:好意, 15) * 10 + BASE:LOCAL:ムード / 50 + (1000 - BASE:LOCAL:理性) / 30
-		;既成事実:告白がある場合最大ランク+1
+	
+	;既成事実:告白がある場合最大ランク+1
 	LOCAL:2 += GETBIT(CFLAG:LOCAL:既成事実,0)
-		;ムードと理性が限界なら上限突破
+	
+	;ムードと理性が限界なら上限突破
 	SIF BASE:LOCAL:ムード == MAXBASE:LOCAL:ムード && BASE:LOCAL:理性 < 100
 		LOCAL:2 += 1
-		;既成事実:うふふ(5)、うふふはセクハラしやすさには影響しない
+		
+	;興奮度が限界なら上限突破
+	SIF BASE:LOCAL:興奮度 == MAXBASE:LOCAL:興奮度
+		LOCAL:2 += 1
+
+	;既成事実:うふふ(5)、うふふはセクハラしやすさには影響しない
 	LOCAL:1 += 5 * GETBIT(CFLAG:LOCAL:既成事実,1)
-		;淫乱/娼婦なら積極的にセクハラしてくる。上限ランクが増える
+	
+	;淫乱/娼婦なら積極的にセクハラしてくる。上限ランクが増える
 	LOCAL:2 += (TALENT:LOCAL:淫乱>0)
-		;;肉便器は弱味と同じように扱う
+		;肉便器は弱味と同じように扱う
 	IF TALENT:PLAYER:肉便器
 		LOCAL:1 += 5
 		LOCAL:2 += 2
 	ENDIF
 	IF CFLAG:LOCAL:MASTERの弱味
-			;MASTERの弱味を握っているなら積極的にセクハラしてくる。基準値に+5して上限ランクを+2に
+		;MASTERの弱味を握っているなら積極的にセクハラしてくる。基準値に+5して上限ランクを+2に
 		LOCAL:1 += 5
 		LOCAL:2 += 2
 	ELSE
-			;弱みを握っていないなら欲情補正(0.5～1.0倍)
+		;弱みを握っていないなら欲情補正(0.5～1.0倍)
 		LOCAL:1 = LOCAL:1 * (5000 + MIN(PALAM:LOCAL:欲情,5000)) / 10000
 	ENDIF
-
+	
 	IF CFLAG:LOCAL:仕事前
-			;仕事前は馴れ合い強度は1まで
+		;仕事前は馴れ合い強度は1まで
 		LOCAL:2 = MIN(LOCAL:2, 1)
 	ENDIF
-
+	
 	IF CFLAG:LOCAL:怒り || CFLAG:LOCAL:睡眠
-			;怒り or 睡眠なら最大ランクは０
+		;怒り or 睡眠なら最大ランクは０
 		LOCAL:2 = 0
 	ENDIF
-		;馴れ合い基準値90(一線超えない場合110)毎に仮ランク１、NTRや公衆便所がある場合は仮ランクが減る
-		;NTRや公衆便所(管理状態)でも、我慢できなくなれば的な表現。
+	
+	;馴れ合い基準値90(一線超えない場合110)毎に仮ランク１、NTRや公衆便所がある場合は仮ランクが減る
+	;NTRや公衆便所(管理状態)でも、我慢できなくなれば的な表現。
 	LOCAL:3 = MAX( LOCAL:1 / (90+TALENT:LOCAL:一線越えない*20) - (TALENT:LOCAL:NTR + TALENT:LOCAL:公衆便所) , 0 )
-		;最大ランクまでに切り詰める
+	
+	;最大ランクまでに切り詰める
 	CFLAG:LOCAL:馴れ合い強度度 = MIN( LOCAL:3 , LOCAL:2 )
-		;PRINTFORML %CALLNAME:LOCAL% 馴れ合い強度度:{CFLAG:LOCAL:馴れ合い強度度}
+	
+	;陥落素質で最低強度度を保証
+	SIF CFLAG:LOCAL:馴れ合い強度度 <  1 && TALENT:LOCAL:恋慕
+			CFLAG:LOCAL:馴れ合い強度度 = 1
+	SIF CFLAG:LOCAL:馴れ合い強度度 <  2 && TALENT:LOCAL:親愛
+			CFLAG:LOCAL:馴れ合い強度度 = 2
+	
+	;PRINTFORML %CALLNAME:LOCAL% 馴れ合い強度度:{CFLAG:LOCAL:馴れ合い強度度}
 NEXT
 RETURN 0
 
 ;-------------------------------------------------------------------------------
 ;情事の発覚
 @AFFAIR_DISCLOSURE(ARG, ARG:1)
-	;ARG 入室してきたキャラの番号　ARG:1 0なら同室、1なら覗き
+
+;ARG 入室してきたキャラの番号　ARG:1 0なら同室、1なら覗き
 VARSET LOCAL
 LOCAL:1 = IN_ROOM("MAX", CFLAG:MASTER:現在位置, "CFLAG", GETNUM(CFLAG, "うふふ"), 1)
 IF ((LOCAL:1 && CFLAG:(LOCAL:1):うふふ) || CFLAG:MASTER:うふふ == 3 ) && (CFLAG:MASTER:現在位置 != 場所_ラブホあなた用 && CFLAG:MASTER:現在位置 != 場所_ソープあなた用)
@@ -1378,18 +1415,18 @@ IF FLAG_画像設定:0
 	IF FLAG_画像設定:1 == 1 || (FLAG_画像設定:1 == 3 && FLAG_画像設定:4 == 0) || (FLAG_画像設定:1 == 3 && LOCAL:1 == 1)
 		CALL キャラ表示("Icon", TARGET, CFLAG:アイコン, "左", , 90, 100)
 	ELSEIF FLAG_画像設定:1 == 3 && TARGET > 0
-		IF FLAG_画像設定:4 < 5
-			IF LOCAL:1 <= 2+FLAG_画像設定:4
+		IF FLAG_画像設定:4 <= キャラ画像表示上限数 - キャラ画像表示下限数
+			IF LOCAL:1 <= キャラ画像表示下限数 + FLAG_画像設定:4
 				LOCAL:3 = 0
 			ELSE
 				LOCAL:2 = FINDELEMENT(同席者, TARGET)
-				IF LOCAL:2 >= (2+FLAG_画像設定:4) / 2
-					LOCAL:3 = LOCAL:2 - (2+FLAG_画像設定:4) / 2
+				IF LOCAL:2 >= (キャラ画像表示下限数 + FLAG_画像設定:4) / 2
+					LOCAL:3 = LOCAL:2 - (キャラ画像表示下限数 + FLAG_画像設定:4) / 2
 				ELSE
 					LOCAL:3 = 0
 				ENDIF
 			ENDIF
-			FOR LOCAL, LOCAL:3, LOCAL:3 + (2+FLAG_画像設定:4)
+			FOR LOCAL, LOCAL:3, LOCAL:3 + (キャラ画像表示下限数 + FLAG_画像設定:4)
 				SIF LOCAL >= LOCAL:1
 					BREAK
 				;訪問者EXは表示させない(後に変更する可能性あり)
@@ -1426,12 +1463,14 @@ IF TARGET:0 > 0
 	ELSE
 		PRINTFORM %"　",29,LEFT%
 	ENDIF
-	IF CFLAG:(TARGET:0):怒り
-		SETCOLOR 色設定_状態_激おこ
-		PRINTFORM %"怒"%
-		RESETCOLOR
+		IF CFLAG:(TARGET:0):怒り
+			SETCOLOR 色設定_状態_激おこ
+			PRINTFORM %"怒"%
+			RESETCOLOR
+	ELSEIF BASE:(TARGET:0):怒り >= 200
+			PRINTFORM %"怒り:"%%"！" * (BASE:怒り/200)%
 	ELSE
-		PRINTFORM %"怒り:"%%"！" * (BASE:怒り/200)%
+			PRINTFORM %"怒り:"%
 	ENDIF
 ENDIF
 RETURN 0
@@ -1440,49 +1479,70 @@ RETURN 0
 ;自室のチェックを行う
 ;@param ARG:0 チェックするキャラクター
 @INFO_CheckMyRoom(ARG:0)
-	;非恋慕状態で、子供じゃない場合
-IF !TALENT:ARG:恋慕 && (NO:ARG!=人物_息子 && NO:ARG!=人物_娘)
-		;あなたの私室が、自分の私室に設定されている
-	IF CFLAG:MASTER:開始位置 == CFLAG:ARG:開始位置
-		PRINTL 
-		PRINTFORML %CALLNAME:ARG%は、今日から%CALLNAME:MASTER%は自分の部屋で寝るよう言った
-		TRYCALLLIST
-			FUNC NTR_MESSAGE_COM_K{ARG:0}_104_1_3
-			FUNC NTR_MESSAGE_COM_K_104_1_3(ARG:0)
-		ENDFUNC
-		CFLAG:MASTER:開始位置 = 場所_あなたの家
-	ENDIF
-ENDIF
-RETURN 0
 
+	;非恋慕状態で、子供じゃない場合
+	IF !TALENT:ARG:恋慕 && (NO:ARG!=人物_息子 && NO:ARG!=人物_娘)
+		;あなたの私室が、自分の私室に設定されている
+		IF CFLAG:MASTER:開始位置 == CFLAG:ARG:開始位置
+			PRINTL 
+			PRINTFORML %CALLNAME:ARG%は、今日から%CALLNAME:MASTER%は自分の部屋で寝るよう言った
+			TRYCALLLIST
+				FUNC NTR_MESSAGE_COM_K{ARG:0}_104_1_3
+				FUNC NTR_MESSAGE_COM_K_104_1_3(ARG:0)
+			ENDFUNC
+			CFLAG:MASTER:開始位置 = 場所_あなたの家
+		ENDIF
+	ENDIF
+
+RETURN 0
 ;-------------------------------------------------------------------------------
 ;ムードを表示
 ;@param ARG:0 キャラクターの番号
 ;@return 1:xxx,0:xxx
 @INFO_PrintTargetMood(ARG:0)
+
 PRINTFORM %"ムード:"%
 IF BASE:ARG:ムード == MAXBASE:ARG:ムード
-		;最大だったらピンク色
+	;最大だったらピンク色
 	SETCOLOR 色設定_状態_発情中
 ENDIF
 PRINTFORML %UNICODE(0x2764)*LIMIT(BASE:ARG:ムード/200,0,5)+UNICODE(0x2715)*(5-LIMIT(BASE:ARG:ムード/200,0,5))%
 RESETCOLOR
-RETURN 0
 
+RETURN 0
 ;-------------------------------------------------------------------------------
 ;理性を表示
 ;@param ARG:0 キャラクターの番号
 ;@return 1:xxx,0:xxx
 @INFO_PrintTargetReason(ARG:0)
-PRINTFORM %"理性:"%
+
+PRINTFORM %"理性  :"%
 IF BASE:ARG:理性 < 100
-		;100以下なら黄色
+	;100以下なら黄色
 	SETCOLOR 色設定_状態_理性的
 ENDIF
 PRINTFORML %"★"*(MAX(BASE:ARG:理性/200,1))%
 RESETCOLOR
-RETURN 0
 
+RETURN 0
+;-------------------------------------------------------------------------------
+;興奮度を表示
+;@param ARG:0 キャラクターの番号
+;@return 1:xxx,0:xxx
+@INFO_PrintTargetKOUHUN(ARG:0)
+
+;SETCOLOR 色設定_状態_注意
+;	PRINTFORML SEXUAL MOOD!!
+;RESETCOLOR
+PRINTFORM %"エッチ:"%
+IF BASE:ARG:興奮度 == MAXBASE:ARG:興奮度
+	;最大だったら紫色
+	SETCOLOR 色設定_状態_恋慕
+ENDIF
+PRINTFORML %UNICODE(0x279C)*LIMIT(BASE:ARG:興奮度/200,0,5)+UNICODE(0x2715)*(5-LIMIT(BASE:ARG:興奮度/200,0,5))%
+RESETCOLOR
+
+RETURN 0
 ;-------------------------------------------------------------------------------
 ;満足度を表示
 ;@param ARG:0 キャラクターの番号
@@ -1620,7 +1680,9 @@ FOR LOCAL,1,20
 NEXT
 IF !LOCAL:1
 	PRINTL はだか
-ELSEIF EQUIP:ARG:下半身下着１ + EQUIP:ARG:下半身下着２ < 1 && (!GETBIT(FLAG:雑多設定,1) && !Unknown下着(ARG, LOCAL))
+ELSEIF (EQUIP:ARG:5 + EQUIP:ARG:6 + EQUIP:ARG:7 + EQUIP:ARG:8 + EQUIP:ARG:9 + EQUIP:ARG:10 + EQUIP:ARG:11 + EQUIP:ARG:12 + EQUIP:ARG:13 + EQUIP:ARG:14 + EQUIP:ARG:15 + EQUIP:ARG:16 + EQUIP:ARG:17) == 0
+	PRINTL [はだか] 
+ELSEIF (EQUIP:ARG:下半身下着１ + EQUIP:ARG:下半身下着２ < 1) && (!GETBIT(FLAG:雑多設定,1) && !Unknown下着(ARG, LOCAL))
 	PRINTL [はいてない] 
 ELSE
 	PRINTL

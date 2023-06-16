@@ -225,16 +225,17 @@ IF TFLAG:195
 		CFLAG:MASTER:現在位置 = FARMOVE(MASTER, TFLAG:195)
 		NEXTCOM = 400
 	ENDIF
+	
 	SIF FLAG:訪問者同行フラグ
 		FLAG:訪問者の現在位置 = CFLAG:MASTER:現在位置
-
-	;現在位置の情景描写
-	CALL MAP_MOBMATION
-
+;-----------------------------
+	;移動位置の情景描写
+	CALL MAP_MOVEINGTEXT
+;-----------------------------
 	TIME += 3
 	RETURN 0
 ENDIF
-
+;-----------------------------------------------------------
 ;プレイヤーの位置から表示するマップを変更
 CALL GET_PLAYER_MAP
 PAGE = RESULT
@@ -274,7 +275,7 @@ FOR LOCAL,0, 場所番号最大値初期数
 		PRINTFORML %LOCALS:1%
 	ENDIF
 NEXT
-PRINT [100] - 戻る
+PRINT [9999] - 戻る
 $INPUT_LOOP
 INPUTS
 SIF RESULTS == ""
@@ -294,7 +295,8 @@ IF RESULT == 0
 ENDIF
 
 
-IF RESULT == 100 || RESULT == CFLAG:MASTER:現在位置
+;戻る
+IF RESULT == 9999 || RESULT == CFLAG:MASTER:現在位置
 	RETURN 0
 ;マップ変更
 ELSEIF RESULT >= 1000 && RESULT <= 1001
@@ -401,17 +403,18 @@ ELSE
 	CFLAG:MASTER:現在位置 = FARMOVE(MASTER,TFLAG:195)
 	NEXTCOM = 400
 ENDIF
+
 SIF FLAG:訪問者同行フラグ
 	FLAG:訪問者の現在位置 = CFLAG:MASTER:現在位置
-
-;現在位置の情景描写
-CALL MAP_MOBMATION
-
+;-----------------------------
+	;移動位置の情景描写
+	CALL MAP_MOVEINGTEXT
+;-----------------------------
 TIME += 3
 PREVCOM = 400
 STR:0 = 移動
 RETURN 0
-
+;-----------------------------------------------------------
 [SKIPSTART]
 ;MASTER遠距離移動
 ;ARG:0	最終目的地

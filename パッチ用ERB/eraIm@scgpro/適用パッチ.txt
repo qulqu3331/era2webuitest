@@ -3,8 +3,15 @@ eraIm@scgprov0.66 私家改造版Ver0.54
 
 パッチ
 eraIm@scgprov0.66 私家改造版Ver0.54用パッチまとめv2.2.0
+eraIm@scgprov0.66 私家改造版Ver0.54 好好製パッチ16
+eraIm@scgprov0.66 私家改造版Ver0.54 好好製パッチ17
+eraIm@scgprov0.66 私家改造版Ver0.54 好好製パッチ18
+eraIm@scgprov0.66 私家改造版Ver0.54 好好製パッチ19
+eraIm@scgpro私家版0.54用感覚追加パッチ
+eraIm@scgpro私家版0.54用感覚追加修正パッチ
 
-以上で動作確認
+上記の順に適応した状態で動作確認
 
 
-※感覚追加パッチを入れると動かないことを確認。後日対応予定
+入れても入れなくても影響ないパッチ
+eraIm@scgpro用パッチ＿自分差し出し追加　（適用順序自由）
