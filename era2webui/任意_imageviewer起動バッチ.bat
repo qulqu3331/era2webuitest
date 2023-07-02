@@ -1,0 +1,2 @@
+python imageviewer.py
+pause

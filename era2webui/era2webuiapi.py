@@ -100,21 +100,10 @@ def TaskExecutor(queue,driver):
             # キューが空の場合は少し待つ
             time.sleep(0.02)
 
-
-# 画像ビューア起動関数
-def run_imageviewer():
-    path1 = os.path.dirname(__file__) + "/" 
-    file1 = '"' + path1 + "imageviewer.py" + '"'
-    cmd1 = "python " + file1 
-    subprocess.Popen( cmd1 ) 
-    
 if __name__ == '__main__':
 
     # 作業ディレクトリを本プログラムがあるフォルダに変更
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-    # ダイアログで監視対象フォルダを選ばせる。
-    # ダイアログ表示はconfigファイルでスキップ設定可能
 
     # iniファイル読み込み
     config_ini = configparser.ConfigParser()
@@ -132,8 +121,6 @@ if __name__ == '__main__':
         config_ini.set('Paths', 'erasav', '')
     if not 'image' in config_ini['Paths']:
         config_ini.set('Paths', 'image', '')
-    if not '画像ビューア自動起動' in config_ini['Viewer']:
-        config_ini.set('Viewer', '画像ビューア自動起動', "1")
     if not '画像表示の拡大率' in config_ini['Viewer']:
         config_ini.set('Viewer', '画像表示の拡大率', "1.0")
     if not 'savフォルダの選択をスキップ' in config_ini['Generater']:
@@ -147,6 +134,8 @@ if __name__ == '__main__':
     if not 'apiモードで起動する' in config_ini['Generater']:
         config_ini.set('Generater', 'apiモードで起動する', "0")
 
+    # ダイアログで監視対象フォルダを選ばせる。
+    # ダイアログ表示はconfigファイルでスキップ設定可能
     dir = config_ini.get("Paths", "erasav", fallback="")
     # スキップ設定を読む
     skip = int(config_ini.get("Generater", "savフォルダの選択をスキップ", fallback=0))
@@ -172,14 +161,10 @@ if __name__ == '__main__':
     解像度自動変更 = int(config_ini.get("Generater", "解像度自動変更", fallback=0))
     # 外付けボタンによるプロンプト追加機能
     add_prompt機能 = int(config_ini.get("Generater", "add_prompt機能", fallback=0))
-    # 画像ビューア自動起動
-    画像ビューア自動起動 = int(config_ini.get("Viewer", "画像ビューア自動起動", fallback=0))
     # apiモードで起動する
     apiモードで起動する = int(config_ini.get("Generater", "apiモードで起動する", fallback=0))
 
-    # 画像ビューアを起動 ビューアは独立して動作する
-    if 画像ビューア自動起動:
-        threading.Thread(target=run_imageviewer()).start()
+    # 画像ビューアの起動は手動にしました
 
     # キューの初期化
     order_queue = []
