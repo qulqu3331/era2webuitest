@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-from tkinter import ttk
 import re
 
 # ボタンが押されたときのイベントハンドラ
@@ -83,12 +82,12 @@ for i in range(n):
         # [SL](prompt:[2])
         # 「[]で囲まれた文字列」を区切り文字にしてsplitをかける
         splited_texts = re.split("\[.*?\]",words[i])
-        # "", "<loraXXX:",  ">,TRIGGERWORD" の3要素に別れる。要素数が3でなかったら書式間違い
+        # spritの結果は "" と "<loraXXX:" と ">,TRIGGERWORD" の3要素に分かれる。要素数が3でなかったら書式間違い
         if len(splited_texts) == 3:
             #フレームを切る
             subframe = tk.Frame(frame)
             subframe.grid(row=row, column=0, columnspan=max_columns)
-            #元の文字列の、2つめの[]内の文字列を取得しておく
+            #元の文字列の、2つめの[]内の文字列を取得しておく　これをスライダーの最大値にする
             maxweight = float(re.findall("(?<=\[).+?(?=\])", words[i])[1])
             #ボタン
             button = tk.Button(subframe, text='0', relief='raised', font=('Helvetica', 9))

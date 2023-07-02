@@ -25,8 +25,6 @@ class FileMonitor(FileSystemEventHandler):
             if event.src_path.endswith('.png'):
                 print("png検知")
                 self.update_canvas(event.src_path)
-        else:
-            print("dir?")
 
     def update_canvas(self, image_path):
         #"""キャンバスの画像を更新する関数"""
