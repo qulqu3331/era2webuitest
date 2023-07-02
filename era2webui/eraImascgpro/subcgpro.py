@@ -28,6 +28,7 @@ def preceding(order):
             comNo = Nナイズリ
 
     # 着衣時の胸愛撫はCHAKUMOMIのLoraを適用
+    # キャラLoraと相性よくないみたいでつらい
     if order["上半身着衣状況"] != 0:
         if comNo == N胸愛撫:
             comNo = N着衣胸愛撫
@@ -69,10 +70,10 @@ def promptmaker(order):
     prompt += get_df(csv_efc,'名称','基礎プロンプト','プロンプト') + ","
     negative += get_df(csv_efc,'名称','基礎プロンプト','ネガティブ')  + ","
  
-    if "死亡" in order["talent"]:
-        prompt += "tombstone,dark scene,offering of flowers,"
-        negative += "girl,"
-        return prompt, negative,0,0
+    # if "死亡" in order["talent"]:
+    #     prompt += "tombstone,dark scene,offering of flowers,"
+    #     negative += "girl,"
+    #     return prompt, negative,0,0
 
     #シーン分岐
 
@@ -86,6 +87,7 @@ def promptmaker(order):
             # 立ち絵表示　背景描写を強化
             prompt += "1girl standing,detailed scenery in the background,"
             flags["drawchara"] = 1
+            flags["drawface"] = 1
         #ロケーション
         p,n = get_location(order)
         prompt += p
@@ -228,7 +230,6 @@ def promptmaker(order):
                 prompt += "\(" + get_df(csv_cha,"キャラ名",chaName,"プロンプト") + ":" + str(get_df(csv_cha,"キャラ名",chaName,"プロンプト強調")) + "\),"
                 prompt += "\(" + get_df(csv_cha,"キャラ名",chaName,"プロンプト2") + "\),"
                 prompt += get_df(csv_cha,"キャラ名",chaName,"キャラLora") + ","
-                prompt += get_df(csv_cha,"キャラ名",chaName,"目つきLora") + ","
                 negative += get_df(csv_cha,"キャラ名",chaName,"ネガティブ") +  ","
 
 
@@ -370,18 +371,18 @@ def body_shape (order,flags):
     return prompt,negative
 
 # 髪色
-def haircolor(order):
-    csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Talent.csv')
-    csv_tal = pd.read_csv(filepath_or_buffer=csvfile_path)
-    prompt = ""
-    negative = ""
-    talents = ["黒髪","栗毛","金髪","赤毛","銀髪","青髪","緑髪","ピンク髪","紫髪","白髪","オレンジ髪","水色髪","灰髪"]
-    for tal in talents:
-        if tal in order["talent"]:
-            # csvには色だけ書いてるのでhairをつける
-            prompt += get_df(csv_tal,"名称",tal,"プロンプト") + " hair,"
-            negative += get_df(csv_tal,"名称",tal,"ネガティブ") + " hair,"
-    return prompt
+# def haircolor(order):
+#     csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Talent.csv')
+#     csv_tal = pd.read_csv(filepath_or_buffer=csvfile_path)
+#     prompt = ""
+#     negative = ""
+#     talents = ["黒髪","栗毛","金髪","赤毛","銀髪","青髪","緑髪","ピンク髪","紫髪","白髪","オレンジ髪","水色髪","灰髪"]
+#     for tal in talents:
+#         if tal in order["talent"]:
+#             # csvには色だけ書いてるのでhairをつける
+#             prompt += get_df(csv_tal,"名称",tal,"プロンプト") + " hair,"
+#             negative += get_df(csv_tal,"名称",tal,"ネガティブ") + " hair,"
+#     return prompt
 
 
 # 髪型 
@@ -405,17 +406,17 @@ def equipment(order,flags):
     csvfile_path= os.path.join(os.path.dirname(__file__), 'csvfiles\\Equip.csv')
     csv_equ = pd.read_csv(filepath_or_buffer=csvfile_path)
 
-    N膣装備 = "20"
-    Nアナル装備 = "25"    
+    N膣装備 = ["11","12","13","22"]
+    Nアナル装備 = ["14","15","23"]    
     # 存在するすべてのequipについて繰り返す
     for key,value in order["equip"].items():
         # 構図による装備品のスキップ
-        if key == N膣装備:
+        if key in N膣装備:
             print("v")
             print(flags["drawvagina"])
             if flags["drawvagina"] == 0:
                 continue
-        if key == Nアナル装備:
+        if key in Nアナル装備:
             print("a")
             print(flags["drawanus"])
             if flags["drawanus"] == 0:
@@ -535,30 +536,36 @@ def clothing(order,flags):
     パンツ露出フラグ = 0
     乳露出フラグ = 0
     秘部露出フラグ = 0
-    上半身はだけフラグ = 0 #未実装
-    下半身はだけフラグ = 0 #未実装
+    上半身はだけフラグ = 0 #未実装 上着着衣のまま乳を見せるコマンド用
+    下半身はだけフラグ = 0 #スカート着衣のまま中身を見せるコマンド用
+
+    # 下半身はだけ　クンニ、秘貝開帳、自慰、ローター、Eマッサージャ、クリキャップ、バイブ、アナルバイブ、アナルビーズ、正常位、後背位、正常位アナル、後背位アナル、逆レイプ、騎乗位、騎乗位アナル、対面座位、背面座位、対面座位アナル、背面座位アナル、二穴挿し、素股、スパンキング、
+    if order["コマンド"] in ["1","8","9","40","41","42","44","45","46","60","61","62","63","64","65","66","67","68","69","70","71","72","83","100"]:
+        下半身はだけフラグ = 1
 
     # 下着１（貞操帯、絆創膏、ニプレス）は未実装
 
-    print(f"上半身上着重ね着数{上半身上着重ね着数(order)}")
-    print(f"下半身上着重ね着数{下半身上着重ね着数(order)}")
 
-    # 上着を着てないとき or 1枚だけ着てるのを脱いでるとき に露出フラグが立つ。ノーブラでもフラグを立てておき、あとで折る
+    # ブラ露出判定
+    # 上着が0枚 or 上着1枚かつ脱衣中 に露出フラグが立つ。ノーブラの判定はあとでやる
     if 上半身上着重ね着数(order) == 0 or (上半身上着重ね着数(order) == 1 and order["コマンド"] == N上半身脱衣_上着):
         ブラ露出フラグ = 1
     elif 上半身はだけフラグ == 1:
         ブラ露出フラグ = 1
     
+    # パンツ露出判定　ブラと同様
     if 下半身上着重ね着数(order) == 0 or (下半身上着重ね着数(order) == 1 and order["コマンド"] == N下半身脱衣_上着):
         パンツ露出フラグ = 1 
     elif 下半身はだけフラグ == 1:
         パンツ露出フラグ = 1
     
+    # 乳露出判定
     # 着てない or ブラのみの状態から脱ぐ、または元々ノーブラの状態でブラが見える条件を満たす
     if order["上半身着衣状況"] == 0 or (上半身上着重ね着数(order) == 0 and order["コマンド"] == N上半身脱衣_下着) or (order["上半身下着２"] == 0 and ブラ露出フラグ == 1):
         ブラ露出フラグ = 0
         乳露出フラグ = 1
 
+    # 秘部露出判定
     # なにも履いてない or パンツだけ履いてるのを脱ぐ、または元々ノーパンの状態でパンツが見える条件を満たす
     if order["下半身着衣状況"] == 0 or (下半身上着重ね着数(order) == 0 and order["コマンド"] == N下半身脱衣_下着) or (order["下半身下着２"] == 0 and パンツ露出フラグ == 1):
         パンツ露出フラグ = 0 
@@ -573,15 +580,13 @@ def clothing(order,flags):
         prompt += "nsfw, her upper body is naked,(topless, naked breasts, nipples),"
     # 全裸
     if 秘部露出フラグ == 1 and 乳露出フラグ == 1:
-        prompt += "nsfw, full nude,completely naked, navel, (naked breasts,nipples),"
+        prompt += "nsfw, full nude,completely naked, (naked breasts,nipples),"
 
     # 上着描写
     # 上半身上着
     if (ブラ露出フラグ == 0 and 乳露出フラグ == 0) or 上半身はだけフラグ == 1:
         clothings = ["上半身上着１","上半身上着２","ボディースーツ","ワンピース","着物","レオタード"]
         for clo in clothings:
-            print(clo)
-            print(order[clo])
             clothNo = str(order[clo])
             if order[clo] != 0:
                 prompt += "(wearing "  + 今日の服(order,clothNo) + " " + get_df(csv_clo,"番号",clothNo,"プロンプト") + ":1.3),"
@@ -607,9 +612,10 @@ def clothing(order,flags):
             prompt += "(wearing "  + 今日の服(order,"8888") + " panties:1.3),"
 
     # panty aside
-    if order["マスターがＶ挿入"] != 0 or order["マスターがＡ挿入"] != 0 :
+    # 挿入とクンニ
+    if (order["マスターがＶ挿入"] != 0 )or(order["マスターがＡ挿入"] != 0) or (order["コマンド"] == "1"):
         if order["下半身下着２"] != 0:
-            prompt += "pantie aside,"
+            prompt += "(naked pussy, pantie aside),"
 
     return prompt,negative
 
@@ -639,7 +645,7 @@ def 今日の服(order,clothNo):
             clothcolor = "green"
         elif clothNo == "901":
             clothcolor = "black"
-        # ワイシャツに白を指定するとwhite dress shirt になり、たぶんwhite dressが強すぎて破綻する。なのであえて色指定なし
+        # ワイシャツには色指定なし（white dress shirtになるとホワイトドレスになる)
         elif clothNo == "1304":
             clothcolor = ""
 

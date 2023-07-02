@@ -28,9 +28,9 @@ def Expression(order,flags):
     Love = False
     NotMaster = False
 
-    # TEQUIP:41 眼隠し
-    # if "41" in order["equip"]:
-    #     ClosedEyes = True
+    # TEQUIP:18 アイマスク (cgpro)
+    if "18" in order["equip"]:
+        ClosedEyes = True
 
     # 主人以外が相手の時は恋慕、反発の効果を消す
     # if order["scene"] == "TRAIN":
@@ -307,7 +307,6 @@ def Expression(order,flags):
 
         if tsuyoijoudou == True: # 余裕ないときには退屈な表情はしない
             taikutsu = 0    
-        print(f"taikutsu{taikutsu}")
 
         if taikutsu >= 2:
             # 従順低い時のサドは挑戦的な顔
@@ -332,12 +331,12 @@ def Expression(order,flags):
                     prompt += "(closed eyes smile,blushing:1.3),"
                     ClosedEyes == True
                 if ra == 2:
-                    prompt += "(closed eyes smile,blushing:1.3),open mouth"
+                    prompt += "(closed eyes smile,blushing:1.3),open mouth,"
                     ClosedEyes == True                
                 if ra == 3:
-                    prompt += "(heart racing,blushing:1.3)"
+                    prompt += "(heart racing,blushing:1.3),"
                 if ra == 4:
-                    prompt += "(delighted)"
+                    prompt += "(delighted),"
 
 
         #生来のTalentによる顔つき
