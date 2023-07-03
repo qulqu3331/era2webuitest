@@ -1,6 +1,5 @@
 import os
 import asyncio
-import threading
 import time
 import requests
 from watchdog.observers.polling import PollingObserver
@@ -10,12 +9,10 @@ from sub import gen_Image
 from api import gen_Image_api
 import configparser
 from tkinter import filedialog
-from tkinter import messagebox
 # from eratohoYM.suberatohoYM import promptmaker
 from eraImascgpro.subcgpro import promptmaker
 from selenium import webdriver
 import sys
-import subprocess
 
 class FileHandler(FileSystemEventHandler):
     def __init__(self, queue):
@@ -73,6 +70,14 @@ def TaskExecutor(queue,driver):
             if 解像度自動変更 == 0:
                 gen_width = 0
                 gen_height = 0
+            else:
+                # csvの解像度指定欄が空欄の場合、gen_width/gen_heightには"0"が入っている
+                # このときデフォルト解像度（iniで設定）に置き換える。
+                # （iniで設定された値が0なら解像度変更スキップになる）
+                if gen_width == 0:
+                    gen_width = デフォルト解像度x
+                if gen_height == 0:
+                    gen_height = デフォルト解像度y
 
             # ブラウザ操作
             i = 1
@@ -127,6 +132,10 @@ if __name__ == '__main__':
         config_ini.set('Generater', 'savフォルダの選択をスキップ', "0")
     if not '解像度自動変更' in config_ini['Generater']:
         config_ini.set('Generater', '解像度自動変更', "1")
+    if not 'デフォルト解像度x' in config_ini['Generater']:
+        config_ini.set('Generater', 'デフォルト解像度x', "0")
+    if not 'デフォルト解像度y' in config_ini['Generater']:
+        config_ini.set('Generater', 'デフォルト解像度y', "0")
     if not 'キューの最大サイズ' in config_ini['Generater']:
         config_ini.set('Generater', 'キューの最大サイズ', "2")
     if not 'add_prompt機能' in config_ini['Generater']:
@@ -159,6 +168,9 @@ if __name__ == '__main__':
     QUEUE_MAX_SIZE = int(config_ini.get("Generater", "キューの最大サイズ", fallback=2))
     # 解像度切り替え
     解像度自動変更 = int(config_ini.get("Generater", "解像度自動変更", fallback=0))
+    # デフォルト解像度
+    デフォルト解像度x = int(config_ini.get("Generater", "デフォルト解像度x", fallback=0))
+    デフォルト解像度y = int(config_ini.get("Generater", "デフォルト解像度y", fallback=0))
     # 外付けボタンによるプロンプト追加機能
     add_prompt機能 = int(config_ini.get("Generater", "add_prompt機能", fallback=0))
     # apiモードで起動する
