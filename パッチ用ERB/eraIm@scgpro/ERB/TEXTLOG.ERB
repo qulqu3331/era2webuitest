@@ -13,10 +13,11 @@
 ;LOCAL:3 TARGETを一時保管しているので使ったらだめ
 ;変数
 ;FLAG:880 立ち絵表示の予約フラグ
-;0:なにもしない,1:ターゲット切替,2:移動
+;0:なにもしない,1:ターゲット切替,2:移動,3:真名看破
 ;=============================================================================
 @OUTPUT_TXT(ARGS,ARG = 0)
 #DIMS SCENE
+#DIM LOOP_CHR
 
 ;基本的には第1引数だけ指定して呼び出す。
 ;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
@@ -27,18 +28,27 @@ SCENE = %ARGS%
 IF ARGS == "TACHIE"
 	IF FLAG:880 == 1
 		SCENE = ターゲット切替
-		PRINTFORML %CALLNAME:target%を選択した
+;		PRINTFORML %CALLNAME:target%を選択した
 		WAIT
 		FLAG:880 = 0
 	ELSEIF FLAG:880 == 2
 		SCENE = マスター移動
-		PRINTFORML 移動直後です
+;		PRINTFORML 移動直後です
+		WAIT
+		FLAG:880 = 0
+	ELSEIF FLAG:880 == 3
+		SCENE = 真名看破
+		PRINTFORML 真名看破
 		WAIT
 		FLAG:880 = 0
 	ELSE
 		;予約なしで呼ばれたらキャンセル
 		RETURN 0
 	ENDIF
+ELSE
+;引数TACHIE以外では名前未確定キャラの描画はしない
+	SIF CFLAG:95 == 0
+		RETURN 0
 ENDIF
 
 ;調教メニューお断り
@@ -190,21 +200,22 @@ LOCALS = %LOCALS%\},
 
 ;------------------------------------------------------------------------
 ;コマンドの成功失敗
-;YMだとフラグが見当たらないので判定値で計算
-;判定のないコマンドではこの値は更新されない
+;成否のあるコマンドの拒否時には呼ばれないはず
 
-IF TFLAG:240 < TFLAG:241
-	LOCALS = %LOCALS%"success":0,
-ELSE
-	LOCALS = %LOCALS%"success":1,
-ENDIF
-;PRINTFORML {TFLAG:240} >= {TFLAG:241}
+LOCALS = %LOCALS%"success":1,
 
+;大成功とかの判定は下でTFLAG:193で取得
 
 ;------------------------------------------------------------------------
 
+;不審者がいる、かつ不審な行動を既に見ている(=名前が振られている)
+LOCAL = 0
+FOR LOOP_CHR,1, CHARA_ACTIVE
+	SIF CFLAG:LOOP_CHR:現在位置==CFLAG:MASTER:現在位置 && TALENT:LOOP_CHR:ＥＮＥＭＹ && CFLAG:LOOP_CHR:名前フラグ && !NTR_HAS_CHARA_VISITOREX(LOOP_CHR)
+		LOCAL = 1
+NEXT
 
-
+LOCALS = %LOCALS%"不審者":{LOCAL},
 
 ;キャラ名称-------------------------------------------------------------
 LOCALS = %LOCALS%"target":"%NAME:(TARGET)%",
@@ -359,13 +370,13 @@ LOCALS = %LOCALS%"ワンピース":{EQUIP:ワンピース},
 LOCALS = %LOCALS%"着物":{EQUIP:着物},
 LOCALS = %LOCALS%"レオタード":{EQUIP:レオタード},
 
-LOCALS = %LOCALS%"催眠":{TEQUIP:300},
 LOCALS = %LOCALS%"下半身着衣状況":{TEQUIP:0},
 LOCALS = %LOCALS%"上半身着衣状況":{TEQUIP:1},
 LOCALS = %LOCALS%"下半身ずらし状態":{TEQUIP:2},
 LOCALS = %LOCALS%"上半身はだけ状態":{TEQUIP:3},
 LOCALS = %LOCALS%"マスターがＶ挿入":{MASTER_POSE(6,1)},
 LOCALS = %LOCALS%"マスターがＡ挿入":{MASTER_POSE(7,1)},
+
 
 
 
@@ -394,5 +405,7 @@ PRINTFORML {SELECTCOM}
 		FLAG:880 = 1
 	ELSEIF ARGS == "マスター移動"
 		FLAG:880 = 2	
+	ELSEIF ARGS == "真名看破"
+		FLAG:880 = 3	
 	ENDIF
 	

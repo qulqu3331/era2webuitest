@@ -78,7 +78,7 @@ def promptmaker(order):
     #シーン分岐
 
     #場所とキャラを描写する
-    if order["scene"] == "ターゲット切替" or order["scene"] == "マスター移動":
+    if order["scene"] == "ターゲット切替" or order["scene"] == "マスター移動" or order["scene"] == "真名看破":
         if order["キャラ固有番号"] == 0:
             # targetがいないとき
             prompt += "(empty scene),"
@@ -88,6 +88,8 @@ def promptmaker(order):
             prompt += "1girl standing,detailed scenery in the background,"
             flags["drawchara"] = 1
             flags["drawface"] = 1
+            if order["不審者"] == 1:
+                prompt += "(ugly man behind her in background:1.6),"
         #ロケーション
         p,n = get_location(order)
         prompt += p
@@ -125,8 +127,10 @@ def promptmaker(order):
             flags["drawanus"] = get_df(csv_eve,"名称","汎用調教","アナル描画")
 
         else:
-            # コマンド成否で分岐
-            # 成否判定のないコマンドの場合、order["success"]の値は不定(前回コマンドのまま)
+            # cgpro コマンド成否で分岐はめんどいので実装しない
+            # 現状だとソース変動があるときにしか画像表示関数は呼ばれない
+            order["success"] = 1 # 必ず成功
+
             deny = get_df(csv_tra,"コマンド番号",comNo,"拒否プロンプト")
             if deny == "":
                 #拒否プロンプトが空なら成否判定なしと判断、通常プロンプトを出力する
@@ -296,14 +300,15 @@ def promptmaker(order):
 
     # 昼夜の表現
         # やたらと夜景や黄昏時を出したがるので強めにネガ
+        # 屋外なら青空とかを書きたいが分岐が面倒くさい
         if order["時間"] in range(0,360):
             prompt += "at night,"
             negative += "(blue sky,twilight:1.3),"
         elif order["時間"] in range(360,720):
-            prompt += "in the morning,"
+            prompt += "day,"
             negative += "(night sky,night scene,twilight:1.3),"
         elif order["時間"] in range(720,1060):
-            prompt += "in the afternoon,"
+            prompt += "day,"
             negative += "(night sky,night scene,twilight:1.3),"
         elif order["時間"] in range(1060,1150):
             prompt += "in the twilight,"

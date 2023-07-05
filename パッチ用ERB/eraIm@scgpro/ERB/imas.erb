@@ -1,0 +1,793 @@
+
+@IDOLRANK(ARG)
+;INPUT(0-9に対してアルファベットを返す)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 0
+		RETURNF "Ｆ"
+	CASE 1
+		RETURNF "Ｅ"
+	CASE 2
+		RETURNF "Ｄ"
+	CASE 3
+		RETURNF "C-"
+	CASE 4
+		RETURNF "C+"
+	CASE 5
+		RETURNF "B-"
+	CASE 6
+		RETURNF "B+"
+	CASE 7
+		RETURNF "A-"
+	CASE 8
+		RETURNF "A+"
+	CASE 9
+		RETURNF "Ｓ"
+	CASEELSE
+		RETURNF "アイドルランクエラー"
+ENDSELECT
+
+@IDOLSTATAS(ARG)
+;ARGのアイドル技能表示
+PRINTFORM Vi{ABL:ARG:ビジュアル技能,2,RIGHT}/ 
+PRINTFORM Vo{ABL:ARG:ボーカル技能,2,RIGHT}/ 
+PRINTFORM Da{ABL:ARG:ダンス技能,2,RIGHT}
+
+@MAKE_AUDITION(ARG)
+#DIM C_COUNT
+#DIM SUM_STATUS
+;ARG0~9で生成
+;初期化
+FOR C_COUNT ,0, 4
+	ランク:ARG:C_COUNT=0
+NEXT
+SUM_STATUS = 0
+
+SELECTCASE ARG
+	CASE 0
+		SUM_STATUS = 1
+	CASE 1
+		SUM_STATUS = 4
+	CASE 2
+		SUM_STATUS = 7
+	CASE 3
+		SUM_STATUS = 12
+	CASE 4
+		SUM_STATUS = 17
+	CASE 5
+		SUM_STATUS = 23
+	CASE 6
+		SUM_STATUS = 29
+	CASE 7
+		SUM_STATUS = 36
+	CASE 8
+		SUM_STATUS = 45
+	CASEELSE
+		SUM_STATUS = 60
+ENDSELECT
+
+FOR C_COUNT,0, SUM_STATUS
+	ランク:ARG:(RAND:3)++
+NEXT
+
+@AUDITION_STATE(ARG)
+;ランクARGの情報開示
+#FUNCTIONS
+
+
+;LOCALに最も重い比重を配置
+IF ランク:ARG:0 > ランク:ARG:1 && ランク:ARG:0 > ランク:ARG:2
+	LOCAL=0
+ELSEIF ランク:ARG:1 > ランク:ARG:2
+	LOCAL=1
+ELSE
+	LOCAL=2
+ENDIF
+
+;個々に判別する方
+;IF ランク:ARG:3==0
+IF 0
+	RETURNF AUDITION_KAMOKU(LOCAL)+"能力（"+TOSTR(ランク:ARG:LOCAL)+"）を筆頭に、個々の要素毎に評価：目標総能力値="+TOSTR(ランク:ARG:0+ランク:ARG:1+ランク:ARG:2)
+ELSE
+	RETURNF AUDITION_KAMOKU(LOCAL)+"能力に比重が置かれた総合能力で評価:目標総能力値="+TOSTR(ランク:ARG:0+ランク:ARG:1+ランク:ARG:2)
+;総合的に判断
+ENDIF
+
+
+@AUDITION_KAMOKU(ARG)
+;ARG文字列をリターンする
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 0
+		RETURNF "ビジュアル"
+	CASE 1
+		RETURNF "ボーカル"
+	CASE 2
+		RETURNF "ダンス"
+	CASEELSE
+		RETURNF "エラー"
+ENDSELECT
+
+@素質の変換(ARG)
+CSTR:ARG:フルネーム=%NAME:ARG%
+CSTR:ARG:呼び名=%CALLNAME:ARG%
+CSTR:ARG:源氏名=%GENJINA(ARG)%
+IF TALENT:ARG:ＥＮＥＭＹ
+	CFLAG:ARG:311=場所_間男長屋
+ELSE
+	CFLAG:ARG:311=場所_アイドル長屋
+ENDIF
+CFLAG:ARG:現在位置 = CFLAG:ARG:311
+CFLAG:ARG:300=CFLAG:ARG:311
+CFLAG:ARG:口上パターン=NO:ARG
+CFLAG:ARG:298=1;行動ぱたーぬ
+CFLAG:ARG:360=1
+CFLAG:ARG:7=2
+
+;念のため掃除
+CFLAG:ARG:16=0
+CFLAG:ARG:19=0
+CFLAG:ARG:21=0
+CFLAG:ARG:22=0
+CFLAG:ARG:23=0
+CFLAG:ARG:24=0
+CFLAG:ARG:25=0
+CFLAG:ARG:41=0
+CFLAG:ARG:スカウト不可能 = 3
+CFLAG:ARG:清純度 = 100
+ABL:ARG:交渉能力=RAND:3
+;誕生日の移植
+;CSVファイルを修正したため、削除
+
+MAXBASE:ARG:10=1500
+MAXBASE:ARG:11=1000
+MAXBASE:ARG:12=1000
+MAXBASE:ARG:13=1000
+MAXBASE:ARG:満腹度 = 1000
+
+BASE:ARG:10=0
+BASE:ARG:11=000
+BASE:ARG:12=000
+BASE:ARG:13=000
+
+IF GETBIT(TALENT:ARG:ＳＲ,0)
+	FOR COUNT:1, 0 ,300
+		SELECTCASE RAND:3
+			CASE 0
+				EXP:ARG:ビジュアル経験++
+			CASE 1
+				EXP:ARG:ボーカル経験++
+			CASE 2
+				EXP:ARG:ダンス経験++
+		ENDSELECT
+	NEXT
+ENDIF
+;-----------------------------------------------------------
+;素質変換
+;-----------------------------------------------------------
+;高校生
+IF TALENT:ARG:1220 == 1
+	TALENT:ARG:1230 = 4
+	TALENT:ARG:1220 = 0
+ENDIF
+;中学生
+IF TALENT:ARG:1221 == 1
+	TALENT:ARG:1230 = 3
+	TALENT:ARG:1221 = 0
+ENDIF
+;小学生
+IF TALENT:ARG:1222 == 1
+	TALENT:ARG:1230 = 2
+	TALENT:ARG:1222 = 0
+ENDIF
+;大学生
+IF TALENT:ARG:1223 == 1
+	TALENT:ARG:1230 = 5
+	TALENT:ARG:1223 = 0
+ENDIF
+;園児
+IF TALENT:ARG:1224 == 1
+	TALENT:ARG:1230 = 1
+	TALENT:ARG:1224 = 0
+ENDIF
+;-----------------------------
+;精神素質
+;-----------------------------
+;臆病
+IF TALENT:ARG:臆病==1
+	TALENT:ARG:度胸=-1
+	TALENT:ARG:臆病=0
+ENDIF
+;反抗的
+IF TALENT:ARG:反抗的==1
+	TALENT:ARG:態度=1
+	TALENT:ARG:反抗的=0
+ENDIF
+;気丈
+IF TALENT:ARG:気丈==1
+	TALENT:ARG:度胸=1
+	TALENT:ARG:気丈=0
+ENDIF
+;素直
+IF TALENT:ARG:素直==1
+	TALENT:ARG:態度=-1
+	TALENT:ARG:素直=0
+ENDIF
+;おとなしい
+IF TALENT:ARG:大人しい==1
+	TALENT:ARG:応答=-1
+	TALENT:ARG:大人しい=0
+ENDIF
+;プライド高い
+IF TALENT:ARG:プライド高い==1
+	TALENT:ARG:プライド=1
+	TALENT:ARG:プライド高い=0
+ENDIF
+;生意気
+IF TALENT:ARG:生意気==1
+	TALENT:ARG:応答=1
+	TALENT:ARG:生意気=0
+ENDIF
+;プライド低い
+IF TALENT:ARG:プライド低い==1
+	TALENT:ARG:プライド=-1
+	TALENT:ARG:プライド低い=0
+ENDIF
+;好奇心
+IF TALENT:ARG:好奇心==1
+	TALENT:ARG:性的興味=1
+	TALENT:ARG:好奇心=0
+ENDIF
+;保守的
+IF TALENT:ARG:保守的==1
+	TALENT:ARG:性的興味=-1
+	TALENT:ARG:保守的=0
+ENDIF
+;陽気
+IF TALENT:ARG:陽気==1
+	TALENT:ARG:陽気／陰気=1
+	TALENT:ARG:陽気=0
+ENDIF
+;陰気
+IF TALENT:ARG:陰気==1
+	TALENT:ARG:陽気／陰気=-1
+	TALENT:ARG:陰気=0
+ENDIF
+;楽観的
+IF TALENT:ARG:楽観的==1
+	TALENT:ARG:主観=1
+	TALENT:ARG:楽観的=0
+ENDIF
+;悲観的
+IF TALENT:ARG:悲観的==1
+	TALENT:ARG:主観=-1
+	TALENT:ARG:悲観的=0
+ENDIF
+;貞操観念
+IF TALENT:ARG:1030==1
+	TALENT:ARG:30=1
+	TALENT:ARG:1030=0
+ENDIF
+;貞操無頓着
+IF TALENT:ARG:1031==1
+	TALENT:ARG:30=-1
+	TALENT:ARG:1031=0
+ENDIF
+;抑圧
+IF TALENT:ARG:1032==1
+	TALENT:ARG:31=-1
+	TALENT:ARG:1032=0
+ENDIF
+;開放
+IF TALENT:ARG:1033==1
+	TALENT:ARG:31=1
+	TALENT:ARG:1033=0
+ENDIF
+;恥じらい
+IF TALENT:ARG:1035==1
+	TALENT:ARG:33=1
+	TALENT:ARG:1035=0
+ENDIF
+;恥薄い
+IF TALENT:ARG:1036==1
+	TALENT:ARG:33=-1
+	TALENT:ARG:1036=0
+ENDIF
+;痛みに弱い
+IF TALENT:ARG:1040==1
+	TALENT:ARG:40=1
+	TALENT:ARG:1040=0
+ENDIF
+;痛みに強い
+IF TALENT:ARG:1041==1
+	TALENT:ARG:40=-1
+	TALENT:ARG:1041=0
+ENDIF
+;濡れやすい
+IF TALENT:ARG:1042==1
+	TALENT:ARG:41=1
+	TALENT:ARG:1042=0
+ENDIF
+;濡れにくい
+IF TALENT:ARG:1043==1
+	TALENT:ARG:41=-1
+	TALENT:ARG:1043=0
+ENDIF
+;習得はやい
+IF TALENT:ARG:1050==1
+	TALENT:ARG:50=1
+	TALENT:ARG:1050=0
+ENDIF
+;習得遅い
+IF TALENT:ARG:1051==1
+	TALENT:ARG:50=-1
+	TALENT:ARG:1051=0
+ENDIF
+;汚臭鈍感
+IF TALENT:ARG:1061==1
+	TALENT:ARG:61=1
+	TALENT:ARG:1061=0
+ENDIF
+;汚臭敏感
+IF TALENT:ARG:1062==1
+	TALENT:ARG:61=-1
+	TALENT:ARG:1062=0
+ENDIF
+;汚れ無視
+IF TALENT:ARG:1064==1
+	TALENT:ARG:61=2
+	TALENT:ARG:1064=0
+ENDIF
+;快感に素直
+IF TALENT:ARG:1070==1
+	TALENT:ARG:70=1
+	TALENT:ARG:1070=0
+ENDIF
+;快感の否定
+IF TALENT:ARG:1071==1
+	TALENT:ARG:70=-1
+	TALENT:ARG:1071=0
+ENDIF
+;男勝り
+IF TALENT:ARG:1079==1
+	TALENT:ARG:81=2
+	TALENT:ARG:1079=0
+ENDIF
+;両刀
+IF TALENT:ARG:1081==1
+	TALENT:ARG:81=-1
+	TALENT:ARG:1081=0
+ENDIF
+;男嫌い
+IF TALENT:ARG:1082==1
+	TALENT:ARG:81=1
+	TALENT:ARG:1082=0
+ENDIF
+;-----------------------------
+;身体素質
+;-----------------------------
+;念のため処女チェック
+;オトコ
+IF TALENT:ARG:1100 == 1 || TALENT:ARG:2 == 2
+	TALENT:ARG:2 = 2
+	TALENT:ARG:1100 = 0
+ELSE
+	TALENT:ARG:2=1
+ENDIF
+SIF TALENT:ARG:2 == 1& EXP:ARG:1 == 0
+	TALENT:ARG:0 = 1
+;幼児体形
+IF TALENT:ARG:1105 == 1
+	TALENT:ARG:100 = -2
+	TALENT:ARG:1105 = 0
+ENDIF
+;小柄体形
+IF TALENT:ARG:1106 == 1
+	TALENT:ARG:100 = -1
+	TALENT:ARG:1106 = 0
+ENDIF
+;長身
+IF TALENT:ARG:1108 == 1
+	TALENT:ARG:100 = 1
+	TALENT:ARG:1108 = 0
+ENDIF
+;絶壁
+IF TALENT:ARG:1120 == 1
+	TALENT:ARG:105 = -2
+	TALENT:ARG:1120 = 0
+ENDIF
+;貧乳
+IF TALENT:ARG:1121 == 1
+	TALENT:ARG:105 = -1
+	TALENT:ARG:1121 = 0
+ENDIF
+;巨乳
+IF TALENT:ARG:1122 == 1
+	TALENT:ARG:105 = 1
+	TALENT:ARG:1122 = 0
+ENDIF
+;爆乳
+IF TALENT:ARG:1123 == 1
+	TALENT:ARG:105 = 2
+	TALENT:ARG:1123 = 0
+ENDIF
+;牛乳
+IF TALENT:ARG:1124 == 1
+	TALENT:ARG:105 = 3
+	TALENT:ARG:1124 = 0
+ENDIF
+;微尻
+IF TALENT:ARG:1125 == 1
+	TALENT:ARG:112 = -2
+	TALENT:ARG:1125 = 0
+ENDIF
+;小尻
+IF TALENT:ARG:1126 == 1
+	TALENT:ARG:112 = -1
+	TALENT:ARG:1126 = 0
+ENDIF
+;巨尻
+IF TALENT:ARG:1127 == 1
+	TALENT:ARG:112 = 1
+	TALENT:ARG:1127 = 0
+ENDIF
+;爆尻
+IF TALENT:ARG:1128 == 1
+	TALENT:ARG:112 = 2
+	TALENT:ARG:1128 = 0
+ENDIF
+;牛尻
+IF TALENT:ARG:1129 == 1
+	TALENT:ARG:112 = 3
+	TALENT:ARG:1129 = 0
+ENDIF
+;Ｃ鈍感
+IF TALENT:ARG:1140 == 1
+	TALENT:ARG:101 = -1
+	TALENT:ARG:1140 = 0
+ENDIF
+;Ｃ敏感
+IF TALENT:ARG:1141 == 1
+	TALENT:ARG:101 = 1
+	TALENT:ARG:1141 = 0
+ENDIF
+;Ｖ鈍感
+IF TALENT:ARG:1142 == 1
+	TALENT:ARG:102 = -1
+	TALENT:ARG:1142 = 0
+ENDIF
+;Ｖ敏感
+IF TALENT:ARG:1143 == 1
+	TALENT:ARG:102 = 1
+	TALENT:ARG:1143 = 0
+ENDIF
+;Ａ鈍感
+IF TALENT:ARG:1144 == 1
+	TALENT:ARG:103 = -1
+	TALENT:ARG:1144 = 0
+ENDIF
+;Ａ敏感
+IF TALENT:ARG:1145 == 1
+	TALENT:ARG:103 = 1
+	TALENT:ARG:1145 = 0
+ENDIF
+;Ｂ鈍感
+IF TALENT:ARG:1146 == 1
+	TALENT:ARG:104 = -1
+	TALENT:ARG:1146 = 0
+ENDIF
+;Ｂ敏感
+IF TALENT:ARG:1147 == 1
+	TALENT:ARG:104 = 1
+	TALENT:ARG:1147 = 0
+ENDIF
+;Ｍ鈍感
+IF TALENT:ARG:1148 == 1
+	TALENT:ARG:109 = -1
+	TALENT:ARG:1148 = 0
+ENDIF
+;Ｍ敏感
+IF TALENT:ARG:1149 == 1
+	TALENT:ARG:109 = 1
+	TALENT:ARG:1149 = 0
+ENDIF
+;Ｎ鈍感
+IF TALENT:ARG:1152 == 1
+	TALENT:ARG:110 = -1
+	TALENT:ARG:1152 = 0
+ENDIF
+;Ｎ敏感
+IF TALENT:ARG:1153 == 1
+	TALENT:ARG:110 = 1
+	TALENT:ARG:1153 = 0
+ENDIF
+;Ｕ鈍感
+IF TALENT:ARG:1154 == 1
+	TALENT:ARG:113 = -1
+	TALENT:ARG:1154 = 0
+ENDIF
+;Ｕ敏感
+IF TALENT:ARG:1155 == 1
+	TALENT:ARG:113 = 1
+	TALENT:ARG:1155 = 0
+ENDIF
+;回復早い
+IF TALENT:ARG:1150 == 1
+	TALENT:ARG:130 = 1
+	TALENT:ARG:1150 = 0
+ENDIF
+;回復遅い
+IF TALENT:ARG:1151 == 1
+	TALENT:ARG:130 = -1
+	TALENT:ARG:1151 = 0
+ENDIF
+
+@履歴MAKING(ARG,ARG:1)
+;登録番号ARGのキャラに関する履歴を読み取る
+;ARG:1,内容
+
+
+履歴_NO:履歴_IX=NO:ARG
+履歴_DAY:履歴_IX:0=CFLAG:ARG:活動開始日
+履歴_DAY:履歴_IX:1=DAY
+履歴_CO:履歴_IX:0=CFLAG:ARG:アイドルランク
+履歴_CO:履歴_IX:1=ARG:1
+履歴_IX++
+RETURN 1
+;-------------------------------------------------------------------------------
+;表示できるか評価する。CAN_MOVE、同じ場所、FLAG:訪問者との汚れ判定に使用の32bit目で評価。
+;ARG…口上元の発生場所
+;戻り値…1:条件成立 0:条件非成立
+;仮
+
+@CHK_VISIBLE(ARG)
+#FUNCTION
+
+
+IF IS_NTR_SHOW_ALL()
+	RETURNF 1
+ENDIF
+IF CFLAG:MASTER:現在位置 == ARG
+	RETURNF 1
+ENDIF
+IF CAN_MOVE(CFLAG:MASTER:現在位置, ARG) == 2
+	RETURNF 1
+ENDIF
+RETURNF 0
+;-------------------------------------------------------------------------------
+;表示できるか評価する。CAN_MOVE、同じ場所、FLAG:訪問者との汚れ判定に使用の32bit目で評価。
+;ARG…口上元の発生場所
+;戻り値…1:条件成立 0:条件非成立
+;アイドル関係の経験の時のみ
+
+@CHK_VISIBLE2(ARG)
+#FUNCTION
+
+IF CFLAG:MASTER:現在位置 == ARG
+	RETURNF 1
+ENDIF
+IF CAN_MOVE(CFLAG:MASTER:現在位置, ARG) == 2
+	RETURNF 1
+ENDIF
+RETURNF 0
+;-----------------------------------------------------------
+@真名隠蔽(ARG)
+;ARGの名前を隠す
+IF GETBIT(FLAG:雑多設定, 9)
+	NAME:ARG = %外観呼び名設定(ARG, 0)%
+	CALLNAME:ARG = %外観呼び名設定(ARG, 1)%
+ELSE
+	NAME:ARG=？？？
+	CALLNAME:ARG=？？？
+ENDIF
+CFLAG:ARG:名前フラグ=0
+;-----------------------------------------------------------
+@外観呼び名設定(ARG, ARG:1)
+#FUNCTIONS
+#DIMS 性格
+#DIMS 背格好
+#DIMS 胸
+#DIMS 年かさ
+#DIMS 呼び名
+;ARG:1　0 全部いり　1 二つ程度
+
+性格 = 
+背格好 = 
+胸 = 
+年かさ = 
+呼び名 = 
+
+;	性格 = 凄みのある、気の弱そうな、素直そうな、気の強そうな、気位の高そうな、陰のある、快活な、怪しい目をした
+IF TALENT:ARG:威圧感 != 0
+	性格 = 凄みのある
+ELSEIF TALENT:ARG:陽気／陰気 != 0
+	性格 = \@ TALENT:ARG:陽気／陰気 > 0 ?快活な#陰のある\@
+ELSEIF TALENT:ARG:プライド > 0
+	性格 = 気位の高そうな
+ELSEIF TALENT:ARG:応答 != 0
+	性格 = \@ TALENT:ARG:応答 > 0 ?生意気そうな#大人しそうな\@
+ELSEIF TALENT:ARG:度胸 != 0
+	性格 = \@ TALENT:ARG:度胸 > 0 ?芯の強そうな#気の弱そうな\@
+ELSEIF TALENT:ARG:態度 != 0
+	性格 = \@ TALENT:ARG:態度 > 0 ?気の強そうな#素直そうな\@
+ELSEIF TALENT:ARG:羞恥心 != 0
+	性格 = \@ TALENT:ARG:羞恥心 > 0 ?おどおどした#あけすけな\@
+ELSEIF TALENT:ARG:性的興味 > 0
+	性格 = 好奇心旺盛な
+ELSEIF TALENT:ARG:倒錯的 > 0
+	性格 = 怪しげな目の
+ENDIF
+
+;	背格好 = 小柄な、背の高い
+SELECTCASE TALENT:ARG:体型
+	CASE IS < 0
+		背格好 = 小柄
+	CASE IS > 0
+		背格好 = 長身
+ENDSELECT
+
+
+;	胸 = 貧乳の、巨乳の、爆乳の
+SELECTCASE TALENT:ARG:バストサイズ
+	CASE IS < 0
+		胸 = 貧乳の
+	CASE 1
+		胸 = 巨乳の
+	CASE IS > 1
+		胸 = 爆乳の
+ENDSELECT
+
+;-------------------
+	;年かさ = 幼女、少年、少女、青年、女性
+	IF (INRANGE(BASE:ARG:実年齢, 1, 10) || TALENT:ARG:園児 || TALENT:ARG:学生 == 1) && HAS_VAGINA(ARG) 
+		年かさ = 幼女
+		;幼女が貧乳なのは当たり前
+		SIF TALENT:ARG:バストサイズ < 0
+			胸 = 
+		;小柄なのもあたりまえ
+		;↑放課後クライマックスガールズの皆さん、こいつです
+		SIF TALENT:ARG:体型 < 0
+			背格好 = 
+	ELSEIF INRANGE(TALENT:ARG:学生, 1, 4) || TALENT:ARG:高校生 || TALENT:ARG:中学生 || TALENT:ARG:小学生 || INRANGE(BASE:ARG:実年齢, 11, 18)
+		年かさ = \@ HAS_VAGINA(ARG) ?少女#少年\@
+	ELSE
+		年かさ = \@ HAS_VAGINA(ARG) ?女性#青年\@
+	ENDIF
+;-------------------
+;オトコは胸に言及しない
+SIF !HAS_VAGINA(ARG)
+	胸 = 
+
+
+IF ARG:1 == 1
+	IF 性格 != ""
+		呼び名 = %性格 + 年かさ%
+	ELSEIF 背格好 != ""
+		呼び名 = %背格好%な%年かさ%
+	ELSEIF 胸 != ""
+		呼び名 = %胸 + 年かさ%
+	ELSE
+		呼び名 = ごく普通の%年かさ%
+	ENDIF
+ELSE
+	呼び名 = %性格%
+	IF 背格好 != ""
+		呼び名 = %呼び名+ 背格好%
+		呼び名 += \@ 胸 == "" ?の#で\@
+	ENDIF
+	呼び名 = %呼び名 + 胸 + 年かさ%
+	SIF 性格 == "" && 背格好 == "" && 胸 == ""
+		呼び名 = ごく普通の%年かさ%
+ENDIF
+RETURNF 呼び名
+;-----------------------------------------------------------
+@真名看破(ARG)
+;上の逆
+
+NAME:ARG = %CSTR:ARG:フルネーム%
+CALLNAME:ARG = %CSTR:ARG:呼び名%
+CFLAG:ARG:名前フラグ = 1
+CALL SET_TACHIE_FLAG("真名看破")
+;-----------------------------------------------------------
+@所属(ARG)
+#FUNCTION
+;CFLAG:所属がある場合は、それを返す
+SIF CFLAG:ARG:所属 == 1
+	RETURNF 1
+
+SIF CFLAG:ARG:所属 == 2
+	RETURNF 0
+
+;ARGの所属が事務所だったら1を返す
+SIF TALENT:ARG:事務員
+	RETURNF 1
+;あなただったら1を返す
+SIF ARG == MASTER
+	RETURNF 1
+;-----------------------------
+;アイドルかトレーナーぽいなら1を返す
+;同棲中の子も所属していると見られるのであなたの家は除外する（暫定）
+;SIF (CFLAG:ARG:開始位置 == 場所_あなたの家 || 場所番号最大値初期数 < CFLAG:ARG:開始位置) && CFLAG:ARG:開始位置 <= 移動可能_場所番号最大値 && CFLAG:ARG:開始位置 != 場所_あなたの家
+;	RETURNF 1
+
+	;これでどうでしょうか？ (2022/09/04)
+	SIF CFLAG:ARG:開始位置 <= 場所番号最大値 && !CFLAG:ARG:同棲
+		RETURNF 1
+;-----------------------------
+RETURNF 0
+;-----------------------------------------------------------
+@能力表示許可(ARG)
+;将来的にoptionとかで拡張する予定
+#FUNCTION
+#DIM TEMP
+
+;SIF 所属(ARG) || CFLAG:MASTER:現在位置==CFLAG:ARG:現在位置 || CAN_MOVE(CFLAG:MASTER:現在位置, CFLAG:ARG:現在位置)==2
+SIF (所属(ARG) || TALENT:ARG:恋慕) || (GETBIT(FLAG:ＮＴＲパッチ設定,32) || CFLAG:MASTER:現在位置==CFLAG:ARG:現在位置 || CAN_MOVE(CFLAG:MASTER:現在位置, CFLAG:ARG:現在位置)==2)
+	RETURNF 1
+RETURNF 0
+;-----------------------------------------------------------
+@ラブホ_移動処理(ARG)
+
+CFLAG:ARG:現在位置= 場所_ラブホあなた用
+CFLAG:MASTER:現在位置= 場所_ラブホあなた用
+;服対策でここで前ターン偽造
+CFLAG:ARG:前ターン位置=場所_ラブホあなた用
+;CALL CLOTHES_Preset_NUDE(ARG)
+CFLAG:ARG:うふふ=1
+;-----------------------------------------------------------
+@GET_SEC()
+#FUNCTION
+
+;事務員の番号を返す
+#DIM LOOP_CHR
+FOR LOOP_CHR,1, CHARA_ACTIVE
+	SIF TALENT:LOOP_CHR:事務員
+		RETURNF LOOP_CHR
+NEXT
+;-----------------------------------------------------------
+@名前色決め(ARG)
+;名前の色をアイドル属性に応じた色に変更する
+;属性が存在しない場合は、緑色にする
+
+IF CFLAG:ARG:名前フラグ == 0
+	IF TALENT:ARG:ＥＮＥＭＹ || TALENT:ARG:ＲＩＶＡＬ
+		SETCOLOR 色設定_敵
+	ENDIF
+ELSE
+	SELECTCASE CFLAG:ARG:CHARATYPE
+		CASE 属性_キュート
+			SETCOLOR 色設定_キュート
+		CASE 属性_クール
+			SETCOLOR 色設定_クール
+		CASE 属性_パッション
+			SETCOLOR 色設定_パッション
+		CASEELSE
+			SETCOLOR 色設定_その他属性
+	ENDSELECT
+ENDIF
+
+SIF NTR_HAS_CHARA_VISITOREX(ARG)
+	SETCOLOR 色設定_敵
+
+;-----------------------------------------------------------
+@名前色付表示(ARG, ARGS = "フルネーム")
+;指定キャラの名前をアイドル属性に応じた色で表示する
+CALL 名前色決め(ARG)
+
+IF ARGS == "フルネーム"
+	PRINTFORM %NAME:ARG%
+ELSE
+	PRINTFORM %CALLNAME:ARG%
+ENDIF
+RESETCOLOR
+
+@所属色設定(ARG)
+;指定キャラの所属に応じた色に変更する
+SELECTCASE CFLAG:ARG:所属
+	CASE 1
+		SETCOLOR 色設定_自社所属
+	CASE 2
+		SETCOLOR 色設定_ライバル所属
+	CASEELSE
+		RESETCOLOR
+ENDSELECT
