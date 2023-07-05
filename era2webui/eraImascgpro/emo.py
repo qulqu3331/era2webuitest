@@ -295,12 +295,12 @@ def Expression(order,flags):
 
         # 調教初期の表情 つまんなそうな顔
         # 何も指定しないとカワイイ笑顔になるのを防ぐためのデフォルト表情
-        # 従順で解除
+        # scgpro 初対面シチュエーションが多いので軽めに200で解除する
 
         taikutsu = 2
-        if (order["abl"]["従順"] > 3) or (order["好感度"] > 500): #従順と好感度どっちか1回ずつしか効かない
+        if (order["abl"]["従順"] > 3) or (order["好感度"] > 50):
             taikutsu -= 1
-        if (order["abl"]["従順"] > 4) or (order["好感度"] > 1000):
+        if (order["abl"]["従順"] > 4) or (order["好感度"] > 200):
             taikutsu -= 1
 
         # 性格等で増減
