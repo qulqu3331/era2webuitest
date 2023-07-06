@@ -1,2 +1,2 @@
-python era2webuiapi.py
+python era2webui.py
 pause
