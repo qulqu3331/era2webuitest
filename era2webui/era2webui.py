@@ -10,7 +10,8 @@ from api import gen_Image_api
 import configparser
 from tkinter import filedialog
 # from eratohoYM.suberatohoYM import promptmaker
-from eraImascgpro.subcgpro import promptmaker
+# from eraImascgpro.subcgpro import promptmaker
+from eraAVHo.subavho import promptmaker
 from selenium import webdriver
 import sys
 
