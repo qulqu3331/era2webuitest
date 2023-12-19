@@ -1,0 +1,522 @@
+﻿;=============================================================================
+;調教中のパラメータをテキスト出力
+;JSON形式
+;時刻,キャラ名,素質,好感度,刻印,行為,絶頂,PALAM増減,PALAM累積値,ほかいろんなフラグ
+;GLOBAL:8800 連続呼び出し防止用のタイマー
+;GLOBAL:8801 出力テキストにつく連番
+;引数
+;ARGS どの場面から呼ばれたかを表す文字列 。"scene"要素としてそのまま文字列出力
+;ARG 描画キャラの番号 省略したらTARGET
+;ローカル変数
+;LOCALS  txt出力する文字列
+;LOCAL:0～2 カウンタ等に適当に使用
+;LOCAL:3 TARGETを一時保管しているので使ったらだめ
+;変数
+;FLAG:8800 立ち絵表示の予約フラグ
+;0:なにもしない,1:ターゲット切替,2:移動
+;=============================================================================
+
+@OUTPUT_TXT(ARGS,ARG = 0)
+#DIMS SCENE
+#DIM LOOP_CHR
+
+;基本的には第1引数だけ指定して呼び出す。
+;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
+
+SCENE = %ARGS%
+
+;引数TACHIEで呼ばれたら、予約があるときのみ反応する（呼び出し元:SHOW_STATUS関数）
+IF ARGS == "TACHIE"
+	IF FLAG:8800 == 1
+		SCENE = ターゲット切替
+;		PRINTFORML %CALLNAME:target%を選択した
+		WAIT
+		FLAG:8800 = 0
+	ELSEIF FLAG:8800 == 2
+		SCENE = マスター移動
+;		PRINTFORML 移動直後です
+		WAIT
+		FLAG:8800 = 0
+			ELSEIF FLAG:8800 == 3
+		SCENE = 真名看破
+		PRINTFORML 真名看破
+		WAIT
+		FLAG:8800 = 0
+	ELSE
+		;予約なしで呼ばれたらキャンセル
+		RETURN 0
+	ENDIF
+ENDIF
+
+;調教メニューお断り
+SIF TFLAG:224 == 555
+	RETURN 0
+
+;タイマーで200ミリ秒未満の連続実行を防ぐ
+GETMILLISECOND
+LOCAL = RESULT
+SIF GLOBAL:3000 - LOCAL > -200
+	RETURN 0
+
+
+;連続実行防止タイマー更新
+GLOBAL:3000 = LOCAL
+
+
+;対象がTARGETでない場面での呼び出しに対応するため、TAEGETを退避しておく。最後に戻す
+LOCAL:3 = TARGET
+;引数ありならTARGETを一時的に変更。引数を省略した場合はそのままTARGETを対象にする。
+SIF ARG != 0
+	TARGET = ARG
+
+
+;jsonの最初の波括弧を記述------------------------------------------------------
+LOCALS = \{
+
+;タイムスタンプ 時刻ミリ秒-----------------------------------------------------
+;txtとプロンプトを紐づけるIDにする。今のところ使ってない
+LOCALS = %LOCALS%"timestamp":{GLOBAL:3000},
+
+;シーン------------------------------------------------------------------------
+;シーン文字列を書き出す
+LOCALS = %LOCALS%"scene":"%SCENE%",
+
+
+
+;TALENT(取得しているものだけ書き出し)-------------------------------------------
+;書式は "talent":["a","b","c",...]
+
+;素質を数えるカウンタ
+LOCAL:2 = 0
+
+LOCALS = %LOCALS%"talent":[
+;300,行きずり,;いわゆる汎用キャラまでループ
+REPEAT 305
+	LOCAL=COUNT
+	SIF STRLENS(TALENTNAME:LOCAL) <= 0
+		CONTINUE
+	IF TALENT:TARGET:(LOCAL) == 1
+		LOCALS = %LOCALS%"%TALENTNAME:(LOCAL)%",
+		LOCAL:2 += 1
+	ENDIF
+	LOCAL += 1
+REND
+
+	;余分な","を取り除くために末尾1文字を消す処理（素質が1つもなければ実行しない）
+	SIF LOCAL:2 >= 1
+		LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+
+	LOCALS = %LOCALS%],
+
+
+;ABL(すべて書き出し)------------------------------------------------------
+;書式は "abl":{"a":Lv,"b":Lv,"c":Lv,...}
+LOCALS = %LOCALS%"abl":\{
+REPEAT 60
+	LOCAL=COUNT
+	SIF STRLENS(ABLNAME:LOCAL) <= 0
+		CONTINUE
+	LOCALS = %LOCALS%"%ABLNAME:(LOCAL)%":{ABL:TARGET:LOCAL},
+	LOCAL += 1
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+;刻印-----------------------------------------------------------------------------------
+LOCALS = %LOCALS%"mark":\{
+REPEAT 8
+	LOCAL=COUNT
+	SIF STRLENS(MARKNAME:LOCAL) <= 0
+		CONTINUE
+	LOCALS = %LOCALS%"%MARKNAME:(LOCAL)%":{MARK:TARGET:LOCAL},
+	LOCAL += 1
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;このコマンドで上昇したPALAM-------------------------------------------------------
+
+LOCALS = %LOCALS%"palam_up":\{
+REPEAT 33
+	LOCAL = COUNT
+	SIF STRLENS(PALAMNAME:LOCAL) <= 0
+		CONTINUE
+	;上昇値が負の数なら0にする
+	UP:LOCAL = MAX(UP:LOCAL, 0)
+	;下降値が負の数なら0にする
+	DOWN:LOCAL = MAX(DOWN:LOCAL, 0)
+	;変数を統一
+	LOCAL:1 = UP:LOCAL - DOWN:LOCAL
+	LOCALS = %LOCALS%"%PALAMNAME:LOCAL%":{LOCAL:1},
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;現在PALAM(呼び出し位置が上昇前なので、UPを足して上昇後の値にする。)----------------------
+LOCALS = %LOCALS%"palam":\{
+REPEAT 33
+	LOCAL = COUNT
+	SIF STRLENS(PALAMNAME:LOCAL) <= 0
+		CONTINUE
+	LOCAL:2 = PALAM:LOCAL + UP:LOCAL
+	LOCALS = %LOCALS%"%PALAMNAME:LOCAL%":{LOCAL:2},
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+;EQUIP------------------------------------------------------------------
+;値が1以上のものすべてについて、変数の番号をそのまま書き出す。
+LOCALS = %LOCALS%"equip":\{
+LOCAL:2 = 0
+REPEAT 25
+	LOCAL = COUNT
+		SIF EQUIP:LOCAL < 1
+		CONTINUE
+	LOCALS = %LOCALS%"{LOCAL}":{EQUIP:LOCAL},
+	LOCAL:2 += 1
+REND
+;末尾のカンマを消す
+SIF LOCAL:2 >= 1
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+; EQUIP:NO:装備部位
+LOCALS = %LOCALS%"EQUIP:NO:装備部位":\{
+FOR LOCAL, 1, 23
+	LOCAL:1 = 装備部位INDEX(LOCAL)
+	; PRINTFORML "装備部位INDEX 数字型" {LOCAL:1} "EQUIP:NO:装備部位デバッグ用"
+	; WAIT
+	LOCAL:4 = EQUIP:NO:(LOCAL:1)
+	; PRINTFORML "EQUIP:NO:(LOCAL:1)結果" {LOCAL:4} "EQUIP:NO:装備部位デバッグ用"
+	; WAIT
+	SIF LOCAL:4 >= 1
+		LOCALS = %LOCALS%"{LOCAL}":{LOCAL:4},
+NEXT
+	WAIT
+	; 余分なカンマを削除
+	SIF LOCAL:2 >= 1
+		LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+	LOCALS = %LOCALS%\},
+
+
+;CSTR:C_ID:(50 + 装備部位)
+;パジャマ判定用
+;CLOTH.EBRより
+;IF STRLENS(CSTR:C_ID:(50 + 装備部位)) && !CFLAG:C_ID:パジャマ
+;C_IDはキャラ固有番号なので NO とする
+;パンツの名前を延々出す､あとで直す
+;天気を取得するようにしたr天気を延々と出す
+LOCALS = %LOCALS%"パジャマ判定":\{
+FOR LOCAL, 1, 23
+	LOCAL:1 = 装備部位INDEX(LOCAL)
+	;PRINTFORML "装備部位INDEX(LOCAL)結果" {LOCAL:1} "CSTR:C_ID:(50 + 装備部位)デバッグ用"
+	SIF !EQUIP:NO:(LOCAL:1)
+		CONTINUE
+	;50を足す位置はどこだ?
+	SIF STRLENS(CSTR:NO:(50 + LOCAL:1)) && !CFLAG:NO:パジャマ
+		LOCALS:1 = %CSTR:NO:(50 + LOCAL:1)%
+		;PRINTFORML "CSTR:NO:(50 + LOCAL:1)" %LOCALS:1% "CSTR:C_ID:(50 + 装備部位)デバッグ用"
+		LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
+NEXT
+	WAIT
+	; 余分なカンマを削除
+	SIF LOCAL:2 >= 1
+		LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+	LOCALS = %LOCALS%\},
+
+LOCALS = %LOCALS%"CFLAG:NO:パジャマ":{CFLAG:NO:パジャマ},
+
+
+;upper_underwear_NAME
+LOCALS = %LOCALS%"upper_underwear":\{
+LOCALS:1 = %BRANAME(EQUIP:NO:上半身下着１, NO)%
+LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
+	; 余分なカンマを削除
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+	LOCALS = %LOCALS%\},
+
+;lower_underwear_NAME
+LOCALS = %LOCALS%"lower_underwear":\{
+LOCALS:1 = %PANTSNAME(EQUIP:NO:下半身下着２, NO)%
+LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
+	; 余分なカンマを削除
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+	LOCALS = %LOCALS%\},
+
+
+
+
+;TEQUIP------------------------------------------------------------------
+;値が1以上のものすべてについて、変数の番号をそのまま書き出す。
+LOCALS = %LOCALS%"tequip":\{
+LOCAL:2 = 0
+REPEAT 25
+	LOCAL = COUNT
+	SIF TEQUIP:LOCAL < 1
+		CONTINUE
+	LOCALS = %LOCALS%"{LOCAL}":{TEQUIP:LOCAL},
+	LOCAL:2 += 1
+REND
+
+;末尾のカンマを消す
+SIF LOCAL:2 >= 1
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+;------------------------------------------------------------------------
+;コマンドの成功失敗
+;eraTW -1:失敗 0:成功 1;大成功
+;ここは謎 TFLAG:194 SOURCEなどに影響しないSELECTCOMの分岐
+
+LOCALS = %LOCALS%"success":{TFLAG:193},
+
+;大成功とかの判定は下でTFLAG:193で取得
+
+
+;キャラ名称-------------------------------------------------------------
+LOCALS = %LOCALS%"target":"%CALLNAME:(TARGET)%",
+
+
+;ここから単項目で数値型---------------------------------------------------
+LOCALS = %LOCALS%"キャラ固有番号":{NO},
+LOCALS = %LOCALS%"コマンド":{SELECTCOM},
+LOCALS = %LOCALS%"コマンド名":"%TRAINNAME:(SELECTCOM)%",
+LOCALS = %LOCALS%"前回コマンド":{PREVCOM},
+LOCALS = %LOCALS%"PLAYER":{PLAYER},
+LOCALS = %LOCALS%"時間":{TIME},
+LOCALS = %LOCALS%"日付":{DAY},
+
+LOCALS:1 = %GET_WEATHER()%
+LOCALS = %LOCALS%"天気":"%LOCALS:1%",
+
+LOCALS = %LOCALS%"体力":{BASE:0},
+LOCALS = %LOCALS%"気力":{BASE:1},
+LOCALS = %LOCALS%"最大体力":{MAXBASE:0},
+LOCALS = %LOCALS%"最大気力":{MAXBASE:1},
+LOCALS = %LOCALS%"ムード":{BASE:10},
+LOCALS = %LOCALS%"理性":{BASE:11},
+LOCALS = %LOCALS%"怒り":{BASE:12},
+LOCALS = %LOCALS%"仕事量":{BASE:13},
+LOCALS = %LOCALS%"酒気":{BASE:15},
+LOCALS = %LOCALS%"潜伏率":{BASE:16},
+
+LOCALS = %LOCALS%"既成事実":{CFLAG:1},
+LOCALS = %LOCALS%"好感度":{CFLAG:好感度},
+LOCALS = %LOCALS%"信頼度":{CFLAG:信頼度},
+LOCALS = %LOCALS%"態度":{CFLAG:態度},
+LOCALS = %LOCALS%"デート中":{CFLAG:12},
+LOCALS = %LOCALS%"デート中イベントフラグ":{CFLAG:13},
+LOCALS = %LOCALS%"ローター挿入":{CFLAG:15},
+LOCALS = %LOCALS%"ローターA挿入":{CFLAG:16},
+LOCALS = %LOCALS%"宴会参加":{CFLAG:20},
+LOCALS = %LOCALS%"浮気バレ":{CFLAG:40},
+LOCALS = %LOCALS%"オナバレ":{CFLAG:41},
+LOCALS = %LOCALS%"夜這い":{CFLAG:42},
+LOCALS = %LOCALS%"CFLAG:MASTER:現在位置":{CFLAG:MASTER:現在位置},
+LOCALS = %LOCALS%"現在位置":"%STR:12000%",
+LOCALS = %LOCALS%"睡眠":{CFLAG:313},
+
+LOCALS = %LOCALS%"うふふ":{CFLAG:317},
+LOCALS = %LOCALS%"ブチギレ":{CFLAG:318},
+LOCALS = %LOCALS%"同室":{CFLAG:319},
+LOCALS = %LOCALS%"同行":{CFLAG:320},
+LOCALS = %LOCALS%"幽閉":{CFLAG:321},
+LOCALS = %LOCALS%"不機嫌":{CFLAG:322},
+LOCALS = %LOCALS%"風呂":{CFLAG:323},
+LOCALS = %LOCALS%"情事目撃":{CFLAG:324},
+LOCALS = %LOCALS%"添い寝中":{CFLAG:334},
+LOCALS = %LOCALS%"隠密中":{CFLAG:330},
+LOCALS = %LOCALS%"時間停止行動":{CFLAG:344},
+LOCALS = %LOCALS%"時間停止バレ":{CFLAG:345},
+LOCALS = %LOCALS%"潜伏状態":{CFLAG:526},
+LOCALS = %LOCALS%"睡眠姦":{CFLAG:527},
+LOCALS = %LOCALS%"泥酔姦":{CFLAG:528},
+LOCALS = %LOCALS%"にんっしんっ":{CFLAG:902},
+
+LOCALS = %LOCALS%"射精箇所":{TFLAG:1},
+LOCALS = %LOCALS%"射精した箇所フラグ":{TCVAR:2},
+LOCALS = %LOCALS%"SELECTCOM保存":{TFLAG:3},
+LOCALS = %LOCALS%"破瓜フラグ":{TFLAG:4},
+LOCALS = %LOCALS%"押し倒し":{TFLAG:5},
+LOCALS = %LOCALS%"V挿入継続":{TFLAG:10},
+LOCALS = %LOCALS%"A挿入継続":{TFLAG:11},
+LOCALS = %LOCALS%"逆レイプ継続":{TFLAG:12},
+LOCALS = %LOCALS%"時姦刻印取得":{TFLAG:20},
+LOCALS = %LOCALS%"反発刻印取得":{TFLAG:21},
+LOCALS = %LOCALS%"苦痛刻印取得":{TFLAG:22},
+LOCALS = %LOCALS%"快楽刻印取得":{TFLAG:23},
+LOCALS = %LOCALS%"屈服刻印取得":{TFLAG:24},
+LOCALS = %LOCALS%"刻印従順変化":{TFLAG:25},
+LOCALS = %LOCALS%"調教中COMABLE管理":{TFLAG:100},
+LOCALS = %LOCALS%"調教自動実行管理":{TFLAG:101},
+LOCALS = %LOCALS%"COMABLE管理":{TFLAG:102},
+LOCALS = %LOCALS%"現在のTARGET":{TFLAG:104},
+LOCALS = %LOCALS%"ビデオカメラ":{TFLAG:105},
+LOCALS = %LOCALS%"抱きつきモード":{TFLAG:107},
+LOCALS = %LOCALS%"キスマーク":{TFLAG:120},
+LOCALS = %LOCALS%"ゴム内":{TFLAG:121},
+LOCALS = %LOCALS%"包帯":{TFLAG:122},
+LOCALS = %LOCALS%"お茶":{TFLAG:131},
+LOCALS = %LOCALS%"口上によるCOM成否判定":{TFLAG:192},
+LOCALS = %LOCALS%"SELECTCOMの分岐":{TFLAG:193},
+
+LOCALS = %LOCALS%"コンドーム":{TCVAR:3},
+LOCALS = %LOCALS%"射精快感強度":{TCVAR:4},
+LOCALS = %LOCALS%"処女喪失":{TCVAR:15},
+LOCALS = %LOCALS%"Ａ処女喪失":{TCVAR:17},
+
+LOCALS = %LOCALS%"V挿入管理フラグ":{TCVAR:100},
+LOCALS = %LOCALS%"A挿入管理フラグ":{TCVAR:101},
+LOCALS = %LOCALS%"Vに中出しされたフラグ":{TCVAR:102},
+LOCALS = %LOCALS%"Vに中出ししたキャラの番号":{TCVAR:103},
+LOCALS = %LOCALS%"Aに中出しされたフラグ":{TCVAR:104},
+LOCALS = %LOCALS%"Aに中出ししたキャラの番号":{TCVAR:105},
+LOCALS = %LOCALS%"快楽強度":{TCVAR:106},
+LOCALS = %LOCALS%"奉仕フラグ":{TCVAR:108},
+LOCALS = %LOCALS%"懇願":{TCVAR:117},
+LOCALS = %LOCALS%"体勢":{TCVAR:120},
+LOCALS = %LOCALS%"位置関係":{TCVAR:122},
+LOCALS = %LOCALS%"嗜虐フラグ":{TCVAR:125},
+LOCALS = %LOCALS%"睡眠薬":{TCVAR:145},
+LOCALS = %LOCALS%"睡眠深度":{TCVAR:TARGET:睡眠深度},
+LOCALS = %LOCALS%"弾幕勝負結果":{TCVAR:296},
+LOCALS = %LOCALS%"食事":{TCVAR:305},
+LOCALS = %LOCALS%"料理評価値":{TCVAR:306},
+
+LOCALS = %LOCALS%"口":{STAIN:0},
+LOCALS = %LOCALS%"手":{STAIN:1},
+LOCALS = %LOCALS%"P":{STAIN:2},
+LOCALS = %LOCALS%"V":{STAIN:3},
+LOCALS = %LOCALS%"A":{STAIN:4},
+LOCALS = %LOCALS%"B":{STAIN:5},
+LOCALS = %LOCALS%"腟内":{STAIN:6},
+LOCALS = %LOCALS%"腸内":{STAIN:7},
+
+LOCALS = %LOCALS%"Ｃ絶頂":{NOWEX:0},
+LOCALS = %LOCALS%"Ｖ絶頂":{NOWEX:1},
+LOCALS = %LOCALS%"Ａ絶頂":{NOWEX:2},
+LOCALS = %LOCALS%"Ｂ絶頂":{NOWEX:3},
+LOCALS = %LOCALS%"M絶頂":{NOWEX:4},
+LOCALS = %LOCALS%"二重絶頂":{NOWEX:6},
+LOCALS = %LOCALS%"三重絶頂":{NOWEX:7},
+LOCALS = %LOCALS%"四重絶頂":{NOWEX:8},
+LOCALS = %LOCALS%"五重絶頂":{NOWEX:9},
+LOCALS = %LOCALS%"噴乳":{NOWEX:10},
+LOCALS = %LOCALS%"放尿":{NOWEX:12},
+LOCALS = %LOCALS%"MASTER射精量":{NOWEX:MASTER:射精},
+
+LOCALS = %LOCALS%"下半身下着1":{EQUIP:TARGET:下半身下着１},
+LOCALS = %LOCALS%"下半身下着2":{EQUIP:TARGET:下半身下着２},
+
+LOCAL = 下半身下着表示(NO)
+LOCALS = %LOCALS%"下半身下着表示フラグ":{LOCAL},
+
+LOCALS = %LOCALS%"下半身上着1":{EQUIP:TARGET:下半身上着},
+;eraTWで無い変数なので常に0を出力する
+LOCALS = %LOCALS%"下半身上着2":0,
+LOCALS = %LOCALS%"スカート":{EQUIP:TARGET:スカート},
+
+LOCAL = 上半身下着表示(NO)
+LOCALS = %LOCALS%"上半身下着表示フラグ":{LOCAL},
+
+LOCALS = %LOCALS%"上半身下着1":{EQUIP:TARGET:上半身下着１},
+LOCALS = %LOCALS%"上半身下着2":{EQUIP:TARGET:上半身下着２},
+
+LOCALS = %LOCALS%"上半身上着1":{EQUIP:TARGET:上半身上着１},
+LOCALS = %LOCALS%"上半身上着2":{EQUIP:TARGET:上半身上着２},
+LOCALS = %LOCALS%"ボディースーツ":{EQUIP:TARGET:ボディースーツ},
+LOCALS = %LOCALS%"ワンピース":{EQUIP:TARGET:ワンピース},
+LOCALS = %LOCALS%"着物":{EQUIP:TARGET:着物},
+LOCALS = %LOCALS%"レオタード":{EQUIP:TARGET:レオタード},
+LOCALS = %LOCALS%"CFLAG:NO:パジャマ":{CFLAG:TARGET:パジャマ},
+LOCALS = %LOCALS%"性別":{TALENT:TARGET:性別},
+
+LOCALS = %LOCALS%"上半身着衣状況":{TEQUIP:TARGET:上半身着衣状況},
+LOCALS = %LOCALS%"上半身はだけ状態":{TEQUIP:TARGET:上半身はだけ状態},
+LOCALS = %LOCALS%"上着脱衣済み":{TEQUIP:TARGET:上着脱衣済み},
+
+LOCALS = %LOCALS%"下半身着衣状況":{TEQUIP:下半身着衣状況},
+LOCALS = %LOCALS%"下半身ずらし状態":{TEQUIP:2},
+LOCALS = %LOCALS%"ノーパン":{CFLAG:TARGET:ノーパン},
+
+LOCALS = %LOCALS%"マスターがＶ挿入":{MASTER_POSE(6,1)},
+LOCALS = %LOCALS%"マスターがＡ挿入":{MASTER_POSE(7,1)},
+
+;末尾の,を消去してから波括弧を閉じる
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\}
+;PRINTFORML %LOCALS%
+;SAVETEXT関数でsavフォルダに出力される。
+;SAVETEXT 文字列, 連番, (第3引数はsavフォルダ強制), 第4引数によりエンコードをUTF-8に強制
+SAVETEXT LOCALS, GLOBAL:8800, 0, 1
+
+;後始末 ARGを省略していたら意味のない処理
+TARGET = LOCAL:3
+
+;出力テキストの連番は0～4でループさせる
+GLOBAL:8801 = GLOBAL:8801 + 1
+SIF GLOBAL:8801 == 5
+	GLOBAL:8801 = 0
+
+PRINTFORML {SELECTCOM}
+;-------------------------------------------------------------------------------
+;SHOWSTATUS関数中での立ち絵表示を予約する
+;後でeraTW用に拡張
+@SET_TACHIE_FLAG(ARGS)
+	IF ARGS == "ターゲット切替"
+		FLAG:8800 = 1
+	ELSEIF ARGS == "マスター移動"
+		FLAG:8800 = 2
+	ELSEIF ARGS == "真名看破"
+		FLAG:8800 = 3
+	ENDIF
+
+;
+@装備部位INDEX(ARG)
+#FUNCTION
+#DIMS 装備部位INDEX
+{
+#DIMS CONST 表示部位, 23 = "",
+	"帽子", "アクセサリ", "腕部装束",
+	"外衣",
+	"上半身上着１","上半身上着２",
+	"着物", "ワンピース",
+	"スカート", "下半身上着", "ズボン",
+	"レオタード", "ボディースーツ",
+	"上半身下着１", "上半身下着２",
+	"下半身下着１", "下半身下着２",
+	"その他１", "その他２", "その他３",
+	"靴下", "靴"
+}
+LOCAL = ARG
+; PRINTFORML %表示部位:LOCAL%
+;PRINTFORML {LOCAL}     %表示部位:LOCAL%     "装備部位INDEXデバッグ用"
+RETURNF FINDELEMENT(EQUIPNAME, 表示部位:LOCAL)
+
+
+@表示部位(ARG)
+{
+#DIMS CONST 表示部位, 23 = "",
+	"帽子", "アクセサリ", "腕部装束",
+	"外衣",
+	"上半身上着１","上半身上着２",
+	"着物", "ワンピース",
+	"スカート", "下半身上着", "ズボン",
+	"レオタード", "ボディースーツ",
+	"上半身下着１", "上半身下着２",
+	"下半身下着１", "下半身下着２",
+	"その他１", "その他２", "その他３",
+	"靴下", "靴"
+}
+LOCAL = ARG
+;WAIT
+;PRINTFORML {LOCAL}     %表示部位:LOCAL%      "表示部位関数デバッグ用"
+STR:12001 = %表示部位:LOCAL%

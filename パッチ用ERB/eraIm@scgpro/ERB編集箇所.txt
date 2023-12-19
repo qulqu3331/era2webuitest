@@ -1,29 +1,100 @@
 
 ERB\コマンド\COMF\日常\COMF400_移動.ERB
+
+CLEARLINE 1
+PRINTL 移動場所選択
+CALL SET_TACHIE_FLAG("マスター移動")
+DRAWLINE
+CALL MAP_PRINT_0
+CALLFORM MAP_PRINT_{PAGE}
+PRINTL
+DRAWLINE
+
+
 移動コマンド実行時に立ち絵フラグを立てる文を追加
 　このファイルを上書きするパッチ
 　・私家改造版Ver0.54 好好製パッチ17
 　・eraIm@scgpro私家版0.54用感覚追加パッチ
 
+
 ERB\USERCOM.ERB
+
+ELSEIF RESULT >= 701 && RESULT <= 799 && CHARA_ACTIVE > RESULT - 700 && CFLAG:(RESULT - 700):同室
+TFLAG:104 = RESULT - 700
+CALL SET_TACHIE_FLAG("ターゲット切替")		
+RETURN 1
+
 ターゲット切り替え時に立ち絵フラグを立てる文を追加（キャラ名やアイコンをクリックしたとき）
 　このファイルを上書きするパッチ
 　・私家改造版Ver0.54用パッチまとめv2.2.0
 　・eraIm@scgpro私家版0.54用感覚追加パッチ
 
+
 ERB\INFO.ERB
+
+;-------------------------------------------------
+;情報表示
+;-------------------------------------------------
+CALL OUTPUT_TXT("TACHIE")
+DRAWLINE
+
 立ち絵フラグが立っている場合に画像表示をする文を追加
 　このファイルを上書きするパッチ
 　・私家改造版Ver0.54用パッチまとめv2.2.0
 　・私家改造版Ver0.54 好好製パッチ18
 　・eraIm@scgpro私家版0.54用感覚追加パッチ
 
+
 ERB\SOURCE.ERB
+
+;-------------------------------------------------
+;数値変動の表示
+;-------------------------------------------------
+;相性
+IF (TCVAR:行為者 < CHARA_ACTIVE)
+    R = NO:PLAYER
+    SIF RELATION:R != 0
+        PRINTFORML ＜相性{RELATION:R/100}.%TOSTR(RELATION:R%100, "00")%倍＞
+    SIF SELECTCOM == PREVCOM && TFLAG:50 == TFLAG:151 && (SELECTCOM < 350 || SELECTCOM >= 500) && SELECTCOM != 300
+        PRINTL ＜同一コマンド連続実行＞
+    ;気力０
+    SIF BASE:1 <= 0
+        PRINTL ★気力０★
+    LOCAL:1 = 0
+    FOR LOCAL,0,CHARA_ACTIVE
+        SIF !CHK_VISIBLE2(CFLAG:LOCAL:現在位置) && LOCAL!=MASTER
+            CONTINUE
+        IF DOWNBASE:LOCAL:体力
+            PRINTFORM 体力-{DOWNBASE:LOCAL:体力}
+            LOCAL:1 ++
+        ENDIF
+        IF DOWNBASE:LOCAL:気力
+            PRINTFORM 気力-{DOWNBASE:LOCAL:気力}
+            LOCAL:1 ++
+        ENDIF
+        SIF LOCAL:1
+            PRINTFORML (%CALLNAME:LOCAL%)
+        LOCAL:1 = 0
+    NEXT
+    PRINTL
+ENDIF
+CALL OUTPUT_TXT("TRAIN")
+
 ソース変動のあるコマンド実行時に画像表示する文を追加
 　このファイルを上書きするパッチ
 　・eraIm@scgpro私家版0.54用感覚追加パッチ
 
+
 ERB\imas.erb
+
+@真名看破(ARG)
+;上の逆
+
+NAME:ARG = %CSTR:ARG:フルネーム%
+CALLNAME:ARG = %CSTR:ARG:呼び名%
+CFLAG:ARG:名前フラグ = 1
+CALL SET_TACHIE_FLAG("真名看破")
+
 真名看破時に立ち絵フラグを立てる文を追加
 　このファイルを上書きするパッチ
 　・私家改造版Ver0.54用パッチまとめv2.2.0

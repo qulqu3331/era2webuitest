@@ -1,0 +1,154 @@
+キャラ番号,キャラ名,プロンプト,プロンプト強調,プロンプト2,キャラLora,ネガティブ,目の色,メモ
+0,あなた,gentlemen,,,,,,色移りの問題があるため、目の色はモデルで対応できているなら無指定推奨。
+1,霊夢,hakurei reimu,,,,,,
+2,る～こと,,,,,,,
+3,カナ,,,,,,,
+4,魅魔,,,,,,,
+5,サニー,"Sunny Milk,light brown hair,fairy wings",,,,,,三月精は諦め
+6,ルナ,"Luna Child,blonde hair,fairy wings",,,,,,
+7,スター,"Star Sapphire,black hair,fairy wings,blue ribbon",,,<lora:star:0.75>,,,
+8,ちゆり,,,,,,,
+9,夢美,,,,,,,
+10,萃香,"(Ibuki Suika:1.1),light brown hair,horns of oni,child, no sleeve white shirt,red ribbon,shoulders,handcuffs",,,,,,紫の服になりがち
+11,魔理沙,"kirisame marisa,blonde hair,witch's black hat",,,,,,
+12,ルーミア,"rumia,blonde hair",,,,"tied hair,twintail,side tail",red,髪を結ぶ頻度が高いのでネガ必須
+13,大妖精,"touhou,(((daiyousei))),green hair",,,,,yellow,違う人が出やすい。謎衣装を着やすい。
+14,チルノ,"cirno,blue hair",,,,,,
+15,咲夜,"izayoi sakuya,silver hair",,,,,,
+16,レミリア,"remilia scarlet,zun hat",,,,"(pink hair),red hair",,
+17,アリス,"alice margatroid,blonde hair,headband",,,,"(tied hair),(twintails),bunny ears headband,animal ears",,
+18,リリーW,"touhou, (Lily White:1.3),blonde hair,(white cape with big ribbon),white hat with red ribbon,white cloth,fairy wings",,,,,,安定しない。名前で要素を拾ってくれてる気がしない
+19,リリーB,Lily Black,,,,,,
+20,リリカ,"Lyrica Prismriver,Lyrica,brown hair,white collared shirt,long sleeves,red vest",,,,ribbon,brown,キャラ名は全く効かない。茶髪赤服の女でしかない
+21,メルラン,"Merlin Prismriver,Merlin,white blue hair,Bedhead,(wavy hair:1.2),waby bangs, pink vest, white collared shirt,long sleeves,",,,,ribbon,blue,髪型無理。服もかなり無理がある
+22,ルナサ,"(Lunasa Prismriver,Lunasa:1.2),blonde hair,extra short bob cut,white long sleeves,black vest",,,,ribbon,yellow,三姉妹中では最もキャラ名認識されてるっぽいが打率が低すぎる。touhouやzun hatを強めると純狐の要素が生える
+23,妖夢,"konpaku youmu,silver hair",,,,,,white spiritとか書いても半霊は出なかった
+24,橙,"touhou,(Chen),cat ear,brown hair,very short hair,red cloth",,,,,,
+25,藍,"(Yakumo Ran:1.2), tabard, zun hat,[fox tails]",,,,,,キャラデザが情報過多なのか、ウェイトを上げると絵柄を壊されがち
+26,紫,"Yakumo Yukari, zun hat with red ribbon",,,,"animal tails,fox tails",,尻尾生えがち
+27,リグル,"Wriggle Nightbug,antennae,green hair",,,,,,名前だけでもかなり安定する
+28,ミスティア,"Mystia Lorelei,pink hair,hat",,,,,,よく学習されているが帽子が不安定
+29,文,"Shameimaru Aya,black hair,touhou",,,,,,AIはtouhou＝文ボンボンだと思っている節があるが、文本人には有用
+30,映姫,"Shiki Eiki,Yamaxanadu,green hair",,,,,,補正しないとやたら長髪になる、冠がいまいち不安定だが何と表現したらいいんだ
+31,早苗,"Kochiya Sanae,green hair",,,,,,
+32,神奈子,"(Yasaka Kanako:1.2),purple hair,%高身長%",,,,,,名前で8割正解までいくが違和感あり
+33,諏訪子,"(Moriya Suwako:1.2),suwako,touhou,blonde hair,brown hat with eyeballs",,,,,,だいぶわかってる感は出してくるものの惜しい感じで安定しない
+34,天子,"(Hinanawi Tenshi),deep blue hair,hat with peach",,,,,,ツインテ天子かわいい　帽子を脱いでも葉っぱは取れない
+35,衣玖,"(Nagae Iku:1.3),purple hair,black hat with large red ribbon",,,,,,60点から先に進まない感じ
+36,お燐,"Kaenbyou Rin,red hair",,,,,,
+37,お空,"(Reiuji Utsuho:1.2),black hair,green ribbon",,,,,,空→おくうに書き換え
+38,こいし,"(Komeji Koishi:1.2),white green hair,hat",,,,,,whiteもgreenもコレジャナイ感があったがwhite greenでいいのかー。帽子つけないと黄色いリボンが頭につく
+39,ナズーリン,"Nazrin,gray hair",,,,,,星蓮船は白蓮以外全滅に近い　次点でぬえ、ナズ
+40,小傘,"Tatara Kogasa,Kogasa,blue hair",,,,,,
+41,ぬえ,"(Houjuu Nue),(nue),black hair",,,,,,後ろのアレは書かなくても出るが、記述出来たらもっと安定しそう。顔面デザインにキャラクター性がないコスプレ黒髪女
+42,はたて,"Himekaidou Hatate,Hatate,brown hair, twintails, tokin hat,short sleeves shirt,purple necktie",,,,,,だいたい合ってるけどなんか違う子が安定して出てくる
+43,華扇,"Ibaraki Kasen,pink_hair, two chignons on the head, double bun, (whole right arm bandage)",,,,two horns in head,,
+44,エレン,,,,,,,
+45,理香子,,,,,,,
+46,明羅,,,,,,,
+47,里香,,,,,,,
+48,ルイズ,,,,,,,
+49,さとり,"Komeiji Satori,pink hair",,,,,,サードアイまで完璧
+50,フラン,"flandre scarlet,zun hat,blonde hair",,,,,,hatがあると衣装が安定する
+51,にとり,"Kawashiro Nitori,blue hair,hat",,,,,,帽子をかぶせると光学迷彩スーツも着るようになった
+52,鈴仙,"Reisen Udongein Inaba,pink hair,dressed shirt,red tie",,,,,,夏服の方が自然に半脱ぎになりやすい。たまにブレザーも着る
+53,てゐ,"(Inaba Tewi),black hair,white lop-eared,pink cloth",,,,,,高い頻度で別人になる。髪の長さが不安定。にんじんアクセは巨大化して暴れるので外した
+54,パチュリー,"patchouli knowledge,hat",,,,twintails,,
+55,白蓮,"Hijiri Byakuren,Byakuren,gradation hair",,,,,,髪色が2割くらい失敗する
+56,神子,"Toyosatomimi no Miko,(touhou),headphone",,,,,,巫女成分が入る
+57,こころ,"Hata no Kokoro, (mask),fox mask on head",,,,"animal girl,animal ear",,
+58,美鈴,"hong meiling,red hair",,,,,,
+59,小悪魔,"tohou, koakuma,red hair",,,,,,不安定
+60,パルスィ,Mizuhashi Parsee,,,,,,謎に学習度が高い
+61,妹紅,Fujiwara no Mokou,,,,,,
+62,輝夜,"Houraisan Kaguya,black hair,pink kimono",,,,,,衣装の解釈がなかなか合わない
+63,影狼,Imaizumi Kagerou,,,,,,
+64,勇儀,"Hoshiguma Yuugi,single horn,%高身長%,blonde hair",,,,double horn,,ちゃんと記述すれば出せそう
+65,椛,"Inubashiri Momiji,white hair,touhou",,,,,,名前だけで髪色以外は十分
+66,幽々子,"saigyouji yuyuko,pink hair,zun hat",,,,blue hair,,
+67,慧音,"Kamishirasawa Keine,silver hair,blue headwear with red ribbon,blue clothes",,,,"tied hair,twintail",,惜しいところまで来てるが別人になりやすい
+68,幽香,"Kazami Yuuka,green hair,red plaid vest,long sleeves",,,,,,髪は安定、服は指定しないと裸族だがred plaidでそれらしいのを着る。若干違う感はある
+69,マミゾウ,Futatsuiwa Mamizou,,,,,,
+70,小鈴,"Motoori Kosuzu,kosuzu,checkered kimono ,checkered clothes,hair bell, yellow apron",,,,,,
+71,針妙丸,Sukuna Shinmyoumaru,,,,,,
+72,永琳,"(Yagokoro Eirin),silver hair,long sigle braid,blue nurse cap",,,,,,服装が無理
+73,蛮奇,Sekibanki,,,,,,
+74,レティ,"touhou,(((Letty Whiterock))),medium hair",,,,,,打率低め。名前だけで雰囲気は出るがそこから固められない。zun hatなどで帽子に言及するとクソデカ帽子になりがち。
+75,メディスン,"(Medicine Melancholy),blonde hair,wavy hair,large red ribbon on top of head",,,,"twintails,tied hair",,諦め。似た感じにもならない。
+76,小町,"(Onozuka Komachi:1.2),%高身長%,oriental dress,blue and white dress,white sleeves,touhou,red hair",,,,,,服装をもっと詳細に記述できれば学習データを引き出せそうな手ごたえはある
+77,静葉,"(Aki Shizuha),blonde hair",,,,,,諦め
+78,穣子,"(Aki Minoriko),blonde hair",,,,,,諦め
+79,雛,"(Kagiyama Hina:1.3),green hair,red ribbon,touhou",,,,,,名前強調でだいぶ寄せられる。崩れやすいので油断できない
+80,阿求,"Hieda no Akyuu,(Akyuu),green Kimono,yellow sleeves,purple hair,white flower on hair,",,,,,,袖の色さえ合えば阿求と言い張れるんだけど
+81,蓮子,"Usami Renko,black hair,hat",,,,,,
+82,メリー,"Maribel Hearn,blonde hair,hat",,,,,,
+83,キスメ,"(Kisume),green hair,twintails,plain white yukata",,,,,,赤い髪留めはちゃんと出てくる。着物がplainじゃないとらしくならない
+84,ヤマメ,Kurodani Yamame,,,,,,カスりもしない
+85,一輪,"Kumoi Ichirin,Ichirin,blue hair,(Buddhist,kesa),hood",,,,,,
+86,ムラサ,"Murasa Minamitsu,Murasa,black hair",,,,,,
+87,星,"Toramaru Shou,yellow hair,tiger hair",,,,,,
+88,響子,Kasodani Kyouko,,,,,,
+89,芳香,Miyako Yoshika,,,,,,
+90,青娥,Kaku Seiga,,,,,,
+91,屠自古,"Soga no Tojiko,(tojiko),(ghost tail), tate eboshi,ghost girl with no legs",,,,feet,,足
+92,布都,"Mononobe no Futo,(futo), tate eboshi,gray hair",,,,,,わりと良好
+93,わかさぎ姫,"Wakasagihime,mermaid lower body,kimono",,,,,,
+94,弁々,Tsukumo Benben,,,,,,
+95,八橋,Tsukumo Yatsuhashi,,,,,,
+96,雷鼓,Horikawa Raiko,,,,,,
+97,正邪,Kijin Seija,,,,,,
+98,依姫,Watatsuki no Yorihime,,,,,,出せる気がしない
+99,豊姫,Watatsuki no Toyohime,,,,,,出せる気がしない
+100,レイセン,Reisen,,,,,,名前で出る
+101,朱鷺子,"Unnamed Book-Reading Youkai,Tokiko",,,,,,
+102,神綺,,,,,,,
+103,夢子,,,,,,,
+104,ユキ,,,,,,,
+105,マイ,,,,,,,
+106,菫子,Usami Sumireko,,,,,,
+107,清蘭,,,,,,,
+108,鈴瑚,,,,,,,
+109,ドレミー,,,,,,,
+110,サグメ,,,,,,,
+111,クラウンピース,,,,,,,
+112,純狐,,,,,,,
+113,ヘカーティア,,,,,,,
+114,くるみ,,,,,,,
+115,エリー,,,,,,,
+116,夢月,,,,,,,
+117,幻月,,,,,,,
+118,ラルバ,,,,,,,
+119,ネムノ,,,,,,,
+120,あうん,,,,,,,
+121,成美,,,,,,,
+122,舞,,,,,,,
+123,里乃,,,,,,,
+124,隠岐奈,,,,,,,
+125,女苑,,,,,,,
+126,紫苑,,,,,,,
+127,瓔花,,,,,,,
+128,潤美,,,,,,,
+129,久侘歌,,,,,,,
+130,八千慧,,,,,,,
+131,磨弓,,,,,,,
+132,袿姫,,,,,,,
+133,早鬼,,,,,,,
+134,美宵,,,,,,,
+135,ミケ,,,,,,,
+136,たかね,,,,,,,
+137,駒草,,,,,,,
+138,魅須丸,,,,,,,
+139,典,,,,,,,
+140,龍,,,,,,,
+141,千亦,,,,,,,
+142,百々世,,,,,,,
+143,尤魔,,,,,,,
+144,影華扇,,,,,,,
+145,小兎姫,,,,,,,
+146,エリス,,,,,,,
+147,サリエル,,,,,,,
+148,サラ,,,,,,,
+149,オレンジ,,,,,,,
+150,コンガラ,,,,,,,
+151,ユウゲンマガン,,,,,,,
+152,キクリ,,,,,,,

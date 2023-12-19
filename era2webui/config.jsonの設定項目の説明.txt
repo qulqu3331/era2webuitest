@@ -1,0 +1,7 @@
+config.jsonの設定項目の説明
+デフォルトオプションLCM LoRA設定
+
+APIモードで起動時にsdwebuiに送られるパラメーター
+https://github.com/mix1009/sdwebuiapi
+
+
