@@ -1,408 +1,660 @@
+"""
+Expression クラスは、キャラクターの表情や感情状態に基づいたエレメントを生成するためのクラスだ。
+このクラスは、PromptMaker クラスを継承し、特定のシチュエーションやキャラクターの状態に応じて、
+細かい感情表現をプロンプトに追加するためのメソッドを提供するぜ。
+
+主な機能:
+- 様々な感情状態や状況を表すためのエレメントを管理する辞書 `emopro` と `emonega` を持つ。
+- キャラクターの目の状態や、他のキャラクターとの関係を制御するためのフラグ `emoflags` を管理する。
+- 感情の強度やレベルを管理する `emolevel` 辞書を持つ。
+
+使用方法:
+- SJH インスタンスを引数として、Expression インスタンスを作成する。
+- 各種感情エレメント生成メソッドを呼び出して、プロンプトを構築する。
+
+例：
+expression = Expression(sjh_instance)
+prompt = expression.create_emotion_elements()
+
+Raises:
+- KeyError: 必要なデータがSJHインスタンスから取得できない場合に発生する可能性がある。
+
+Returns:
+- dict: キャラクターの感情や状態を表すエレメントの辞書。
+"""
 import random
-import numpy as np
-import os
-import random
-import pandas as pd
-from sub import get_df
-
-# 表情ブレンダー
-# 表情のプロンプトは実行中に弄りたいのでいつかcsv化する
-
-# 様々な表情の単語をブレンドしても良い顔ができない上に構図や絵柄に深刻な悪影響があることがわかった。
-# 要素ごとにプロンプトを追加していくやり方ではすぐ限界が来る。
+from module.promptmaker import PromptMaker
+from module.csv_manager import CSVMFactory
+csvm = CSVMFactory.get_instance()
 
 
-
-def Expression(order,flags):
-    prompt = ""
-    negative = ""
-    ClosedEyes = False
-    eyeprompt = ""  # 目の処理はeyepromtに書き溜め、後で結合するが、最終的にclosed eyesフラグが立ってれば削除
-    Pain = False
-    tsuyoijoudou = False
-    Love = False
-    NotMaster = False
-
-    # TEQUIP:41 眼隠し
-    if "41" in order["equip"]:
-        ClosedEyes = True
-
-    # 主人以外が相手の時は恋慕、反発の効果を消す
-    if order["scene"] == "TRAIN":
-        if order["PLAYER"] != 0:
-            NotMaster = True
-            print("助手とか")
-    else:
-        if flags["主人以外が相手"] == 1:
-            NotMaster = True
-            print("主人以外が相手のイベント")
-
-    #睡眠薬または失神中
-    # 4 : 昏睡
-    # 3 : 熟睡
-    # 2 : 睡眠
-    # 1 : まどろみ
-    # 0 : 目覚め
-    # 失神フラグは失神した瞬間は1、次ターンから2以上になる
-    if (order["睡眠薬"] > 0) or (order["失神"] >= 2):
-        prompt += "(sleeping,closed eyes:1.2),"
-        negative += "smile,"
-        ClosedEyes = True
-        # 暫定で表情変化なしにする。
-        flags["drawface"] = 0
-        # でも欲情と絶頂はちょっと効くように
-        pleasure = order["palam_up"]["快Ｃ"]+order["palam_up"]["快Ｂ"]+order["palam_up"]["快Ｖ"]+order["palam_up"]["快Ａ"]
-        if pleasure in range(100,1000): #最初の目標は100
-            prompt += "(blush:0.7),"
-        elif pleasure in range(1000,3000):
-            prompt += "Orgasmic expression,(blush:0.9)"
-        elif pleasure in range(3000,7500):
-            prompt += "(Orgasmic expression),blush,"
-        elif pleasure > 7500:
-            prompt += "(Orgasmic expression:1.2),blush,"
-        if order["絶頂の強度"] > 0:
-            prompt += "(motion lines:1.2),"
-    # ここまで睡眠中
+# 暫定でバリアント毎に分けたけど更新が面倒になるのでホントはまとめたい。
 
 
-    # 顔を見せない構図なら表情作りはスキップ
-    if flags["drawface"] == 1 :
+class Expression(PromptMaker):
+    """"
+    Args:
+        PromptMaker (sjh): SaveJsonHanderインスタンス
+    """
+    def __init__(self, sjh):
+        super().__init__(sjh)
+        self.emopro =  {'眠り':"", '体力':"", '気力':"", '酔':"", '目色':"", '目つき':"", '羞恥':"",\
+                        '恐怖':"", '反発':"", '苦痛':"", '絶頂':"", 'ハート':"", '退屈':"",\
+                        'トキメキ':"", '顔つき':""}
+        self.emonega = {'眠り':"", '体力':"", '気力':"", '酔':"", '目色':"", '目つき':"", '羞恥':"",\
+                        '恐怖':"", '反発':"", '苦痛':"", '絶頂':"", 'ハート':"", '退屈':"",\
+                        'トキメキ':"", '顔つき':""}
+        self.emolevel = {"快感Lv":0,"快楽強度":0,"睡眠深度":0,"体力Lv":0,"気力Lv":0,"酩酊Lv":0,\
+                         "絶頂Lv":0,"苦痛Lv":0,"恐怖Lv":0,"恥情Lv":0,"好意Lv":0,"退屈Lv":2}
+                        #退屈Lvは元のコードに従い退屈Lvは2で始まるあとで変えるかも
+        self.emo = self.get_csvname("emotion")
+        self.initialize_class_variables_emo()
+        self.emolevels()
 
-        # 体力が減ると汗をかく
-        # 現在地が閾値より低い または MAXから〇〇以上減ってる
+    def add_element(self, elements, prompt, nega):
+        """
+        add_element メソッドをオーバーライドして、Expression クラス固有の辞書に
+        プロンプトを追加するようにする。
 
-        damage = order["最大体力"] - order["体力"]
-        if damage > 50:
-            if order["体力"] < 700:
-                prompt += "(sweat:1.4),(Lots and lots of drips of sweat),steam,"
-            elif order["体力"] < 1100:
-                prompt += "(sweat:1.4),steam,"
-            else:
-                if damage in range(200,400):
-                    prompt += "(sweat:0.8),"
-                elif damage in range(400,600):
-                    prompt += "(sweat:1.0),steam,"
-                elif damage in range(600,800):
-                    prompt += "(sweat:1.2),Lots and lots of drips of sweat,steam,"
-                elif damage in range(800,1000):
-                    prompt += "(sweat:1.3),(Lots and lots of drips of sweat),steam,"
-                elif damage >= 1000:
-                    prompt += "(sweat:1.4),(Lots and lots of drips of sweat),steam,"
+        Args:
+            elements (str): プロンプト要素のキー。
+            prompt (str): 追加するプロンプトのテキスト。Noneまたは'ERROR'でなければ追加。
+            nega (str): 追加するネガティブプロンプトのテキスト。Noneまたは'ERROR'でなければ追加。
+        """
+        if elements not in self.emopro:
+            raise KeyError(f" '{elements}' なんてプロンプト要素、ないぜ！")
 
-        # もう止めないとまずいな感を出す
-        if order["体力"] < 500:
-            prompt += "(expressionless:1.3),(shadowy face:1.4),(half opened mouth:1.4),"
-            eyeprompt += "(half closed eyes ,empty eyes:1.5),"
-
-    
-
-        #気力がないとぐったりする
-        if order["気力"] < 100:
-            prompt += "(she is utterly exhausted:1.3),sleepy,"
-            eyeprompt += "empty eyes,looking away,"
-            tsuyoijoudou = True
-
-        # 酔い
-        if order["酔い"] in range(1000,3000):
-            prompt += "drunk,blush"
-        elif order["酔い"] in range(3000,6000):
-            prompt += "(wasted,get  drunk:1.2),blush,"
-        elif order["酔い"] in range(6000,10000):
-            prompt += "(wasted,get  drunk:1.4),(blush),"
-        elif order["酔い"] >= 10000:
-            prompt += "(wasted,get  drunk:1.4),(expressionless:1.2),mind break,(blush),"
+        if prompt is not None and prompt != "ERROR":
+            self.emopro[elements] += prompt
+        if nega is not None and nega != "ERROR":
+            self.emonega[elements] += nega
 
 
-        # 調教に対する反応 TRAIN中のみ反映＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
-        if order["scene"] == "TRAIN":
-            # 苦痛 の判定-----------------------------------------------------------------
-            # 苦痛は累積ではなく瞬間値が大事。palam_upで見る
-            # 刻印1相当
-            if order["palam_up"]["苦痛"] > 500:
-                prompt += "Groaning,"
-            # 刻印3相当
-            if order["palam_up"]["苦痛"] > 3000:
-                Pain = True
-                tsuyoijoudou = True
-                ra = random.randrange(2)
-                #目と口をギュッと閉じるパターン
+    def initialize_class_variables_emo(self):
+        """表情用判定に必要な変数の初期化
+        """
+        self.eyecolor = self.sjh.get_save("eyecolor")#int
+        self.equip = self.sjh.get_save("equip")#dict
+        self.player = self.sjh.get_save("PLAYER")#int
+        self.睡眠薬 = self.sjh.get_save("睡眠薬")
+        self.失神 = self.sjh.get_save("失神")
+        self.睡眠深度 = self.sjh.get_save("睡眠深度")
+        self.絶頂の強度 = self.sjh.get_save("絶頂の強度")
+        self.abl = self.sjh.get_save("abl")#dict
+        self.palam = self.sjh.get_save("palam")#dict
+        self.palam_up = self.sjh.get_save("palam_up")#dict
+        self.max_hp = self.sjh.get_save("最大体力")
+        self.current_hp = self.sjh.get_save("体力")
+        # 酔いの値を取得。存在しない場合は0とする
+        self.drunk = self.sjh.get_save("酔い") or 0
+        self.C = self.sjh.get_save("C絶頂")
+        self.B = self.sjh.get_save("B絶頂")
+        self.V = self.sjh.get_save("B絶頂")
+        self.A = self.sjh.get_save("B絶頂")
+        self.mark = self.sjh.get_save("mark")
+        self.好感度 = self.sjh.get_save("好感度")
+
+        #emoだけで使うフラグをスーパークラスのdictへ追加
+        self.flags["ClosedEyes"] = False
+        self.flags["強い情動"] = False
+        self.flags["苦痛"] = False
+        self.flags["好意"] = False
+
+
+
+    def generate_emotion(self):
+        """
+        generate_emotionはキャラクターの感情の波を捉え、
+        プロンプトとネガティブプロンプトへと変換するメソッドだ。
+        このメソッドは、ただエレメントを生成するだけじゃない。
+        キャラクターの心の深層に潜むフラグもしっかりと管理して、それぞれの感情表現を細かく調整するんだ。
+
+        トレーニング中のキャラクターには特別な扱いを施し、
+        その感情の高まりや痛み、恐怖までもが細かく表現される。
+        さらに、目の状態や他キャラとの関係に関するフラグも考慮に入れて、
+        エレメントを生成するんだ。
+
+        このメソッドは、各種フラグに応じて、サブメソッドを呼び出し、
+        キャラクターの心を豊かに表現するエレメントを組み立てる。
+
+        Returns:
+            tuple: (プロンプト文字列, ネガティブプロンプト文字列)
+            この二つの文字列は、キャラクターの深層心理を探るための鍵となるエレメントで満ちているぜ。
+        """
+        self.emotionflags()#
+        self.emolevels()   #emolevelの一括設定
+
+        self.create_sleep_element() #睡眠中眠りぬ深さ
+        self.create_hp_element() #体力
+        self.create_mp_element() #気力
+        self.create_drunk_element() #酔
+
+        self.create_embarras_element()#羞恥
+        self.create_resist_element() #反発
+        self.create_boredom_element() #退屈
+        self.create_love_emotion_element() #トキメキ
+        self.create_talent_based_element() #顔つき
+        #調教に対する反応 TRAIN中のみ反映
+        if self.sjh.get_save("scene") == "TRAIN":
+            self.create_ahe_element() #絶頂
+            self.create_pain_element() #痛み
+            self.create_fear_element() #恐怖
+            self.create_love_element() #愛情表現 ハートを飛ばす不健全っぽい方
+
+        #目の描写がないならその要素は空文字で抹消
+        if not self.flags["ClosedEyes"]:
+            #self.create_eyes_element()#目色 eraTWは非対応につきコメントアウト
+            self.emopro["目つき"] = ""
+            self.emonega["目つき"] = ""
+        #主人公が相手でない時は以下2つのプロンプトを抹消
+        if not self.flags["主人公以外が相手"]:
+            self.emopro["ハート"] = ""
+            self.emonega["ハート"] = ""
+            self.emopro["反発"] = ""
+            self.emonega["反発"] = ""
+        self.prompt_debug_emo()
+        emopro_values = [value for value in self.emopro.values() if value.strip()]
+        emonega_values = [value for value in self.emonega.values() if value.strip()]
+        #カンマとスペースを足してヒトツナギに
+        prompt = ", ".join(emopro_values)
+        negative = ", ".join(emonega_values)
+        return prompt,negative
+
+
+    def create_eyes_element(self):
+        """
+        eraTWでは非対応の要素
+        霊夢の目が青かったりするのは気になるのであとで実装するかも
+        """
+        prompt = f"{self.eyecolor}eyes"
+        self.add_element("目色", prompt, None)
+
+
+    def emotionflags(self):
+        # TEQUIP:18 アイマスク (eraTW)
+        if 18 in self.tequip.get("equip", {}):
+            self.flags["ClosedEyes"] = True
+
+        if self.scene == "TRAIN":
+            if self.player != 0:
+                self.flags["主人公以外が相手"] = True
+                print("助手とか")
+        else:
+            if self.flags["主人公以外が相手"]:
+                print("主人以外が相手のイベント")
+
+
+    def emolevels(self):
+        """
+        パラメーターに応じたレベルのチェックはここでやる
+        処理の速度よりわかりやすさを優先
+        """
+        self.check_hp_level()        #体力Lv
+        self.check_boredom_level()   #退屈Lv
+        self.check_love_level()      #好意Lv
+        self.check_drunk_level()     #酩酊Lv
+        self.check_resist_level()    #反発刻印
+        if self.scene == "TRAIN":
+            #調教中のみ意味を持つパラメーター
+            #現時点のeraTW対応仕様
+            #移動以外のコマンドは全部 TRAIN だが今後のため
+            self.check_pleasure_level()  #快感Lvと快感強度
+            self.check_pain_level()      #苦痛Lv
+            self.check_fear_level()      #恐怖Lv
+            self.check_orgasm_level()    #絶頂Lv
+            self.check_embarras_level()  #恥情Lv
+
+
+    def create_sleep_element(self):
+        """
+        #148,睡眠薬強度
+        #(0=通常睡眠　1=深い睡眠　2=非常に深い睡眠　3=昏睡)
+        """
+        emo = self.emo
+        if self.睡眠薬 is not None and self.失神 is not None:
+            if self.睡眠薬 > 0 or self.失神 >= 2:
+                prompt = csvm.get_df(emo,"名前", self.睡眠深度,"プロンプト")
+                nega = csvm.get_df(emo,"名前", self.睡眠深度,"ネガティブ")
+                self.flags["ClosedEyes"] = True
+                self.add_element("眠り", prompt, nega)
+                # 暫定で表情変化なしにする。
+                self.flags["drawface"] = 0
+                # でも欲情と絶頂はちょっと効くように
+                pleasure_level = self.emolevel.get("快感Lv")
+                prompt = csvm.get_df_2key(emo, "状態", "快感Lv", "level", pleasure_level, "プロンプト")
+                if self.絶頂の強度 > 0:
+                    self.add_element("眠り", "(motion lines:1.2),(blush:0.9)", None)
+
+
+    def create_hp_element(self):
+        """
+        死亡 0~5 元気いっぱいまでの5段階
+        瀕死の時は目つきに特別なプロンプトを追加
+        """
+        emo = self.emo
+        hp_level = self.emolevel["体力Lv"]
+        prompt = csvm.get_df_2key(emo, "状態", "体力Lv", "level", hp_level, "プロンプト")
+        self.add_element("体力", prompt, None)
+        if hp_level == 1:
+            # 瀕死状態のプロンプトを追加
+            eyeprompt = "(half closed eyes,empty eyes:1.5)"
+            self.add_element("目つき", eyeprompt, None)
+
+
+    def create_mp_element(self):
+        """
+        未実装
+        """
+        emo = self.emo
+        prompt = csvm.get_df_2key(emo, "状態", "気力Lv", "level", 1, "プロンプト")
+        self.add_element("気力", prompt, None)
+        self.flags["強い情動"] = True
+
+
+    def create_drunk_element(self):
+        """
+        eraTWの挙動に即した実装になっていない
+        @ALCOHOL_FACE(TARGET) で4段階の状態が取得できる
+        あとで
+        """
+        emo = self.emo
+        drunk_level = self.emolevel["酩酊Lv"]
+        prompt = csvm.get_df_2key(emo, "状態", "酩酊Lv", "level", drunk_level, "プロンプト")
+        self.add_element("酔", prompt, None)
+
+
+    def create_pain_element(self):
+        """
+        ClosedEyesのフラグ操作あり
+        """
+        emo = self.emo
+        pain_level = self.emolevel["苦痛Lv"]
+
+        if pain_level >= 2:
+            self.flags["強い情動"] = True
+            self.flags["苦痛"] = True
+            # 重い苦痛の追加プロンプト
+            ra = random.randrange(2)
+            if ra == 0: #目と口をギュッと閉じるパターン
+                prompt = csvm.get_df_2key(emo, "状態", "苦痛Lv", "level", 2, "プロンプト")
+                nega = csvm.get_df_2key(emo, "状態", "苦痛Lv", "level", 2, "ネガティブ")
+                self.flags["ClosedEyes"] = True
+                self.add_element("苦痛", prompt, nega)
+            elif ra == 1: #目を見開くパターン
+                prompt = csvm.get_df_2key(emo, "状態", "苦痛Lv", "level", 3, "プロンプト")
+                nega = csvm.get_df_2key(emo, "状態", "苦痛Lv", "level", 3, "ネガティブ")
+                self.add_element("苦痛", prompt, nega)
+                self.add_element("目つき", "(startled eyes,.-.),", "smile")
+        elif pain_level == 1:
+            prompt = csvm.get_df_2key(emo, "状態", "苦痛Lv", "level", pain_level, "プロンプト")
+            self.add_element("苦痛", prompt, None)
+
+
+    def create_fear_element(self):
+        """
+        キャラクターの恐怖レベルに基づいて、恐怖のエレメントを生成するメソッドだ。
+        恐怖の表現をプロンプトとして追加する。恐怖を感じているキャラクターの目は驚いた表情をするから、
+        そういった細かいニュアンスも表現するんだ。
+、
+        CSVManager を使用して恐怖レベルに応じた適切なプロンプトを取得する。
+        最後に、このプロンプトを恐怖と目つきのエレメントとして追加するぜ。
+
+        '恐怖' エレメントはキャラクターの表情や振る舞いに恐怖を反映させ、
+        '目つき' エレメントはその恐怖が目に現れることを表現する。
+        """
+        emo = self.emo
+        fear_level = self.emolevel.get("恐怖Lv")
+        prompt = csvm.get_df_2key(emo, "状態", "恐怖Lv", "level", fear_level, "プロンプト")
+        self.add_element("恐怖", prompt, None)
+        self.add_element("目つき", "(startled eyes,.-.),", "smile")
+
+
+    def create_ahe_element(self):
+        """
+        これはAI魔理沙に書いてもらおうとするとポリシー違反になる
+        絶頂Lvは絶頂が重なった数
+        快楽強度は eraTW{TCVAR:106}
+        """
+        # 淫乱持ちは少しアヘりやすい
+        # 恋慕と排他じゃないバリアントでは望まなくても淫乱がついてしまうので控えめの補正にする
+        emo = self.emo
+        if "淫乱" in self.talent:
+            if self.emolevel["快楽強度"] > 0:
+                self.emolevel["快楽強度"] += 2
+
+        if self.emolevel["絶頂Lv"] == 4:  #四重絶頂の意
+            self.emolevel["快楽強度"] += 6
+        ahe_strength = self.emolevel["快楽強度"]
+        # 基本の絶頂エフェクト
+        if ahe_strength > 0:
+            prompt = csvm.get_df_2key(emo, "状態", "快楽強度", "level", ahe_strength, "プロンプト")
+            self.add_element('絶頂',prompt, None)
+            self.add_element("目つき", ", (startled eyes)", None)
+        if ahe_strength >= 4: #強度4　2重強絶頂以上でアヘり始める
+            if ahe_strength <= 14:
+                prompt = csvm.get_df_2key(emo, "状態", "快楽強度", "level", ahe_strength, "プロンプト")
+                self.add_element('絶頂',prompt, None)
+            #絶頂強度14～16 かなりアヘ顔
+            elif ahe_strength <= 16:
+            #確率でheadback 20%
+            #headbackは表情描写と衝突して絵が壊れるっぽい
+                ra = random.randrange(4)
                 if ra == 0:
-                    prompt += "Squinting,closed eyes,clenched teeth,"
-                    negative += "smile,open eyes,pupil,"
-                    ClosedEyes = True
-                #目を見開くパターン もう少し痛そうにしたいが
-                if ra == 1:
-                    prompt += "(tears),open mouth,"
-                    eyeprompt += "(startled eyes,.-.),"
-                    negative += "smile,"
-                
+                    self.add_element('絶頂',", <lora:conceptHeadbackArched_v10:1:CT>,(HEADBACK)", None )
+                    self.flags["ClosedEyes"] = True
+                else:
+                    self.add_element('絶頂',", <lora:ahegao_v1:1.5:1:lbw=F>,(ahegao),open mouth,drooling,saliva", None )
+            #絶頂強度17超え 完全にアヘ顔
+            else:
+                prompt = csvm.get_df_2key(emo, "状態", "快楽強度", "level", ahe_strength, "プロンプト")
+                self.add_element('絶頂',prompt, None)
 
-            # 恐怖 の判定-----------------------------------------------------------------
-            # 恐怖もupで見る
-            # 軽い恐れなら timid,bearish
-            # Terrifiedはちょっと漫画チックすぎる
-            if order["palam_up"]["恐怖"] > 300:
-                prompt += "(She's scared)," #単語でも一緒かなあ
-                tsuyoijoudou = True
-            if order["palam_up"]["恐怖"] > 1000:
-                prompt += "(tears),"
 
-            if order["palam_up"]["恐怖"] > 3000:
-                prompt += "(tears:1.4)," 
+    def create_embarras_element(self):
+        """
+        # embarras 1.2でもう十分なくらい恥ずかしそう blushが1.0ついている場合0.5位まで変化なし
+        # 普通の調教だと恥情はあんまり上がらないが欲情で赤くなってるはず
+        # embarrasよりshameの方がマイルド なはず
+        """
+        emo = self.emo
+        embarras = self.emolevel["恥情Lv"]
+        prompt = csvm.get_df_2key(emo, "状態", "快楽強度", "level", embarras, "プロンプト")
+        self.add_element('羞恥',prompt, None)
 
-            # 恐怖顔Loraがいい感じ
-            if order["palam_up"]["恐怖"] in range(6000,10000):
-                eyeprompt += "<lora:scaredExpression_v18:0.5>,scared expression,"               
-            elif order["palam_up"]["恐怖"] > 10000:
-                eyeprompt += "<lora:scaredExpression_v18:0.9>,scared expression,"
-
-            # 刻印レベルの苦痛フラグが立ってる場合、好意・欲望・羞恥の表情をつけない。ただし高レベルマゾは例外
-            if (Pain == False) or (order["abl"]["マゾっ気"] >= 4):  
-                # 欲情の判定-----------------------------------------------------------------
-                # うまくいかない
-                pleasure = order["palam_up"]["快Ｃ"]+order["palam_up"]["快Ｂ"]+order["palam_up"]["快Ｖ"]+order["palam_up"]["快Ａ"]
-                # 4部位の珠入手の合計で見る
-
-                if pleasure >= 3000:
-                    tsuyoijoudou = True
-
-                if pleasure in range(100,1000): #最初の目標は100
-                    prompt += "(blush:0.7),"
-                elif pleasure in range(1000,3000):
-                    prompt += "Orgasmic expression,(blush:0.9)"
-                elif pleasure in range(3000,7500):
-                    prompt += "(Orgasmic expression),blush,"
-                elif pleasure > 7500:
-                    prompt += "(Orgasmic expression:1.2),blush,"
-                    eyeprompt += "{rolling eyes|},"
-                elif order["palam_up"]["欲情"] >= 1000:
-                    prompt += "Orgasmic expression,blush,"
-
-                #絶頂
-                ahe_strength = order["絶頂の強度"]
-
-                # 淫乱持ちは少しアヘりやすい
-                # 恋慕と排他じゃないバリアントでは望まなくても淫乱がついてしまうので控えめの補正にする
-                if "淫乱" in order["talent"]:
-                    if ahe_strength > 0:
-                        ahe_strength += 2
-                # 四重絶頂で補正
-                tajuu = np.count_nonzero([order["Ｃ絶頂"],order["Ｂ絶頂"],order["Ｖ絶頂"],order["Ａ絶頂"]])
-                if tajuu == 4:
-                    ahe_strength += 6
-
-                # 基本の絶頂エフェクト
-                if ahe_strength > 0:
-                    prompt += "(motion lines:1.2),"
-                    eyeprompt += "(startled eyes),"
-
-                if ahe_strength >= 4: #強度4　2重強絶頂以上でアヘり始める
-                    #絶頂強度4～7 軽めのアヘ顔
-                    if ahe_strength <= 7:
-                        prompt += "(ahegao:0.7),"
-                    #絶頂強度8～11 そこそこアヘ顔 最強絶頂で9 淫乱なら11に届く。単発Vセックスとかでこれ以上に届いてほしくはない
-                    elif ahe_strength <= 11:
-                        prompt += "ahegao,{open mouth|:o},drooling,saliva,"
-                    #絶頂強度12～14 だいぶアヘ顔
-                    elif ahe_strength <= 14:
-                        prompt += "<lora:ahegao_v1:0.8:F>,ahegao,open mouth,drooling,saliva,"
-                    #絶頂強度14～16 かなりアヘ顔 
-                    elif ahe_strength <= 16:
-                    #確率でheadback 20%
-                    #headbackは表情描写と衝突して絵が壊れるっぽい
-                        ra = random.randrange(4)
-                        if ra == 0:
-                            prompt += "<lora:conceptHeadbackArched_v10:1:CT>,(HEADBACK) "
-                            ClosedEyes = True
-                        else:
-                            prompt += "<lora:ahegao_v1:1.5:F>,(ahegao),open mouth,drooling,saliva,"
-                    #絶頂強度17超え 完全にアヘ顔 
-                    else:
-                        prompt += "<lora:ahegao_v1:1.6:F>,(ahegao:1.5),open mouth,(drooling),saliva,"
-
-                # 羞恥の判定-----------------------------------------------------------------
-
-                # embarrassed 1.2でもう十分なくらい恥ずかしそう blushが1.0ついている場合0.5位まで変化なし
-                # 普通の調教だと恥情はあんまり上がらないが欲情で赤くなってるはず
-                # embarrassedよりshameの方がマイルド なはず
-                if order["palam"]["恥情"] >= 1000:      
-                    if order["palam"]["恥情"] <= 5000:      
-                        prompt += "(shame:0.5),"
-                    elif order["palam"]["恥情"] <= 10000: 
-                        prompt += "(shame:0.7),"
-                    else:
-                        prompt += "shame,"
-                
-                if order["palam_up"]["恥情"] >= 500:
-                    if order["palam_up"]["恥情"] < 1000:
-                        prompt += "(embarrassed:0.6),"
-                    else: 
-                        tsuyoijoudou = True
-                        prompt += "embarrassed,"
 
         # ここからは素質・刻印等によるもの TRAIN以外でも反映＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
 
-        # 反発 の判定-----------------------------------------------------------------
-        # angerは口が歪んだりギャグみたいになる
-        # Hostileはたまに幼い輪郭になる
-        # furiousはへの字口が気になる
-        # いずれも反発刻印3に見合うほどの憎悪は感じない
 
-        # 反発刻印と恋慕の効果は主人以外には向けない
-        if NotMaster == False:
-            # 反発刻印3
-            if order["mark"]["反発刻印"] == 3:
-                prompt += "(Hostile:1.2)," # とりあえず埋めたけど弱い
-            # 反発刻印2 重複させる
-            if order["mark"]["反発刻印"] >= 2:
-                prompt += "anger," # わかりやすくキレる 軽めにかけないとギャグ顔になる
-            
-            # 反発刻印1
-            if order["mark"]["反発刻印"] >= 1:
-                if not ClosedEyes :
-                    eyeprompt += "(glaring eyes:1.0),"
-                    tsuyoijoudou = True
+    def create_resist_element(self):
+        """
+        angerは口が歪んだりギャグみたいになる
+        Hostileはたまに幼い輪郭になる
+        furiousはへの字口が気になる
+        いずれも反発刻印3に見合うほどの憎悪は感じない
+        """
+        emo = self.emo
+        resist = self.emolevel["反発刻印"]
+        # 反発刻印2
+        if resist >= 2:
+            prompt = csvm.get_df_2key(emo, "状態", "反発刻印", "level", resist, "プロンプト")
+            self.add_element('反発',prompt, None)
 
-            # 従順1がつくまでは嫌われてると判断
-            elif order["abl"]["従順"] == 0:
-                if "サド" in order["talent"]: #frownは困り顔になって一部キャラに違和感があったので
-                    prompt += "unamused,"
-                else:
-                    prompt += "(frown:0.9),"
+        # 反発刻印1
+        if resist >= 1:
+            if not self.flags["ClosedEyes"]:
+                self.flags["強い情動"] = True
+                self.add_element("目つき", ", (glaring eyes:1.0)", None)
 
-
-            # 好意
-            # 刻印レベルの苦痛フラグが立ってる場合、好意・欲望・羞恥の表情をつけない。ただし高レベルマゾは例外
-            if (Pain == False) or (order["abl"]["マゾっ気"] >= 4):  
-                # 恋慕でハートを盛る
-                chk_list = ["恋慕","親愛","相愛"]
-                and_list = set(order['talent']) & set(chk_list)
-                if (len(and_list)) > 0:
-                    prompt += "(tender,Loving),(hearts around face:0.8)," # この辺の表情をもっとうまいことやりたい
-                    if order["palam_up"]["恭順"] in range (5000,15000): # ハート増量
-                        prompt += "hearts in speech bubble around face,happy,"
-                    elif order["palam_up"]["恭順"] > 15000: # 追加
-                        prompt += "(big hearts in speech bubble around face),(happy:1.2),"
-                    
-                    Love = True
+        # 従順1がつくまでは嫌われてると判断
+        elif self.abl.get("従順") == 0:
+            if "サド" in self.talent: #frownは困り顔になって一部キャラに違和感があったので
+                self.add_element('反発',", unamused", None)
+            else:
+                self.add_element('反発',", (frown:0.9)", None)
 
 
+    def create_love_element(self):
+        """
+        キャラクターの好意レベルに基づいて、愛情のエレメントを生成するメソッドだ。
+        このメソッドは、苦痛フラグの状態を考慮し、キャラクターが苦痛を感じていない場合、
+        それかレベルの高いのマゾは愛情の表現を追加するんだ。なんというか業が深いな｡
+
+        好意レベルは '好意Lv' として emolevel 辞書で管理され、
+        CSVManager を使用してそのレベルに応じた適切なプロンプトを取得する。
+        愛情のエレメントは、キャラクターの表情や振る舞いにハートマークや優しい表現を追加することで、
+        その愛情を可視化するんだ。
+
+        'ハート' エレメントは、キャラクターが持つ愛情や好意を表現し、
+        シーンや状況に応じてその愛情の深さを表す。
+        """
+        emo = self.emo
+        # 刻印レベルの苦痛フラグが立ってる場合、好意の表情をつけない。ただし高レベルマゾは例外
+        if not self.flags["苦痛"] or self.abl.get("マゾっ気") >= 4:
+            love_lv = self.emolevel["好意Lv"]
+            prompt = csvm.get_df_2key(emo, "状態", "好意Lv", "level", love_lv, "プロンプト")
+            self.add_element('ハート',prompt, None)
+
+
+    def create_boredom_element(self):
+        emo = self.emo
+        boredom = self.emolevel["退屈Lv"]
+
+        # 従順低い時のサドは挑戦的な顔
+        if "サド" in self.talent:
+            self.add_element('退屈',", arrogance", None)
+        else:
+            # サド以外は退屈な顔
+            prompt = csvm.get_df_2key(emo, "状態", "退屈Lv", "level", boredom, "プロンプト")
+            self.add_element('退屈',prompt, None)
+
+
+    def create_love_emotion_element(self):
+        """
+        恋心による表情の呪文を作るぜ！こいつは、強い情動がないときに特別な感情を表現するためのメソッドだ。
+        恋する心が溢れる時、キャラクターの表情が変わるんだ。
+
+        普段は見せない特別な笑顔や、心臓がバクバクする感じ、照れ笑いなど、恋によって引き出される感情を呪文に込めるんだ。
+        性格や好意のレベルによって、たまにはこんな表情も見せてやるといい。
+
+        このメソッドで、恋に満ちた独特の感情の呪文を生成するぜ！
+        """
+        # 刻印レベルの苦痛フラグが立ってる場合、好意の表情をつけない。ただし高レベルマゾは例外
+        if not self.flags["苦痛"] and self.flags["好意"]:
+            ra = random.randrange(20)
+            if ra == 1:
+                self.add_element('トキメキ',", (closed eyes smile,blushing:1.3)", None)
+                self.flags["ClosedEyes"] = True
+            if ra == 2:
+                self.add_element('トキメキ',", (closed eyes smile,blushing:1.3),open mouth,", None)
+                self.flags["ClosedEyes"]  = True
+            if ra == 3:
+                self.add_element('トキメキ',", (heart racing,blushing:1.3)", None)
+            if ra == 4:
+                self.add_element('トキメキ',", (delighted)", None)
+
+
+    def create_talent_based_element(self):
+        """
+        #生来のTalentによる顔つき
+        このメソッドは、キャラクターの「Talent」に基づいてプロンプトを生成するんだ。
+        CSVファイルに登録されている各タレントに対するプロンプトを取得して、適切なプロンプトを追加する。
+        """
+        tal = self.get_csvname("talent")
+        talents_dict = {
+            "たれ目傾向": ["臆病", "大人しい", "悲観的"],
+            "ツリ目傾向": ["反抗的", "気丈", "プライド高い", "ツンデレ", "サド"],
+            "魅力": ["魅力", "魅惑", "謎の魅力"],
+            "頭よさそう": ["自制心", "快感の否定", "教育者", "調合知識"],
+            "ドヤ顔": ["生意気", "目立ちたがり"],
+            "無感情": ["無関心", "感情乏しい", "抑圧"]
+        }
+
+        for _, value_list in talents_dict.items():
+            and_list = set(self.talent) & set(value_list)
+            for talent in and_list:
+                prompt = csvm.get_df(tal, "名称", talent, "プロンプト")
+                self.add_element("顔つき", prompt, None)
+
+
+        # # 無感情 expressionlessは口を閉じる効果が高い。八の字眉傾向
+        # # empty eyes
+        # chk_list = ["無関心","感情乏しい","抑圧"]
+        # and_list = set(self.sjh.get_save('talent')) & set(chk_list)
+        # if (len(and_list)) > 0:
+        #     if self.sjh.get_save("絶頂の強度") == 0:
+        #         eyeprompt += "(empty eyes),"
+        #         prompt += "expressionless,"
+        #         negative += "((blush)),troubled eyebrows,"
+
+
+        # #狂気 強調しないと滅多に光らないはず。キレたときとか条件付きで光るようにした。
+        # chk_list = ["狂気","狂気の目"]
+        # and_list = set(self.sjh.get_save('talent')) & set(chk_list)
+        # if (len(and_list)) > 0:
+        #     if self.sjh.get_save("mark")["反発刻印"] == 3: #反発3だとずっと光る
+        #         eyeprompt += "(glowing eyes:1.4),"
+        #     elif self.sjh.get_save("palam_up")["反感"] >= 500: #反感の上がるようなことをすると光る
+        #         eyeprompt += "(glowing eyes:1.4),"
+        #     else:
+        #         eyeprompt += "glowing eyes," #きまぐれに光る？
+
+
+    def check_pleasure_level(self):
+        pleasure = self.palam_up.get("快C")\
+                    + self.palam_up.get("快B")\
+                    + self.palam_up.get("快V")\
+                    + self.palam_up.get("快A")
+
+        if pleasure >= 7500:
+            self.emolevel["快感Lv"] = 4
+            self.flags["強い情動"] = True
+            self.add_element("目つき", "{rolling eyes|}", None)
+        elif pleasure >= 3000:
+            self.emolevel["快感Lv"] = 3
+            self.flags["強い情動"] = True
+        elif pleasure >= 1000:
+            self.emolevel["快感Lv"] = 2
+            self.flags["強い情動"] = True
+        elif pleasure >= 1000:
+            self.emolevel["快感Lv"] = 1
+            self.flags["強い情動"] = True
+        #別の値をつけているが､似たようなステータスなので
+        ahe_strength = self.sjh.get_save("快楽強度")
+        if ahe_strength == 3:
+            self.emolevel["快楽強度"] = 3
+        elif ahe_strength == 2:
+            self.emolevel["快楽強度"] = 2
+        elif ahe_strength == 1:
+            self.emolevel["快楽強度"] = 1
+
+
+    def check_hp_level(self):
+        hp_ratio = self.current_hp / self.max_hp
+
+        if self.current_hp <= 0:
+            self.emolevel["体力Lv"] = 0  # 死亡（レベル5）
+        elif hp_ratio <= 0.2:
+            self.emolevel["体力Lv"] = 1  # 非常に低い体力
+        elif hp_ratio <= 0.4:
+            self.emolevel["体力Lv"] = 2  # 低い体力
+        elif hp_ratio <= 0.6:
+            self.emolevel["体力Lv"] = 3  # 中程度の体力
+        elif hp_ratio <= 0.8:
+            self.emolevel["体力Lv"] = 4  # 高い体力
+        else:
+            self.emolevel["体力Lv"] = 5  # 非常に高い体力（フル）
+
+
+    def check_drunk_level(self):
+        if self.drunk < 1000:
+            self.emolevel["酩酊Lv"] = 0
+        elif self.drunk < 2000:
+            self.emolevel["酩酊Lv"] = 1
+        elif self.drunk < 3000:
+            self.emolevel["酩酊Lv"] = 2
+        elif self.drunk < 6000:
+            self.emolevel["酩酊Lv"] = 3
+        elif self.drunk < 10000:
+            self.emolevel["酩酊Lv"] = 4
+        else:
+            self.emolevel["酩酊Lv"] = 5
+
+
+    def check_pain_level(self):
+        pain_value = self.palam_up.get("苦痛")
+
+        if pain_value > 3000:
+            self.emolevel["苦痛Lv"] = 2  # 重い苦痛
+        elif pain_value > 500:
+            self.emolevel["苦痛Lv"] = 1  # 軽い苦痛
+
+
+    def check_fear_level(self):
+        fear_value = self.palam_up.get("恐怖")
+        if fear_value > 10000:
+            self.emolevel["恐怖Lv"] = 5  # 極度の恐怖
+        elif fear_value >= 6000:
+            self.emolevel["恐怖Lv"] = 4  # 非常に強い恐怖
+        elif fear_value >= 3000:
+            self.emolevel["恐怖Lv"] = 3  # 強い恐怖
+        elif fear_value >= 1000:
+            self.emolevel["恐怖Lv"] = 2  # 明確な恐怖
+        elif fear_value > 300:
+            self.emolevel["恐怖Lv"] = 1  # 軽い恐怖
+
+
+    def check_orgasm_level(self):
+        tajuu = sum(1 for value in [self.C, self.B, self.V, self.A] if value != 0)
+
+        if tajuu > 4:
+            self.emolevel["絶頂Lv"] = 4
+        elif tajuu > 3:
+            self.emolevel["絶頂Lv"] = 3
+        elif tajuu > 2:
+            self.emolevel["絶頂Lv"] = 2
+        elif tajuu > 1:
+            self.emolevel["絶頂Lv"] = 1
+
+
+    def check_embarras_level(self):
+        embarras = self.palam.get("恥情")
+        embarras_up = self.palam_up.get("恥情")
+        # '恥情'の値に基づいてLevelを設定
+        if embarras >= 1000 and embarras <= 5000:
+            self.emolevel["恥情Lv"] = 1
+        elif embarras > 5000 and embarras <= 10000:
+            self.emolevel["恥情Lv"] = 2
+        elif embarras > 10000:
+            self.emolevel["恥情Lv"] = 3
+        # '恥情'の増加値に基づいてLevelを設定
+        if embarras_up >= 500 and embarras_up < 1000:
+            self.emolevel["恥情Lv"] = 4
+        elif embarras_up >= 1000:
+            self.flags["強い情動"] = True
+            self.emolevel["恥情Lv"] = 5
+
+
+    def check_resist_level(self):
+        """
+        刻印系はまとめてLevelに追加するかも
+        """
+        resist = self.mark.get("反発刻印")
+        self.emolevel["反発刻印"] = resist
+
+
+    def check_love_level(self):
+        chk_list = ["恋慕","親愛","相愛"]
+        and_list = set(self.talent) & set(chk_list)
+        if (len(and_list)) > 0:
+            kyujun = self.palam_up.get("恭順")
+            if kyujun < 5000:
+                self.emolevel["好意Lv"] = 1
+            elif 5000 <= kyujun < 15000:
+                self.emolevel["好意Lv"] = 2
+            else:
+                self.emolevel["好意Lv"] = 3
+            self.flags["好意"] = True
+
+
+    def check_boredom_level(self):
         # 調教初期の表情 つまんなそうな顔
         # 何も指定しないとカワイイ笑顔になるのを防ぐためのデフォルト表情
-        # 従順で解除
+        # scgpro 初対面シチュエーションが多いので軽めに200で解除する
+        #初期化 値は 2 あとで直すかも
+        if self.abl.get("従順") > 3 or self.好感度 > 50:
+            self.emolevel["退屈Lv"] -= 1
 
-        taikutsu = 2
-        if (order["abl"]["従順"] > 3) or (order["好感度"] > 500): #従順と好感度どっちか1回ずつしか効かない
-            taikutsu -= 1
-        if (order["abl"]["従順"] > 4) or (order["好感度"] > 1000):
-            taikutsu -= 1
+        if self.abl.get("従順") > 4 or self.好感度 > 200:
+            self.emolevel["退屈Lv"] -= 1
+        if self.flags["強い情動"]: # 余裕ないときには退屈な表情はしない
+            self.emolevel["退屈Lv"] = 0
 
-        # 性格等で増減
-
-        if tsuyoijoudou == True: # 余裕ないときには退屈な表情はしない
-            taikutsu = 0    
-
-        if taikutsu >= 2:
-            # 従順低い時のサドは挑戦的な顔
-            if "サド" in order['talent']:
-                prompt += "arrogance,"
-            else: 
-                # サド以外は退屈な顔
-                prompt += "(Blank expression,boring:1.3)," 
-        elif taikutsu == 1:
-            if "サド" in order['talent']:
-                prompt += "arrogance,"
-            else:
-                prompt += "Blank expression,boring,"
-
-
-        # 強い情動がないとき恋慕でたまに見せる表情
-        # ここを性格で個性分けしたい
-        if tsuyoijoudou == False:
-            if Love == True:
-                ra = random.randrange(20)
-                if ra == 1:
-                    prompt += "(closed eyes smile,blushing:1.3),"
-                    ClosedEyes == True
-                if ra == 2:
-                    prompt += "(closed eyes smile,blushing:1.3),open mouth"
-                    ClosedEyes == True                
-                if ra == 3:
-                    prompt += "(heart racing,blushing:1.3)"
-                if ra == 4:
-                    prompt += "(delighted)"
-
-
-        #生来のTalentによる顔つき
-
-        #たれ目傾向 taremeは効きが悪い 恐怖の珠が上がるのでそっちでも補正できる
-        chk_list = ["臆病","大人しい","悲観的"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-            prompt += "(tareme),"
-            negative += "(glaring:0.7),"
-
-        #ツリ目傾向
-        chk_list = ["反抗的","気丈","プライド高い","ツンデレ","サド"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-            eyeprompt += "(glaring eyes:0.7)," # 0.7でもよく効いたり全然効かなかったりする。
-
-
-        #無感情 expressionlessは口を閉じる効果が高い。八の字眉傾向
-        # empty eyes 
-        chk_list = ["無関心","感情乏しい","抑圧"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-            if order["絶頂の強度"] == 0:
-                eyeprompt += "(empty eyes),"
-                prompt += "expressionless,"
-                negative += "((blush)),troubled eyebrows,"
-
-
-        #狂気 強調しないと滅多に光らないはず。キレたときとか条件付きで光るようにした方がいいかも。した。
-        chk_list = ["狂気","狂気の目"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-            if order["mark"]["反発刻印"] == 3: #反発3だとずっと光る
-                eyeprompt += "(glowing eyes:1.4),"
-            elif order["palam_up"]["反感"] >= 500: #反感の上がるようなことをすると光る
-                eyeprompt += "(glowing eyes:1.4),"
-            else:
-                eyeprompt += "glowing eyes," #きまぐれに光る？
-
-        #笑顔up 常に効いてるのはおかしいのでいったん保留
-        # chk_list = ["楽観的","解放","鼓舞"]
-        # and_list = set(order['talent']) & set(chk_list)
-        # if (len(and_list)) > 0:
-        #     if Pain == False:
-        #         prompt += "joyful,"
-
-        #魅力 
-        chk_list = ["魅力","魅惑","謎の魅力"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-             prompt += "seductive,"
-    
-        #頭よさそう
-        chk_list = ["自制心","快感の否定","教育者","調合知識"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-             prompt += "smart,"
-
-        #ドヤ顔
-        chk_list = ["生意気","目立ちたがり"]
-        and_list = set(order['talent']) & set(chk_list)
-        if (len(and_list)) > 0:
-             prompt += "(smug:0.6)," #ちょっと強いワード
-
-        #目の処理 Closedでなければeyepromptを統合、csvの目の色を反映
-        if ClosedEyes == False:
-            prompt += eyeprompt
-            if order["eyecolor"] != "":
-                prompt += order["eyecolor"] + " eyes,"
-
-    # 顔はここまで------------------------------------------------------------------------
-
-    return prompt,negative
-
+    def prompt_debug_emo(self):
+        for key, value in self.emopro.items():
+            print (f'emopro:::{key}:::{value}')
+        for key, value in self.emonega.items():
+            print (f'emonega:::{key}:::{value}')
+        for key, value in self.emolevel.items():
+            print (f'emoLevel:::{key}:::{value}')
+        for key, value in self.flags.items():
+            print (f'emonFlag::{key}:::{value}')

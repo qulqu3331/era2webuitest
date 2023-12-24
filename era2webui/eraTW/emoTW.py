@@ -23,7 +23,7 @@ Returns:
 - dict: キャラクターの感情や状態を表すエレメントの辞書。
 """
 import random
-from eraTW.suberaTW import PromptMaker
+from eraTW.suberaTW import PromptMakerTW
 from module.csv_manager import CSVMFactory
 csvm = CSVMFactory.get_instance()
 
@@ -31,7 +31,7 @@ csvm = CSVMFactory.get_instance()
 # 暫定でバリアント毎に分けたけど更新が面倒になるのでホントはまとめたい。
 
 
-class Expression(PromptMaker):
+class ExpressionTW(PromptMakerTW):
     """"
     Args:
         PromptMaker (sjh): SaveJsonHanderインスタンス
@@ -120,14 +120,14 @@ class Expression(PromptMaker):
             self.emonega["ハート"] = ""
             self.emopro["反発"] = ""
             self.emonega["反発"] = ""
-
+        self.prompt_debug_emo()
         emopro_values = [value for value in self.emopro.values() if value.strip()]
         emonega_values = [value for value in self.emonega.values() if value.strip()]
         #カンマとスペースを足してヒトツナギに
         prompt = ", ".join(emopro_values)
         negative = ", ".join(emonega_values)
-        self.prompt_debug()
         return prompt,negative
+
 
     def create_eyes_element(self):
         """
@@ -637,4 +637,13 @@ class Expression(PromptMaker):
             self.emolevel["退屈Lv"] -= 1
         if self.emoflags["強い情動"]: # 余裕ないときには退屈な表情はしない
             self.emolevel["退屈Lv"] = 0
-    
+
+    def prompt_debug_emo(self):
+        for key, value in self.emopro.items():
+            print (f'emopro:::{key}:::{value}')
+        for key, value in self.emonega.items():
+            print (f'emonega:::{key}:::{value}')
+        for key, value in self.emolevel.items():
+            print (f'emoLevel:::{key}:::{value}')
+        for key, value in self.emoflags.items():
+            print (f'emonFlag::{key}:::{value}')

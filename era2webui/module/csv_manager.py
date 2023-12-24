@@ -16,36 +16,7 @@ import os
 import re
 
 import pandas as pd
-
-
-def search_imported_variant():
-    """ここがなんか汚い
-    'era2webui.py' からインポートされているバリアントを検索する。
-    Returns:
-        str:インポートされているバリアントのモージュールが入ったフォルダ名
-            見つからない場合はNoneを返す。
-    """
-    # カレントディレクトリのパスを取得
-    base_dir = os.path.dirname(__file__)
-    # カレントディレクトリの親ディレクトリのパスを取得
-    parent_dir = os.path.dirname(base_dir)
-    # 親ディレクトリにある 'era2webui.py' へのパスを作成
-    era2webui_path = os.path.join(parent_dir, 'era2webui.py')
-
-    try:
-        with open(era2webui_path, 'r', encoding='utf-8') as file:
-            content = file.read()
-        match = re.search(
-            r'^from (eratohoYM|eraTW|eraImascgpro)', content, re.MULTILINE)
-        if match:
-            return match.group(1)
-        else:
-            print("バリアントを選んでfromのコメントアウトを解除してください")
-            return None
-    except FileNotFoundError:
-        print(f"'{era2webui_path}' が見つかりません。")
-        return None
-
+from module.settings import Settings
 
 
 class CSVMFactory:
@@ -56,7 +27,6 @@ class CSVMFactory:
         _type_: _description_
     """
     _instance = None
-
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
@@ -84,22 +54,22 @@ class CSVManager:
         self.generate_csvlist()
         self.csvdata_import()
         self.combine_character_csvs() #Add_Characterを結合してCharacter.csvとして扱うので必ずself.csvdata_import()の後に呼べ
-        self.add_cloth_columns()
-        self.load_display_part()
+        if Settings.variant == "eraTW":
+            self.add_cloth_columns()
+            self.load_display_part()
 
 
     def generate_csvlist(self):
         """
         現在のバリアントのCSVファイルリストを生成し、クラス変数保存するんだ。
-        'era2webui.py' からインポートしてるバリアントに基づいて、
-        対象ディレクトリ内のCSVファイルのパスをリストアップしてくれるぜ。
+        class Settings で選択したバリアントに基づいて、
+        バリアントディレクトリ内のCSVファイルのパスをリストアップしてくれるぜ。
 
         そうして得られたCSVファイルリストは、操作がしやすいように
         'csv_list.csv' ファイルに名前とパスが記録される。
-        バリアント選択が済んでない場合は教えてやるからな。
         """
         # 一致したモジュール名を取得
-        imported_module = search_imported_variant()
+        imported_module = Settings.variant
         print(f"対応するeraバリアント: {imported_module}")
 
         if imported_module:
@@ -114,8 +84,6 @@ class CSVManager:
                 os.path.join(csvdir, '*.csv'))}
 
             print(f"{imported_module}のCSVファイルのリストをCSVManagerクラス変数に格納したぜ。")
-        else:
-            print("バリアントが見つからないか、選択されていないようだ。")
 
 
     def csvdata_import(self):
@@ -272,8 +240,16 @@ class CSVManager:
             この例なら、'NOTFOUND'という状態に対する説明をくれてやる。
         """
         try:
-            # CSVManagerの辞書からデータフレームを取得
-            dataframe = self.csvdatas[csvname]
+            # csvnameがDataFrameのインスタンスである場合、それをそのまま使用
+            # imas手抜き互換用暫定処理 あとで
+            if isinstance(csvname, pd.DataFrame):
+                dataframe = csvname
+            # そうでない場合、CSVManagerの辞書からDataFrameを取得
+            else:
+                dataframe = self.csvdatas[csvname]
+                # CSVManagerの辞書からデータフレームを取得
+                dataframe = self.csvdatas[csvname]
+
             filtered_df = dataframe[dataframe[key] == value]
 
             if not filtered_df.empty:
@@ -319,8 +295,14 @@ class CSVManager:
             str: 探し出された報酬。条件にマッチするものが無ければ空文字列、何かおかしい時は'Error'を返す。
         """
         try:
-            # CSVManagerの辞書からデータフレームを取得
-            dataframe = self.csvdatas[csvname]
+            # csvnameがDataFrameのインスタンスである場合、それをそのまま使用
+            # imas手抜き互換用暫定処理 あとで
+            if isinstance(csvname, pd.DataFrame):
+                dataframe = csvname
+            # そうでない場合、CSVManagerの辞書からDataFrameを取得
+            else:
+                dataframe = self.csvdatas[csvname]
+                # CSVManagerの辞書からデータフレームを取得
 
             # DataFrameから条件に合致する行を検索し、指定されたcolumnの値を取得
             filtered_df = dataframe[(dataframe[key] == value) & (dataframe[subkey] == subvalue)]
@@ -473,4 +455,22 @@ class CSVManager:
             if col not in new_df.columns:
                 new_df[col] = old_df[col]
         return new_df
-    
+
+
+    def get_all_column_data(self, csvname, column_name):
+        """指定されたCSVファイルの指定された列からすべてのデータを取得する
+        デバッグ用メソッド
+        Args:
+            csvname (str): CSVファイル名
+            column_name (str): 列の名前
+
+        Returns:
+            list: 指定された列の全データ
+        """
+        dataframe = self.csvdatas[csvname]
+
+        # 指定された列のデータをリストとして取得
+        if column_name in dataframe.columns:
+            return dataframe[column_name].dropna().tolist()
+        else:
+            return []  # 列が存在しない場合は空のリストを返す

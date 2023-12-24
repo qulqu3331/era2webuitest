@@ -5,19 +5,40 @@ import sys
 import time
 from tkinter import filedialog
 
+from module.settings import Settings
+# バリアントの選択と設定
+#PromptMakerとCSVMFactoryはこれの変数使うからそれより前に呼ぶ
+#あとで直すなんか美しくない
+Settings.select_variant()
+
 import requests
-#from eratohoYM.suberatohoYM import promptmaker  # YMの場合こちらをインポートする
-#from eraTW.suberaTW import promptmaker #TWの場合こちらをインポートする
-from eraTW.suberaTW import PromptMaker
-#from eraImascgpro.subcgpro import promptmaker
 from module.api import gen_image_api
 from module.savedata_handler import SJHFactory
 from module.csv_manager import CSVMFactory
-from module.csv_manager import search_imported_variant
 from module.sub import gen_Image
 from selenium import webdriver
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers.polling import PollingObserver
+
+
+
+class PromptMakerFactory:
+    """class Setings にあるバリアントに従ってPromptMakerのインスタンスを作る
+    Returns:
+        _type_: _description_
+    """
+    @staticmethod
+    def create_prompt_maker(sjhandler):
+        variant = Settings.variant
+        if variant == 'eratohoYM':
+            from eratohoYM.suberatohoYM import PromptMakerYM
+            return PromptMakerYM(sjhandler)
+        elif variant == 'eraTW':
+            from eraTW.suberaTW import PromptMaker
+            return PromptMaker(sjhandler)
+        elif variant == 'eraImascgpro':
+            from eraImascgpro.subcgpro import PromptMakerImascgpro
+            return PromptMakerImascgpro(sjhandler)
 
 class FileHandler(FileSystemEventHandler):
     """受け取る引数 order_queue は list
@@ -79,8 +100,8 @@ def TaskExecutor(order_queue,driver):
             print("txtを読み込み シーン:" + json_data["scene"]) #読み込みチェック　シーンを書き出す
             print("キャラ名:" + json_data["target"]) #キャラ名を書き出す
 
-            # プロンプト整形 SaveJSONHandlerのメソッドを使うため  インスタンスそのもの  をわたす
-            promptmaker = PromptMaker(sjhandler)
+            # プロンプト整形 SaveJSONHandlerのメソッドを使うため  インスタンスそのもの  をわたす 依存性注入とかいうらしい
+            promptmaker = PromptMakerFactory.create_prompt_maker(sjhandler)
             prompt,negative,gen_width,gen_height = promptmaker.generate_prompt()
 
             # add_prompt.txtの内容をpromptに追記する
@@ -192,8 +213,8 @@ if __name__ == '__main__':
     if skip_csv and os.path.isdir(csv_dir):
         csv_target_dir = csv_dir
     else:
-        #search_imported_variantでインポートされてるCSVから監視するPathを作成
-        csv_target_dir = os.path.join(os.path.dirname(__file__), search_imported_variant(), 'csvfiles')
+        #Settings.variantで設定されたバリアントから監視するcsvフォルダのPathを作成
+        csv_target_dir = os.path.join(os.path.dirname(__file__), Settings.variant, 'csvfiles')
     # iniにCSVパスを記入
     config_ini.set("Paths", "eracsv", csv_target_dir)
     with open(inipath, "w", encoding='UTF-8') as configfile:

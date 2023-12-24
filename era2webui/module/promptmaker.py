@@ -1,22 +1,9 @@
-"""_summary_
-
-Raises:
-    KeyError: _description_
-
-Returns:
-    _type_: _description_
-    
-"""
-from eraTW.cloth import ClothFlags, get_cloth_dict
 from module.csv_manager import CSVMFactory
 from module.sub import get_width_and_height
-from module.promptmaker import PromptMaker
+
 csvm = CSVMFactory.get_instance()
-class PromptMakerTW(PromptMaker):
+class PromptMaker():
     """
-    # module.promptmaker をスーパークラスとしてるが全部オーバーライド
-    # あとで
-    
     このPromptMakerクラスは、eraTWゲームの状況に合わせたプロンプトを作るための強力なツールだぜ。
     シナリオやキャラクターの状態に応じた、細かくカスタマイズされたテキストを生成するんだ。使い方を間違えないようにな！
 
@@ -51,6 +38,37 @@ class PromptMakerTW(PromptMaker):
                            "train":'Train.csv',"talent":'Talent.csv',"event":'Event.csv',\
                            "equip":'Equip.csv',"chara":'Character.csv',"effect":'Effect.csv',\
                            "emotion":'Emotion.csv'}
+
+    def initialize_class_variables(self):
+        # 判定につかうセーブデータをクラス変数内にしまう専用のメソッド
+        # 判定に必要なSaveデータをinitで全部先に取得すると読みにくので分離だ
+        #値が存在しない場合 NanやNoneにならないようにする あとで
+        self.scene  = self.sjh.get_save("scene")#str
+        self.charno = self.sjh.get_save("キャラ固有番号")#int
+        self.name   = self.sjh.get_save("target") #list ターゲット名
+        self.comno  = self.sjh.get_save("コマンド")#int
+        self.com    = self.sjh.get_save("コマンド名")#str
+        self.talent = self.sjh.get_save("talent") #list
+        self.upwear = self.sjh.get_save("上半身着衣状況")#int
+        self.loca   = self.sjh.get_save("現在位置")#str
+        self.season = self.sjh.get_save("月")#str
+        self.weath  = self.sjh.get_save("天気")#str
+        self.days   = self.sjh.get_save("日付")#int
+        self.time   = self.sjh.get_save("時間")#int
+        self.succ   = self.sjh.get_save("success")#int  eraTW -1:失敗 1:成功
+        self.tequip = self.sjh.get_save("tequip") or {} #dict
+        self.bstain = self.sjh.get_save("胸の汚れ")
+        self.cip    = self.sjh.get_save("膣内射精フラグ") #int (boole
+        self.cump   = self.sjh.get_save("射精箇所")    #cum point
+        self.mcum   = self.sjh.get_save("MASTER射精量") #int
+        self.juice  = self.sjh.get_save("palam")["潤滑"] #int
+        self.lostv  = self.sjh.get_save("処女喪失") #int (boole
+        self.b      = self.sjh.get_save("今回の調教で処女喪失") #int (boole bは何のbだ? AI魔理沙にいい変数名無い?って聞けない
+        self.nyo    = self.sjh.get_save("放尿") #int (boole
+        self.nyu    = self.sjh.get_save("噴乳") #int (boole
+        self.birth  = self.sjh.get_save("出産日")#int
+        self.upwear = self.sjh.get_save("上半身着衣状況")#int
+        #衣装関係はあとで
 
 
     def generate_prompt(self):
@@ -87,10 +105,10 @@ class PromptMakerTW(PromptMaker):
             self.create_cum_element()
             if self.flags["drawvagina"]:
                 self.create_juice_element()#汁
-                self.create_traineffect_element() #噴乳はここでない気がする
+                self.create_traineffect_element() #噴乳はここでない気がする あとで
                 self.create_stain_element()#如何わしい汚れ
 
-        #主人公しか居ない時はフラグをOFF 連れ出すときもOFFになる
+        #主人公しか居ない時はフラグをOFF 連れ出すときもOFFになる あとで
         if self.charno == 0:
             self.flags["drawchara"] = False
             self.flags["drawface"]  = False
@@ -103,7 +121,7 @@ class PromptMakerTW(PromptMaker):
 
         if self.flags["drawface"]:  # 顔を描画しない場合は処理をスキップ
             self.create_hair_element()#髪
-            from eraTW.emoTW import Expression
+            from module.emo import Expression
             emo = Expression(self.sjh)
             emopro,emonega = emo.generate_emotion() #表情
             self.add_element("emotion", emopro, emonega)
@@ -196,23 +214,24 @@ class PromptMakerTW(PromptMaker):
         このcreate_situation_elementメソッドは、現在のシナリオに合わせて状況のプロンプトを生成するんだ。
         特に、ターゲットの切り替えやマスターの移動などのシーンに応じて、適切なプロンプトを組み立てるぜ。
 
-        基礎プロンプトのネガティブプロンプトは常に追加される。
+        基礎プロンプトのプロンプトは常に追加される。
         シナリオがターゲット切替やマスター移動の場合は特定の条件に基づいて異なるプロンプトを追加する。
         # drawchara､drawface フラグの変更
         """
         efc = self.get_csvname("effect")
+        prompt = csvm.get_df(efc,"名称","基礎プロンプト","プロンプト")
         nega = csvm.get_df(efc,"名称","基礎プロンプト","ネガティブ")
-        self.add_element("situation", None, nega)
+        self.add_element("situation", prompt, nega)
         if self.scene == "ターゲット切替" or self.scene == "マスター移動" or self.scene == "真名看破":
             if self.charno == 0:
                     # targetがいないとき #この条件はTWではうまく動かない
                     self.add_element("situation", "(empty scene)", "(1girl:1.7)")
 
-        else:
-            self.add_element("situation", "1girl standing, detailed scenery in the background", None)
-            #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
-            self.flags["drawchara"] = True
-            self.flags["drawface"] = True
+            else:
+                self.add_element("situation", "1girl standing, detailed scenery in the background", None)
+                #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
+                self.flags["drawchara"] = True
+                self.flags["drawface"] = True
 
 
     def create_location_element(self):
@@ -368,7 +387,7 @@ class PromptMakerTW(PromptMaker):
         """
         # 付着した精液
         if self.flags["drawchara"]:
-            self.create_equip_element()
+            self.create_equip_element() #この部分は後で直す
         if self.flags["drawbreasts"]:
             if self.bstain is not None and self.bstain == 4:
                 self.add_element("stain", "(cum on breasts)", None)
@@ -512,7 +531,7 @@ class PromptMakerTW(PromptMaker):
         これによって、シナリオのリアリティがさらに高まるぜ！
         """
         efc = self.get_csvname("effect")
-        if "妊娠" in self.sjh.get_save("talent"):
+        if "妊娠" in self.talent:
             # 標準で20日で出産する。残14日から描写し、残8日でさらに進行
             if (self.birth - self.days) in range(8,14):
                 prompt = csvm.get_df(efc,"名称","妊娠中期","プロンプト")
@@ -547,7 +566,9 @@ class PromptMakerTW(PromptMaker):
                 if tal in self.talent:
                     prompt = csvm.get_df(tal,"名称",tal,"プロンプト")
                     nega = csvm.get_df(tal,"名称",tal,"ネガティブ")
-                    nega += "areolae, nipple" #negaが空白だった時用対策 #あとで nega空白ならERROR
+                    if nega != "ERROR":
+                        nega += "areolae, nipple" #negaが空白だった時用対策
+                    nega += ", areolae, nipple"
                     self.add_element("body", prompt, nega)
 
         # 体格、体型
@@ -569,6 +590,7 @@ class PromptMakerTW(PromptMaker):
 
 
     def create_hair_element(self):
+        #
         """
         このcreate_hair_elementメソッドは、キャラクターの髪型に基づいてプロンプトを生成するために使うんだ。
         CSVファイルから髪型に関するデータを読み込み、適切なプロンプトを追加するぜ。
@@ -581,10 +603,10 @@ class PromptMakerTW(PromptMaker):
                    "サイドテール","縦ロール","ツインリング","三つ編み","短髪","おさげ髪",\
                    "ポンパドール","ポニーアップ","サイドダウン","お団子髪","ツーサイドアップ",\
                    "ダブルポニー","横ロール","まとめ髪","ボブカット","シニヨン","ロングヘア"]
-        for tal in talents:
-            if tal in self.talent:
-                prompt = csvm.get_df(tal,"名称",tal,"プロンプト")
-                nega = csvm.get_df(tal,"名称",tal,"ネガティブ")
+        for hair_style in talents:
+            if hair_style in self.talent:
+                prompt = csvm.get_df(tal,"名称",hair_style,"プロンプト")
+                nega = csvm.get_df(tal,"名称",hair_style,"ネガティブ")
                 self.add_element("hair", prompt, nega)
 
 
@@ -623,6 +645,9 @@ class PromptMakerTW(PromptMaker):
         注意：このメソッドはまだ未完成だ。いつか完成させるぜ！
         """
         clo = self.get_csvname("cloth")
+        #バリアントごとの汎用性のない部分
+        #ここでdictをインポートしないと
+        from eraTW.cloth import ClothFlags, get_cloth_dict
 
         #グラグの処理はクラスにまとめる
         cf = ClothFlags(self.sjh)

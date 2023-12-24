@@ -154,6 +154,7 @@ class SaveJSONHandler:
             print('エラー: JSONファイルが読み込まれていません。')
             return None
         if key not in self.data:
+            #デバッグ用 好みでコメントアウト
             print(f'エラー: 今は "{key}"って状況にないみたいだぜ')
             return None
         return self.data.get(key)
