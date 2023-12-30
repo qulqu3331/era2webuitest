@@ -1,0 +1,20 @@
+﻿名称,プロンプト,ネガティブ,備考
+基礎プロンプト,"","EasyNegative,(worst quality:1.4), (low quality:1.4), (monochrome:1.3),(multipul angle,split view,panel layout:1.3),",すべての生成で必ず記入されるプロンプト
+人物プロンプト,"perfect anatomy,(masterpiece:1.0), detailed hair,illustration",,キャラクター描写の時記入される
+,,,
+,,,
+AFTER用事後Lora,"<lora:murkysAfterSexLying_1:1:1:lbw=CT>,(looking away,trembling:1.3)",(looking viewer),
+AFTER用精液溢れ,"(cumdrip),cum drip,fucked silly, (cum pool:1.2),cum in pussy,pussy filled semen,(((cum on breasts,cum on stmach,cum on body,cum on face,scattered cum,bukkake)))",penis,
+,,,
+,,,
+,,,
+主人が射精,(semen splash:1.5),,
+主人が大量射精,"(semen splash,excessive cum:1.5)",,
+噴乳,"(lactation, projectile lactation:1.2)",,
+放尿,"(squirt urination,peeing:1.2)",,
+処女喪失,"(defloration blood from pussy,ryona:1.1)",,効かない
+今回の調教で処女喪失,,,その調教の間ずっと(V描画ありの時)
+,,,
+,,,
+妊娠中期,"<lora:nikePregnant_v10:0.1:1:lbw=NC>,PREGNANT",,大きさがまったく安定しない
+妊娠後期,"<lora:nikePregnant_v10:0.4:1:lbw=NC>,PREGNANT",,

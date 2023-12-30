@@ -3,8 +3,6 @@ import numpy as np
 import os
 import random
 import pandas as pd
-from sub import get_df
-
 # cgpro用の表情コード
 # 暫定でバリアント毎に分けたけど更新が面倒になるのでホントはまとめたい
 # YM用の記述や未対応部分はコメントアウト
@@ -165,7 +163,7 @@ def Expression(order,flags):
             if (Pain == False) or (order["abl"]["マゾっ気"] >= 4):  
                 # 欲情の判定-----------------------------------------------------------------
                 # うまくいかない
-                pleasure = order["palam_up"]["快Ｃ"]+order["palam_up"]["快Ｂ"]+order["palam_up"]["快Ｖ"]+order["palam_up"]["快Ａ"]
+                pleasure = order["palam_up"]["快C"]+order["palam_up"]["快B"]+order["palam_up"]["快V"]+order["palam_up"]["快A"]
                 # 4部位の珠入手の合計で見る
 
                 if pleasure >= 3000:
@@ -193,7 +191,7 @@ def Expression(order,flags):
                     if ahe_strength > 0:
                         ahe_strength += 2
                 # 四重絶頂で補正
-                tajuu = np.count_nonzero([order["Ｃ絶頂"],order["Ｂ絶頂"],order["Ｖ絶頂"],order["Ａ絶頂"]])
+                tajuu = np.count_nonzero([order["C絶頂"],order["B絶頂"],order["V絶頂"],order["A絶頂"]])
                 if tajuu == 4:
                     ahe_strength += 6
 

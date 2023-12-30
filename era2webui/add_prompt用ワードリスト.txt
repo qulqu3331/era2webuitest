@@ -24,3 +24,5 @@
 (pixel art:1.5)
 (voxel,3D:1.8)
 (explosion:1.5)
+;LCM loraで生成高速化｡書き込みが減るのflatでマイナス適応推奨
+<lora:lcm-lora-sdv1-5:0.3>,<lora:flat2:-0.7>
