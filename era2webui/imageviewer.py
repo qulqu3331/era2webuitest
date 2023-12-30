@@ -12,12 +12,14 @@ import sys
 class FileMonitor(FileSystemEventHandler):
     #"""フォルダの監視クラス"""
 
-    def __init__(self, folder_path, canvas,sub_win,scaling):
+    def __init__(self, folder_path,canvases,subwindows,scaling,max_windows_number):
         super().__init__()
         self.folder_path = folder_path
-        self.canvas = canvas
-        self.sub_win = sub_win
+        self.canvases = canvases
+        self.subwindows = subwindows
         self.scaling = scaling
+        self.max_windows_number = max_windows_number
+        self.counter = 0
 
     def on_created(self, event):
         #"""ファイルが作成された時に呼び出される関数"""
@@ -29,16 +31,23 @@ class FileMonitor(FileSystemEventHandler):
     def update_canvas(self, image_path):
         #"""キャンバスの画像を更新する関数"""
         print("png")
+
+        targetwindow = self.subwindows[self.counter]
+        targetcanvas = self.canvases[self.counter]
+        self.counter += 1
+        if self.counter == self.max_windows_number:
+            self.counter = 0
+
         image = Image.open(image_path)
         size = (round(image.width * self.scaling), round(image.height * self.scaling))
-        self.sub_win.geometry(str(round(image.width * self.scaling))+"x"+str(round(image.height * self.scaling)))
+        targetwindow.geometry(str(round(image.width * self.scaling))+"x"+str(round(image.height * self.scaling)))
         image = image.resize(size)
         photo = ImageTk.PhotoImage(image)
-        self.canvas.image = photo
-        self.canvas.create_image(0, 0, anchor='nw', image=photo)
+        targetcanvas.image = photo
+        targetcanvas.create_image(0, 0, anchor='nw', image=photo)
         # ウィンドウを前面に持ってくる
-        self.sub_win.attributes("-topmost", True)
-        self.sub_win.attributes("-topmost", False)
+        targetwindow.attributes("-topmost", True)
+        targetwindow.attributes("-topmost", False)
 
 
 
@@ -60,6 +69,11 @@ class App:
         self.wdog_sdimg_Path = self.config.get("Paths", "image", fallback="")
         # 表示倍率
         self.scaling =  float(self.config.get("Viewer", "画像表示の拡大率", fallback=""))
+        # 表示ウィンドウの数
+        try:
+            self.max_windows_number = int(self.config.get("Viewer", "表示ウィンドウの数", fallback=""))
+        except:
+            self.max_windows_number = 1
 
         #上部フレーム
         frame_top = tk.Frame(self.root, pady=5, padx=5, relief=tk.RAISED, bd=2)
@@ -77,36 +91,44 @@ class App:
             print(tk.messagebox.showinfo(title="画像フォルダ不明", message=f"次は画像が生成されるフォルダを選択して下さい。選択フォルダの子フォルダも監視対象になります。"))
             self.select_folder_of_img()
         
+        self.subwindows = {}
+        self.canvases = {}
+
+        for i in range(self.max_windows_number):
+            # サブウィンドウ
+            self.sub_win = tk.Toplevel()
+            self.sub_win.title('image')
+            self.sub_win.geometry("250x100")
+
+            # サブウィンドウを消すと親ウィンドウを道連れにする
+            self.sub_win.wm_protocol('WM_DELETE_WINDOW', self.close_window)
+            # サブウィンドウを常に前面に表示する
+            #self.sub_win.attributes("-topmost", True)
+
+            # キャンバス
+            self.canvas = tk.Canvas(self.sub_win)
+            self.canvas.pack(expand = True,fill=tk.BOTH)
+
+            self.subwindows[i] = self.sub_win
+            self.canvases[i] = self.canvas
 
 
-        # サブウィンドウ
-        self.sub_win = tk.Toplevel()
-        self.sub_win.title('image')
-        self.sub_win.geometry("250x100")
 
-        # サブウィンドウを消すと親ウィンドウを道連れにする
-        self.sub_win.wm_protocol('WM_DELETE_WINDOW', self.close_window)
-        # サブウィンドウを常に前面に表示する
-        #self.sub_win.attributes("-topmost", True)
-
-        # キャンバス
-        self.canvas = tk.Canvas(self.sub_win)
-        self.canvas.pack(expand = True,fill=tk.BOTH)
 
         # 変数の初期化
-        self.event_handler = FileMonitor(self.wdog_sdimg_Path,self.canvas,self.sub_win,self.scaling)
+        self.event_handler = FileMonitor(self.wdog_sdimg_Path,self.canvases,self.subwindows,self.scaling,self.max_windows_number)
         self.observer_img = PollingObserver()
 
         self.observer_img.schedule(self.event_handler, self.wdog_sdimg_Path, recursive=True)
         self.observer_img.start()
         print("pngファイルの監視を開始しました。target_dir:" + str(self.wdog_sdimg_Path))
 
-    def stop(self):
-        #"""アプリケーションの停止関数"""
-        if self.is_running:
-            # 監視スレッドの停止
-            self.observer_img.stop()
-            self.observer_img.join()
+    # def stop(self):
+    #     #"""アプリケーションの停止関数"""
+    #     if self.is_running:
+    #         # 監視スレッドの停止
+    #         self.observer_img.stop()
+    #         self.observer_img.join()
 
 
     # フォルダ選択ダイアログの表示(画像監視フォルダ)
@@ -140,7 +162,7 @@ class App:
         self.observer_img.join()
         print('変更を反映して監視を再開')
         # 変数の初期化
-        self.event_handler = FileMonitor(self.wdog_sdimg_Path,self.canvas,self.sub_win,self.scaling)
+        self.event_handler = FileMonitor(self.wdog_sdimg_Path,self.canvases,self.subwindows,self.scaling,self.max_windows_number)
         self.observer_img = PollingObserver()
         self.observer_img.schedule(self.event_handler, self.wdog_sdimg_Path, recursive=True)
         self.observer_img.start() 
