@@ -48,6 +48,11 @@ IF ARGS == "TACHIE"
 	ENDIF
 ENDIF
 
+;引数TRAINで移動コマンドのとき、立ち絵と重複しないようにここで終了する
+IF (ARGS == "TRAIN") && (SELECTCOM == 400)
+	RETURN 0
+ENDIF
+
 ;調教メニューお断り
 SIF TFLAG:224 == 555
 	RETURN 0
@@ -308,6 +313,8 @@ LOCALS = %LOCALS%"仕事量":{BASE:13},
 LOCALS = %LOCALS%"酒気":{BASE:15},
 LOCALS = %LOCALS%"潜伏率":{BASE:16},
 
+LOCALS = %LOCALS%"時間停止":{FLAG:70},
+
 LOCALS = %LOCALS%"既成事実":{CFLAG:1},
 LOCALS = %LOCALS%"好感度":{CFLAG:好感度},
 LOCALS = %LOCALS%"信頼度":{CFLAG:信頼度},
@@ -455,7 +462,7 @@ LOCALS = %LOCALS%\}
 ;PRINTFORML %LOCALS%
 ;SAVETEXT関数でsavフォルダに出力される。
 ;SAVETEXT 文字列, 連番, (第3引数はsavフォルダ強制), 第4引数によりエンコードをUTF-8に強制
-SAVETEXT LOCALS, GLOBAL:8800, 0, 1
+SAVETEXT LOCALS, GLOBAL:8801, 0, 1
 
 ;後始末 ARGを省略していたら意味のない処理
 TARGET = LOCAL:3
