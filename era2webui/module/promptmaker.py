@@ -121,8 +121,8 @@ class PromptMaker():
 
         if self.flags["drawface"]:  # 顔を描画しない場合は処理をスキップ
             self.create_hair_element()#髪
-            from module.emo import Expression
-            emo = Expression(self.sjh)
+            from eraTW.emoTW import ExpressionTW
+            emo = ExpressionTW(self.sjh)
             emopro,emonega = emo.generate_emotion() #表情
             self.add_element("emotion", emopro, emonega)
 
