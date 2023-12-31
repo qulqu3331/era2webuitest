@@ -23,7 +23,7 @@ Returns:
 - dict: キャラクターの感情や状態を表すエレメントの辞書。
 """
 import random
-from eraTW.suberaTW import PromptMakerTW
+from module.emo import Expression
 from module.csv_manager import CSVMFactory
 csvm = CSVMFactory.get_instance()
 
@@ -31,7 +31,7 @@ csvm = CSVMFactory.get_instance()
 # 暫定でバリアント毎に分けたけど更新が面倒になるのでホントはまとめたい。
 
 
-class ExpressionTW(PromptMakerTW):
+class ExpressionTW(Expression):
     """"
     Args:
         PromptMaker (sjh): SaveJsonHanderインスタンス
@@ -50,7 +50,7 @@ class ExpressionTW(PromptMakerTW):
         self.emolevel = {"快感Lv":0,"快楽強度":0,"睡眠深度":0,"体力Lv":0,"気力Lv":0,"酩酊Lv":0,\
                          "絶頂Lv":0,"苦痛Lv":0,"恐怖Lv":0,"恥情Lv":0,"好意Lv":0,"退屈Lv":2}
                         #退屈Lvは元のコードに従い退屈Lvは2で始まるあとで変えるかも
-        self.emo = self.get_csvname("emotion")
+        self.emo = "Emotion.csv"
 
     def add_element(self, elements, prompt, nega):
         """
@@ -439,7 +439,7 @@ class ExpressionTW(PromptMakerTW):
         このメソッドは、キャラクターの「Talent」に基づいてプロンプトを生成するんだ。
         CSVファイルに登録されている各タレントに対するプロンプトを取得して、適切なプロンプトを追加する。
         """
-        tal = self.get_csvname("talent")
+        tal = "Talent.csv"
         talents_dict = {
             "たれ目傾向": ["臆病", "大人しい", "悲観的"],
             "ツリ目傾向": ["反抗的", "気丈", "プライド高い", "ツンデレ", "サド"],

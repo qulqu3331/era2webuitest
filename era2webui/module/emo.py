@@ -23,7 +23,6 @@ Returns:
 - dict: キャラクターの感情や状態を表すエレメントの辞書。
 """
 import random
-from module.promptmaker import PromptMaker
 from module.csv_manager import CSVMFactory
 csvm = CSVMFactory.get_instance()
 
@@ -31,13 +30,19 @@ csvm = CSVMFactory.get_instance()
 # 暫定でバリアント毎に分けたけど更新が面倒になるのでホントはまとめたい。
 
 
-class Expression(PromptMaker):
+class Expression():
     """"
     Args:
-        PromptMaker (sjh): SaveJsonHanderインスタンス
+        dict (pm_ver): PromptMaker のインスタンス変数 SaveJSONHandlerのインスタンスも含む
     """
-    def __init__(self, sjh):
-        super().__init__(sjh)
+    def __init__(self, pm_ver):
+        # pm_ver（PromptMakerから受け取った変数）の各項目をループ処理
+        for variable, value in pm_ver.items():
+            # setattr関数を使用して、Expressionのインスタンス変数に変換
+            #これでPromptMakerと同一の変数名で処理可能
+            # variableは属性名（例：'sjh', 'flags'）、valueはそれに対応する値
+            setattr(self, variable, value)
+
         self.emopro =  {'眠り':"", '体力':"", '気力':"", '酔':"", '目色':"", '目つき':"", '羞恥':"",\
                         '恐怖':"", '反発':"", '苦痛':"", '絶頂':"", 'ハート':"", '退屈':"",\
                         'トキメキ':"", '顔つき':""}
@@ -47,15 +52,15 @@ class Expression(PromptMaker):
         self.emolevel = {"快感Lv":0,"快楽強度":0,"睡眠深度":0,"体力Lv":0,"気力Lv":0,"酩酊Lv":0,\
                          "絶頂Lv":0,"苦痛Lv":0,"恐怖Lv":0,"恥情Lv":0,"好意Lv":0,"退屈Lv":2}
                         #退屈Lvは元のコードに従い退屈Lvは2で始まるあとで変えるかも
-        self.emo = self.get_csvname("emotion")
+
+        self.emo = "Emotion.csv"
         self.initialize_class_variables_emo()
         self.emolevels()
 
 
     def add_element(self, elements, prompt, nega):
         """
-        add_element メソッドをオーバーライドして、Expression クラス固有の辞書に
-        プロンプトを追加するようにする。
+        Expression クラス辞書にプロンプトを追加する
 
         Args:
             elements (str): プロンプトelements のキー。
@@ -320,7 +325,6 @@ class Expression(PromptMaker):
         """
         これはAI魔理沙に書いてもらおうとするとポリシー違反になる
         絶頂Lvは絶頂が重なった数
-        快楽強度は eraTW{TCVAR:106}
         """
         # 淫乱持ちは少しアヘりやすい
         # 恋慕と排他じゃないバリアントでは望まなくても淫乱がついてしまうので控えめの補正にする
@@ -329,7 +333,7 @@ class Expression(PromptMaker):
             if self.emolevel["快楽強度"] > 0:
                 self.emolevel["快楽強度"] += 2
 
-        if self.emolevel["絶頂Lv"] == 4:  #四重絶頂の意
+        if self.emolevel["絶頂Lv"] >= 4:  #四重絶頂の意
             self.emolevel["快楽強度"] += 6
         ahe_strength = self.emolevel["快楽強度"]
         # 基本の絶頂エフェクト
@@ -463,7 +467,7 @@ class Expression(PromptMaker):
         このメソッドは、キャラクターの「Talent」に基づいてプロンプトを生成するんだ。
         CSVファイルに登録されている各タレントに対するプロンプトを取得して、適切なプロンプトを追加する。
         """
-        tal = self.get_csvname("talent")
+        tal = "Talent.csv"
         talents_dict = {
             "たれ目傾向": ["臆病", "大人しい", "悲観的"],
             "ツリ目傾向": ["反抗的", "気丈", "プライド高い", "ツンデレ", "サド"],

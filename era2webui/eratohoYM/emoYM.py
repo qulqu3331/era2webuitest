@@ -100,11 +100,10 @@ class ExpressionYM(Expression):
             self.create_love_element() #愛情表現 ハートを飛ばす不健全っぽい方
         #目の描写がないならその要素は空文字で抹消
         if not self.flags["ClosedEyes"]:
-            #self.create_eyes_element()#目色 eraTWは非対応につきコメントアウト
             self.emopro["目つき"] = ""
             self.emonega["目つき"] = ""
         #主人公が相手でない時は以下2つのプロンプトを抹消
-        if not self.flags["主人公以外が相手"]:
+        if self.flags["主人公以外が相手"]:
             self.emopro["ハート"] = ""
             self.emonega["ハート"] = ""
             self.emopro["反発"] = ""
@@ -154,13 +153,8 @@ class ExpressionYM(Expression):
             self.emolevel["快感Lv"] = 4
 
         #別の値をつけているが､似たようなステータスなので
-        ahe_strength = self.sjh.get_save("快楽強度")
-        if ahe_strength == 3:
-            self.emolevel["快楽強度"] = 3
-        elif ahe_strength == 2:
-            self.emolevel["快楽強度"] = 2
-        elif ahe_strength == 1:
-            self.emolevel["快楽強度"] = 1
+        if self.sjh.get_save("絶頂の強度") is not None:
+            self.emolevel["快楽強度"] = self.sjh.get_save("絶頂の強度") 
 
 
     def check_hp_level(self):
@@ -210,7 +204,7 @@ class ExpressionYM(Expression):
         このメソッドは、キャラクターの「Talent」に基づいてプロンプトを生成するんだ。
         CSVファイルに登録されている各タレントに対するプロンプトを取得して、適切なプロンプトを追加する。
         """
-        tal = self.get_csvname("talent")
+        tal = "Talent.csv"
         talents_dict = {
             "たれ目傾向": ["臆病", "大人しい", "悲観的"],
             "ツリ目傾向": ["反抗的", "気丈", "プライド高い", "ツンデレ", "サド"],
