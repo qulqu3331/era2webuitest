@@ -23,7 +23,7 @@ Returns:
 - dict: キャラクターの感情や状態を表すエレメントの辞書。
 """
 import random
-from eraTW.suberaTW import PromptMakerTW
+from module.emo import Expression
 from module.csv_manager import CSVMFactory
 csvm = CSVMFactory.get_instance()
 
@@ -31,7 +31,7 @@ csvm = CSVMFactory.get_instance()
 # 暫定でバリアント毎に分けたけど更新が面倒になるのでホントはまとめたい。
 
 
-class ExpressionTW(PromptMakerTW):
+class ExpressionTW(Expression):
     """"
     Args:
         PromptMaker (sjh): SaveJsonHanderインスタンス
