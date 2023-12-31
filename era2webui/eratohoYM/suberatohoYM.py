@@ -114,7 +114,8 @@ class PromptMakerYM(PromptMaker):
         if self.flags["drawface"]:  # 顔を描画しない場合は処理をスキップ
             self.create_hair_element()#髪
             self.create_hair_color_element()#独自メソッド
-            emo = ExpressionYM(self.sjh)
+            pm_var = self.gather_instance_data()
+            emo= ExpressionYM(pm_var) #表情
             emopro,emonega = emo.generate_emotion() #表情
             self.add_element("emotion", emopro, emonega)
 
@@ -165,7 +166,7 @@ class PromptMakerYM(PromptMaker):
         if self.scene not in ["TRAIN", "AFTER", "BEFORE"]:
             return
 
-        loc = self.get_csvname("location")
+        loc = "Location.csv"
 
         if self.scene in ["TRAIN","AFTER"]:
             # TEQUIP:53 お風呂場プレイ
@@ -200,7 +201,7 @@ class PromptMakerYM(PromptMaker):
         #今のところ一般シーンとやってること同じ
         #同じならば処理を統一できないか?
         #統一できるならスーパークラスにまとめる
-        eve = self.get_csvname("event")
+        eve = "Event.csv"
         self.flags["drawchara"] = bool(csvm.get_df(eve,"名称","BEFORE","キャラ描画"))
         self.flags["drawface"] = bool(csvm.get_df(eve,"名称","BEFORE","顔描画"))
         self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称","BEFORE","胸描画"))
@@ -220,8 +221,8 @@ class PromptMakerYM(PromptMaker):
         成功した場合は、CSVから読み込んだ情報に基づいてプロンプトを作成する。失敗した場合は、拒否プロンプトを使うんだ。
         # drawchara drawface drawbreasts drawvagina drawanus
         """
-        tra = self.get_csvname("train")
-        eve = self.get_csvname("event")
+        tra = "Train.csv"
+        eve = "Event.csv"
 
         #0 以上だと成功
         if self.succ < 0:
@@ -268,8 +269,8 @@ class PromptMakerYM(PromptMaker):
         #体力を使い切ったら　事後Loraを適用
 
         #恋慕で余力のあるときは添い寝
-        eve = self.get_csvname("event")
-        efc = self.get_csvname("effect")
+        eve = "Event.csv"
+        efc = "Effect.csv"
         if "恋慕" in self.talent and self.hp >= 500:
             self.Scene = "AFTERピロートーク"
         else:
@@ -324,7 +325,7 @@ class PromptMakerYM(PromptMaker):
         # 装備
         # CSVを2列で検索する
         #オーバーライドメソッド
-        equ = self.get_csvname("equip")
+        equ = "Equip.csv"
 
         # 存在するすべてのequipについて繰り返す
         for key,value in self.equip.items():
@@ -352,8 +353,7 @@ class PromptMakerYM(PromptMaker):
         #独自メソッド
         #------------ここまでAFTER-ここから一般イベント---------------------
         #特殊イベントでないときは"scene"の値でcsvを検索する
-        self.Scene = self.scene
-        eve = self.get_csvname("event")
+        eve = "Event.csv"
         self.flags["drawchara"] = bool(csvm.get_df(eve,"名称","汎用調教","キャラ描画"))
         self.flags["drawface"] = bool(csvm.get_df(eve,"名称","汎用調教","顔描画"))
         self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称","汎用調教","胸描画"))
@@ -373,8 +373,8 @@ class PromptMakerYM(PromptMaker):
     def create_chara_element(self):
         #キャラ描写
         #オーバーライド メソッド
-        cha = self.get_csvname("chara")
-        efc = self.get_csvname("effect")
+        cha = "Character.csv"
+        efc = "Effect.csv"
         prompt = ""
         # キャラ描写の前にBREAKしておく
         prompt += "BREAK,"
@@ -414,7 +414,7 @@ class PromptMakerYM(PromptMaker):
         # 乳強調すると脱ぎたがるのどうしよう
         ## 体型素質 #もとはキャラ描写内で呼び出し
         # 一致する素質を持っていればTalent.csvに書かれたプロンプトを記入
-        tal = self.get_csvname("talent")
+        tal = "Talent.csv"
         if self.flags["drawbreasts"]:
             talents = ["絶壁","貧乳","巨乳","爆乳"]
             for bustsize in talents:
@@ -458,7 +458,7 @@ class PromptMakerYM(PromptMaker):
         #髪色の関数 ※3000番台の名無しキャラ、および息子(2048)と娘(2049)のみ
         if (self.charno in range(3000,4000)) or (self.charno in (2048,2049)):
         # 髪色
-            tal = self.get_csvname("talent")
+            tal = "Talent.csv"
             talents = ["黒髪","栗毛","金髪","赤毛","銀髪","青髪","緑髪","ピンク髪","紫髪","白髪","オレンジ髪","水色髪","灰髪"]
             for hair_color in talents:
                 if hair_color in self.talent:
@@ -519,7 +519,7 @@ class PromptMakerYM(PromptMaker):
         if self.足で射精 > 0: # ここだけ「足 "で"」
             prompt += "(cum on feet,projectile cum),"
         #射精エフェクト
-        efc = self.get_csvname("effect")
+        efc = "Effect.csv"
         if self.主人が射精 > 0:
             if self.主人が射精 == 1:
                 prompt += csvm.get_df(efc,"名称","主人が射精","プロンプト")
@@ -551,13 +551,13 @@ class PromptMakerYM(PromptMaker):
         from module.sub import get_width_and_height
         # TRAINとその他のEVENTで読み取るcsvが異なる
         if self.scene == "TRAIN":
-            tra = self.get_csvname("train")
+            tra = "Train.csv"
             kaizoudo = csvm.get_df(tra,"コマンド番号",self.comNo,"解像度")
         #これ用のプロンプトや解像度はあとでCSVにかく
         elif self.scene == "マスター移動" or self.scene == "ターゲット切替":
             return
 
         else:
-            eve = self.get_csvname("event")
+            eve = "Event.csv"
             kaizoudo = csvm.get_df(eve,"名称",self.scene,"解像度")
             self.width, self.height = get_width_and_height(kaizoudo)

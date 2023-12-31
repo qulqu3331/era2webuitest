@@ -11,6 +11,7 @@ from eraTW.cloth import ClothFlags, get_cloth_dict
 from module.csv_manager import CSVMFactory
 from module.sub import get_width_and_height
 from module.promptmaker import PromptMaker
+from eraTW.emoTW import ExpressionTW
 csvm = CSVMFactory.get_instance()
 class PromptMakerTW(PromptMaker):
     """
@@ -47,10 +48,7 @@ class PromptMakerTW(PromptMaker):
             "drawvagina":False,"drawanus":False,"主人公以外が相手":False,"indoor":False}
         self.width = 0
         self.height = 0
-        self.csv_files  = {"location":'Location.csv',"weather":'Weather.csv',"cloth":'Cloth.csv',\
-                           "train":'Train.csv',"talent":'Talent.csv',"event":'Event.csv',\
-                           "equip":'Equip.csv',"chara":'Character.csv',"effect":'Effect.csv',\
-                           "emotion":'Emotion.csv'}
+        self.initialize_class_variablesTW()#判定に必要なセーブデータを一括取得
 
 
     def generate_prompt(self):
@@ -103,8 +101,8 @@ class PromptMakerTW(PromptMaker):
 
         if self.flags["drawface"]:  # 顔を描画しない場合は処理をスキップ
             self.create_hair_element()#髪
-            from eraTW.emoTW import Expression
-            emo = Expression(self.sjh)
+            pm_var = self.gather_instance_data()
+            emo = ExpressionTW(pm_var)
             emopro,emonega = emo.generate_emotion() #表情
             self.add_element("emotion", emopro, emonega)
 
@@ -120,20 +118,6 @@ class PromptMakerTW(PromptMaker):
         negative = csvm.chikan(negative)
         self.prompt_debug()
         return prompt,negative,width,height
-
-
-    def get_csvname(self, key):
-        """
-        指定されたキーに対応するCSVファイル名を引っ張ってくるメソッドだ。
-        必要なファイル名をサクッと探し出すんだぜ。
-        Args:
-            key (str): CSVファイル名を取得したいキー。ちゃんと正しいキーを渡すんだぜ！
-
-        Returns:
-            str: 指定されたキーに対応するCSVファイル名。もしキーがなければ、Noneを返すぜ。
-                正しいファイル名を取得できるかどうかは、お前の渡したキー次第だな！
-        """
-        return self.csv_files.get(key)
 
 
     def add_element(self, elements, prompt, nega):
@@ -200,7 +184,8 @@ class PromptMakerTW(PromptMaker):
         シナリオがターゲット切替やマスター移動の場合は特定の条件に基づいて異なるプロンプトを追加する。
         # drawchara､drawface フラグの変更
         """
-        efc = self.get_csvname("effect")
+        efc = "Effect.csv"
+        prompt = csvm.get_df(efc,"名称","基礎プロンプト","プロンプト")
         nega = csvm.get_df(efc,"名称","基礎プロンプト","ネガティブ")
         self.add_element("situation", None, nega)
         if self.scene == "ターゲット切替" or self.scene == "マスター移動" or self.scene == "真名看破":
@@ -224,7 +209,7 @@ class PromptMakerTW(PromptMaker):
         """
         # 700箇所
         #IDとの整合はあとで確かめる
-        loc = self.get_csvname("location")
+        loc = "Location.csv"
         prompt = csvm.get_df(loc,"地名", self.loca,"プロンプト")
         nega = csvm.get_df(loc,"地名", self.loca,"ネガティブ")
         self.add_element("location", prompt, nega)
@@ -239,7 +224,7 @@ class PromptMakerTW(PromptMaker):
         現在の季のプロンプトを生成するメソッドだぜ。
         CSVファイルから天気のCSVについでに書いてあるデータを読み込んで、適切なプロンプトとネガティブプロンプトを組み立てる。
         """
-        wea = self.get_csvname("weather")
+        wea = "Weather.csv"
         prompt = csvm.get_df(wea,"天気", self.season,"プロンプト")
         nega = csvm.get_df(wea,"天気", self.season,"ネガティブ")
         self.add_element("weather", prompt, nega)
@@ -250,7 +235,7 @@ class PromptMakerTW(PromptMaker):
         現在の天気に応じて、天気のプロンプトを生成するメソッドだぜ。
         CSVファイルから天気データを読み込んで、適切なプロンプトとネガティブプロンプトを組み立てる。
         """
-        wea = self.get_csvname("weather")
+        wea = "Weather.csv"
         prompt = csvm.get_df(wea,"天気", self.weath,"プロンプト")
         nega = csvm.get_df(wea,"天気", self.weath,"ネガティブ")
         self.add_element("weather", prompt, nega)
@@ -282,8 +267,8 @@ class PromptMakerTW(PromptMaker):
         成功した場合は、CSVから読み込んだ情報に基づいてプロンプトを作成する。失敗した場合は、拒否プロンプトを使うんだ。
         # drawchara drawface drawbreasts drawvagina drawanus
         """
-        tra = self.get_csvname("train")
-        eve = self.get_csvname("event")
+        tra = "Train.csv"
+        eve = "Event.csv"
 
         #0 以上だと成功
         #あとで検証
@@ -331,7 +316,7 @@ class PromptMakerTW(PromptMaker):
         だから、描画フラグに基づいて装備品をスキップする処理も行うんだ。
         こうすることで、シナリオのリアリティを高めることができるぜ！
         """
-        equ = self.get_csvname("equip.csv")
+        equ = "Equip.csv"
 
         N膣装備 = ["11","12","13","22"]
         Nアナル装備 = ["14","15","23"]
@@ -389,8 +374,8 @@ class PromptMakerTW(PromptMaker):
         さらに、特別な名前でプロンプトを登録してある場合は、キャラクター描写を強制的に上書きする処理も行うんだ。
 
         """
-        cha = self.get_csvname("chara")
-        efc = self.get_csvname("effect")
+        cha = "Character.csv"
+        efc = "Effect.csv"
 
         # キャラ描写で毎回記述するプロンプト Effect.csvから読み出す
         charabase = csvm.get_df(efc,"名称","人物プロンプト","プロンプト")
@@ -429,7 +414,7 @@ class PromptMakerTW(PromptMaker):
         ビット演算ってのは、数字をビット単位で見て、特定のビットが立っているかどうかをチェックする方法だ。
         たとえば、'射精箇所'がビットで示されていて、各ビットが特定の射精箇所を表しているんだ。
         """
-        efc = self.get_csvname("effect")
+        efc = "effect"
         #;TFLAG:1 射精箇所 (ビット0=コンドーム 1=膣内 2=アナル 3=手淫 4=口淫 5=パイズリ 6=素股 7=足コキ 8=体表 9=アナル奉仕
         #なにこれ? → 20=手淫フェラ 21=パイズリフェラ22=シックスナイン 24=子宮口 25=疑似 26=授乳プレイ
 
@@ -486,7 +471,7 @@ class PromptMakerTW(PromptMaker):
         """
         #TRAIN限定のエフェクト
         # エフェクト等
-        efc = self.get_csvname("effect")
+        efc = "Effect.csv"
         # 破瓜の血
         if self.lostv > 0:
             prompt = csvm.get_df(efc,"名称","処女喪失","プロンプト")
@@ -511,8 +496,8 @@ class PromptMakerTW(PromptMaker):
         たとえば、キャラクターが妊娠している場合、妊娠の進行度に応じて異なるプロンプトを追加するんだ。
         これによって、シナリオのリアリティがさらに高まるぜ！
         """
-        efc = self.get_csvname("effect")
-        if "妊娠" in self.sjh.get_save("talent"):
+        efc = "Effect.csv"
+        if "妊娠" in self.talent:
             # 標準で20日で出産する。残14日から描写し、残8日でさらに進行
             if (self.birth - self.days) in range(8,14):
                 prompt = csvm.get_df(efc,"名称","妊娠中期","プロンプト")
@@ -622,7 +607,7 @@ class PromptMakerTW(PromptMaker):
 
         注意：このメソッドはまだ未完成だ。いつか完成させるぜ！
         """
-        clo = self.get_csvname("cloth")
+        clo = "Cloth.csv"
 
         #グラグの処理はクラスにまとめる
         cf = ClothFlags(self.sjh)
