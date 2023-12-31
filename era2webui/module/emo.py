@@ -325,7 +325,6 @@ class Expression():
         """
         これはAI魔理沙に書いてもらおうとするとポリシー違反になる
         絶頂Lvは絶頂が重なった数
-        快楽強度は eraTW{TCVAR:106}
         """
         # 淫乱持ちは少しアヘりやすい
         # 恋慕と排他じゃないバリアントでは望まなくても淫乱がついてしまうので控えめの補正にする
@@ -334,7 +333,7 @@ class Expression():
             if self.emolevel["快楽強度"] > 0:
                 self.emolevel["快楽強度"] += 2
 
-        if self.emolevel["絶頂Lv"] == 4:  #四重絶頂の意
+        if self.emolevel["絶頂Lv"] >= 4:  #四重絶頂の意
             self.emolevel["快楽強度"] += 6
         ahe_strength = self.emolevel["快楽強度"]
         # 基本の絶頂エフェクト

@@ -153,13 +153,8 @@ class ExpressionYM(Expression):
             self.emolevel["快感Lv"] = 4
 
         #別の値をつけているが､似たようなステータスなので
-        ahe_strength = self.sjh.get_save("快楽強度")
-        if ahe_strength == 3:
-            self.emolevel["快楽強度"] = 3
-        elif ahe_strength == 2:
-            self.emolevel["快楽強度"] = 2
-        elif ahe_strength == 1:
-            self.emolevel["快楽強度"] = 1
+        if self.sjh.get_save("絶頂の強度") is not None:
+            self.emolevel["快楽強度"] = self.sjh.get_save("絶頂の強度") 
 
 
     def check_hp_level(self):
