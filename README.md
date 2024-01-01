@@ -28,6 +28,25 @@ eraで遊ぶとプレイ内容をリアルタイムで画像生成する仕組�
  - Step 6～8
 3. hiresfix使用時は hiresfix step 0
 
+# [StreamDiffusion](https://github.com/cumulo-autumn/StreamDiffusion)対応による処理の超高速化
+
+### 対応環境の変更
+
+StreamDiffusionが対応しているPythonは3.10のため3.12のvenvは削除する
+
+[StreamDiffusion](https://github.com/cumulo-autumn/StreamDiffusion)の説明に従いTorchなどをインストール
+
+config.iniを変更
+
+```config.ini
+streamdiffusionで生成する = 1
+```
+
+プロンプトを再現する力はイマイチだが早い
+
+東方系統に強いスケベなSDXLモデルとか作らないと駄目かなこれは
+
+
 ### カスタマイズについて
 詳しくは別記
 
