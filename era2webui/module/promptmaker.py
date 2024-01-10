@@ -542,6 +542,16 @@ class PromptMaker():
                 prompt = csvm.get_df(efc,"名称","妊娠後期","プロンプト")
                 self.add_element("effect", prompt, None)
 
+        
+        if self.sjh.get_save("時間停止") != 0:
+            prompt = csvm.get_df(efc,"名称","時間停止","プロンプト")
+            nega = csvm.get_df(efc,"名称","時間停止","ネガティブ")
+            self.add_element("effect", prompt, nega)
+
+        if self.sjh.get_save("睡眠") != 0:
+            prompt = csvm.get_df(efc,"名称","睡眠中","プロンプト")
+            nega = csvm.get_df(efc,"名称","睡眠中","ネガティブ")
+            self.add_element("effect", prompt, nega)
 
     def create_body_element(self):
         """

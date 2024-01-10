@@ -1,6 +1,6 @@
 ﻿名称,プロンプト,ネガティブ,備考
-基礎プロンプト,"","EasyNegative,(worst quality:1.4), (low quality:1.4), (monochrome:1.3),(multipul angle,split view,panel layout:1.3),",すべての生成で必ず記入されるプロンプト
-人物プロンプト,"perfect anatomy,(masterpiece:1.0), detailed hair,illustration",,キャラクター描写の時記入される
+基礎プロンプト,,"EasyNegative,(worst quality:1.4), (low quality:1.4), (monochrome:1.3),(multipul angle,split view,panel layout:1.3),",すべての生成で必ず記入されるプロンプト
+人物プロンプト,"(masterpiece:1.0), detailed hair,illustration",,キャラクター描写の時記入される
 ,,,
 ,,,
 AFTER用事後Lora,"<lora:murkysAfterSexLying_1:1:1:lbw=CT>,(looking away,trembling:1.3)",(looking viewer),
@@ -18,3 +18,6 @@ AFTER用精液溢れ,"(cumdrip),cum drip,fucked silly, (cum pool:1.2),cum in pus
 ,,,
 妊娠中期,"<lora:nikePregnant_v10:0.1:1:lbw=NC>,PREGNANT",,大きさがまったく安定しない
 妊娠後期,"<lora:nikePregnant_v10:0.4:1:lbw=NC>,PREGNANT",,
+,,,
+時間停止,"(expressionless),(empty eyes:1.1),(looking away:1.1) ","(troubled eyebrows:1.5),(blush:1.5),(looking at viewer:1.5)",無表情なのは本意ではないがカメラ目線よりはマシ
+睡眠中,"sleeping,closed eyes,lying",,
