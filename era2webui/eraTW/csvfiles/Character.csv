@@ -1,154 +1,159 @@
-キャラ番号,キャラ名,プロンプト,プロンプト強調,プロンプト2,キャラLora,ネガティブ,目の色,メモ
-0,あなた,gentlemen,,,,,,色移りの問題があるため、目の色はモデルで対応できているなら無指定推奨。
-1,霊夢,hakurei reimu,,,,,,
-2,る～こと,,,,,,,
-3,カナ,,,,,,,
-4,魅魔,,,,,,,
-5,サニー,"Sunny Milk,light brown hair,fairy wings",,,,,,三月精は諦め
-6,ルナ,"Luna Child,blonde hair,fairy wings",,,,,,
-7,スター,"Star Sapphire,black hair,fairy wings,blue ribbon",,,<lora:star:0.75>,,,
-8,ちゆり,,,,,,,
-9,夢美,,,,,,,
-10,萃香,"(Ibuki Suika:1.1),light brown hair,horns of oni,child, no sleeve white shirt,red ribbon,shoulders,handcuffs",,,,,,紫の服になりがち
-11,魔理沙,"kirisame marisa,blonde hair,witch's black hat",,,,,,
-12,ルーミア,"rumia,blonde hair",,,,"tied hair,twintail,side tail",red,髪を結ぶ頻度が高いのでネガ必須
-13,大妖精,"touhou,(((daiyousei))),green hair",,,,,yellow,違う人が出やすい。謎衣装を着やすい。
-14,チルノ,"cirno,blue hair",,,,,,
-15,咲夜,"izayoi sakuya,silver hair",,,,,,
-16,レミリア,"remilia scarlet,zun hat",,,,"(pink hair),red hair",,
-17,アリス,"alice margatroid,blonde hair,headband",,,,"(tied hair),(twintails),bunny ears headband,animal ears",,
-18,リリーW,"touhou, (Lily White:1.3),blonde hair,(white cape with big ribbon),white hat with red ribbon,white cloth,fairy wings",,,,,,安定しない。名前で要素を拾ってくれてる気がしない
-19,リリーB,Lily Black,,,,,,
-20,リリカ,"Lyrica Prismriver,Lyrica,brown hair,white collared shirt,long sleeves,red vest",,,,ribbon,brown,キャラ名は全く効かない。茶髪赤服の女でしかない
-21,メルラン,"Merlin Prismriver,Merlin,white blue hair,Bedhead,(wavy hair:1.2),waby bangs, pink vest, white collared shirt,long sleeves,",,,,ribbon,blue,髪型無理。服もかなり無理がある
-22,ルナサ,"(Lunasa Prismriver,Lunasa:1.2),blonde hair,extra short bob cut,white long sleeves,black vest",,,,ribbon,yellow,三姉妹中では最もキャラ名認識されてるっぽいが打率が低すぎる。touhouやzun hatを強めると純狐の要素が生える
-23,妖夢,"konpaku youmu,silver hair",,,,,,white spiritとか書いても半霊は出なかった
-24,橙,"touhou,(Chen),cat ear,brown hair,very short hair,red cloth",,,,,,
-25,藍,"(Yakumo Ran:1.2), tabard, zun hat,[fox tails]",,,,,,キャラデザが情報過多なのか、ウェイトを上げると絵柄を壊されがち
-26,紫,"Yakumo Yukari, zun hat with red ribbon",,,,"animal tails,fox tails",,尻尾生えがち
-27,リグル,"Wriggle Nightbug,antennae,green hair",,,,,,名前だけでもかなり安定する
-28,ミスティア,"Mystia Lorelei,pink hair,hat",,,,,,よく学習されているが帽子が不安定
-29,文,"Shameimaru Aya,black hair,touhou",,,,,,AIはtouhou＝文ボンボンだと思っている節があるが、文本人には有用
-30,映姫,"Shiki Eiki,Yamaxanadu,green hair",,,,,,補正しないとやたら長髪になる、冠がいまいち不安定だが何と表現したらいいんだ
-31,早苗,"Kochiya Sanae,green hair",,,,,,
-32,神奈子,"(Yasaka Kanako:1.2),purple hair,%高身長%",,,,,,名前で8割正解までいくが違和感あり
-33,諏訪子,"(Moriya Suwako:1.2),suwako,touhou,blonde hair,brown hat with eyeballs",,,,,,だいぶわかってる感は出してくるものの惜しい感じで安定しない
-34,天子,"(Hinanawi Tenshi),deep blue hair,hat with peach",,,,,,ツインテ天子かわいい　帽子を脱いでも葉っぱは取れない
-35,衣玖,"(Nagae Iku:1.3),purple hair,black hat with large red ribbon",,,,,,60点から先に進まない感じ
-36,お燐,"Kaenbyou Rin,red hair",,,,,,
-37,お空,"(Reiuji Utsuho:1.2),black hair,green ribbon",,,,,,空→おくうに書き換え
-38,こいし,"(Komeji Koishi:1.2),white green hair,hat",,,,,,whiteもgreenもコレジャナイ感があったがwhite greenでいいのかー。帽子つけないと黄色いリボンが頭につく
-39,ナズーリン,"Nazrin,gray hair",,,,,,星蓮船は白蓮以外全滅に近い　次点でぬえ、ナズ
-40,小傘,"Tatara Kogasa,Kogasa,blue hair",,,,,,
-41,ぬえ,"(Houjuu Nue),(nue),black hair",,,,,,後ろのアレは書かなくても出るが、記述出来たらもっと安定しそう。顔面デザインにキャラクター性がないコスプレ黒髪女
-42,はたて,"Himekaidou Hatate,Hatate,brown hair, twintails, tokin hat,short sleeves shirt,purple necktie",,,,,,だいたい合ってるけどなんか違う子が安定して出てくる
-43,華扇,"Ibaraki Kasen,pink_hair, two chignons on the head, double bun, (whole right arm bandage)",,,,two horns in head,,
-44,エレン,,,,,,,
-45,理香子,,,,,,,
-46,明羅,,,,,,,
-47,里香,,,,,,,
-48,ルイズ,,,,,,,
-49,さとり,"Komeiji Satori,pink hair",,,,,,サードアイまで完璧
-50,フラン,"flandre scarlet,zun hat,blonde hair",,,,,,hatがあると衣装が安定する
-51,にとり,"Kawashiro Nitori,blue hair,hat",,,,,,帽子をかぶせると光学迷彩スーツも着るようになった
-52,鈴仙,"Reisen Udongein Inaba,pink hair,dressed shirt,red tie",,,,,,夏服の方が自然に半脱ぎになりやすい。たまにブレザーも着る
-53,てゐ,"(Inaba Tewi),black hair,white lop-eared,pink cloth",,,,,,高い頻度で別人になる。髪の長さが不安定。にんじんアクセは巨大化して暴れるので外した
-54,パチュリー,"patchouli knowledge,hat",,,,twintails,,
-55,白蓮,"Hijiri Byakuren,Byakuren,gradation hair",,,,,,髪色が2割くらい失敗する
-56,神子,"Toyosatomimi no Miko,(touhou),headphone",,,,,,巫女成分が入る
-57,こころ,"Hata no Kokoro, (mask),fox mask on head",,,,"animal girl,animal ear",,
-58,美鈴,"hong meiling,red hair",,,,,,
-59,小悪魔,"tohou, koakuma,red hair",,,,,,不安定
-60,パルスィ,Mizuhashi Parsee,,,,,,謎に学習度が高い
-61,妹紅,Fujiwara no Mokou,,,,,,
-62,輝夜,"Houraisan Kaguya,black hair,pink kimono",,,,,,衣装の解釈がなかなか合わない
-63,影狼,Imaizumi Kagerou,,,,,,
-64,勇儀,"Hoshiguma Yuugi,single horn,%高身長%,blonde hair",,,,double horn,,ちゃんと記述すれば出せそう
-65,椛,"Inubashiri Momiji,white hair,touhou",,,,,,名前だけで髪色以外は十分
-66,幽々子,"saigyouji yuyuko,pink hair,zun hat",,,,blue hair,,
-67,慧音,"Kamishirasawa Keine,silver hair,blue headwear with red ribbon,blue clothes",,,,"tied hair,twintail",,惜しいところまで来てるが別人になりやすい
-68,幽香,"Kazami Yuuka,green hair,red plaid vest,long sleeves",,,,,,髪は安定、服は指定しないと裸族だがred plaidでそれらしいのを着る。若干違う感はある
-69,マミゾウ,Futatsuiwa Mamizou,,,,,,
-70,小鈴,"Motoori Kosuzu,kosuzu,checkered kimono ,checkered clothes,hair bell, yellow apron",,,,,,
-71,針妙丸,Sukuna Shinmyoumaru,,,,,,
-72,永琳,"(Yagokoro Eirin),silver hair,long sigle braid,blue nurse cap",,,,,,服装が無理
-73,蛮奇,Sekibanki,,,,,,
-74,レティ,"touhou,(((Letty Whiterock))),medium hair",,,,,,打率低め。名前だけで雰囲気は出るがそこから固められない。zun hatなどで帽子に言及するとクソデカ帽子になりがち。
-75,メディスン,"(Medicine Melancholy),blonde hair,wavy hair,large red ribbon on top of head",,,,"twintails,tied hair",,諦め。似た感じにもならない。
-76,小町,"(Onozuka Komachi:1.2),%高身長%,oriental dress,blue and white dress,white sleeves,touhou,red hair",,,,,,服装をもっと詳細に記述できれば学習データを引き出せそうな手ごたえはある
-77,静葉,"(Aki Shizuha),blonde hair",,,,,,諦め
-78,穣子,"(Aki Minoriko),blonde hair",,,,,,諦め
-79,雛,"(Kagiyama Hina:1.3),green hair,red ribbon,touhou",,,,,,名前強調でだいぶ寄せられる。崩れやすいので油断できない
-80,阿求,"Hieda no Akyuu,(Akyuu),green Kimono,yellow sleeves,purple hair,white flower on hair,",,,,,,袖の色さえ合えば阿求と言い張れるんだけど
-81,蓮子,"Usami Renko,black hair,hat",,,,,,
-82,メリー,"Maribel Hearn,blonde hair,hat",,,,,,
-83,キスメ,"(Kisume),green hair,twintails,plain white yukata",,,,,,赤い髪留めはちゃんと出てくる。着物がplainじゃないとらしくならない
-84,ヤマメ,Kurodani Yamame,,,,,,カスりもしない
-85,一輪,"Kumoi Ichirin,Ichirin,blue hair,(Buddhist,kesa),hood",,,,,,
-86,ムラサ,"Murasa Minamitsu,Murasa,black hair",,,,,,
-87,星,"Toramaru Shou,yellow hair,tiger hair",,,,,,
-88,響子,Kasodani Kyouko,,,,,,
-89,芳香,Miyako Yoshika,,,,,,
-90,青娥,Kaku Seiga,,,,,,
-91,屠自古,"Soga no Tojiko,(tojiko),(ghost tail), tate eboshi,ghost girl with no legs",,,,feet,,足
-92,布都,"Mononobe no Futo,(futo), tate eboshi,gray hair",,,,,,わりと良好
-93,わかさぎ姫,"Wakasagihime,mermaid lower body,kimono",,,,,,
-94,弁々,Tsukumo Benben,,,,,,
-95,八橋,Tsukumo Yatsuhashi,,,,,,
-96,雷鼓,Horikawa Raiko,,,,,,
-97,正邪,Kijin Seija,,,,,,
-98,依姫,Watatsuki no Yorihime,,,,,,出せる気がしない
-99,豊姫,Watatsuki no Toyohime,,,,,,出せる気がしない
-100,レイセン,Reisen,,,,,,名前で出る
-101,朱鷺子,"Unnamed Book-Reading Youkai,Tokiko",,,,,,
-102,神綺,,,,,,,
-103,夢子,,,,,,,
-104,ユキ,,,,,,,
-105,マイ,,,,,,,
-106,菫子,Usami Sumireko,,,,,,
-107,清蘭,,,,,,,
-108,鈴瑚,,,,,,,
-109,ドレミー,,,,,,,
-110,サグメ,,,,,,,
-111,クラウンピース,,,,,,,
-112,純狐,,,,,,,
-113,ヘカーティア,,,,,,,
-114,くるみ,,,,,,,
-115,エリー,,,,,,,
-116,夢月,,,,,,,
-117,幻月,,,,,,,
-118,ラルバ,,,,,,,
-119,ネムノ,,,,,,,
-120,あうん,,,,,,,
-121,成美,,,,,,,
-122,舞,,,,,,,
-123,里乃,,,,,,,
-124,隠岐奈,,,,,,,
-125,女苑,,,,,,,
-126,紫苑,,,,,,,
-127,瓔花,,,,,,,
-128,潤美,,,,,,,
-129,久侘歌,,,,,,,
-130,八千慧,,,,,,,
-131,磨弓,,,,,,,
-132,袿姫,,,,,,,
-133,早鬼,,,,,,,
-134,美宵,,,,,,,
-135,ミケ,,,,,,,
-136,たかね,,,,,,,
-137,駒草,,,,,,,
-138,魅須丸,,,,,,,
-139,典,,,,,,,
-140,龍,,,,,,,
-141,千亦,,,,,,,
-142,百々世,,,,,,,
-143,尤魔,,,,,,,
-144,影華扇,,,,,,,
-145,小兎姫,,,,,,,
-146,エリス,,,,,,,
-147,サリエル,,,,,,,
-148,サラ,,,,,,,
-149,オレンジ,,,,,,,
-150,コンガラ,,,,,,,
-151,ユウゲンマガン,,,,,,,
-152,キクリ,,,,,,,
+﻿キャラ番号,キャラ名,プロンプト,プロンプト強調,プロンプト2,キャラLora,ネガティブ,目の色,メモ,URL,Lora作者名
+0,あなた,"<lora:sagisawaFumikaTHEIDOLM_v20:0.8>(black hair,long hair, hair band,sagisawa Fumika,hairband)",,,,,,色移りの問題があるため、目の色はモデルで対応できているなら無指定推奨。,,
+1,霊夢,hakurei reimu,,,,,,,,
+2,る~こと,"light green hair,short hair,bob cut,(maid costume,maid apron,frilled clothes)",,,,(long hair),,とりあえず緑のモブメイドさん,,
+3,カナ,"Kana Anaberal ,hat, blonde hair,(wavy hair),(short hair), apron",,,<lora:KanaAnaberal_v2-10:0.6>,,,,https://civitai.com/models/152554?modelVersionId=170722,grobique
+4,魅魔,"mima ,hat, green hair,long hair,mimav1",,,<lora:mima-10:0.7>,,,,https://civitai.com/models/84448,Beelze
+5,サニー,"sunny milk, blue eyes, orange hair, two side up, short hair, headdress, red bow, white shirt, yellow ascot, sash, red skirt, fairy wings",,,<lora:sunny milk:0.5>,,,,https://civitai.com/models/114609/sunny-milk,qldqn123
+6,ルナ,"luna child, red eyes, blonde hair, short hair, drill hair, white headwear, white dress, black bowtie, black bow, long sleeves, wide sleeves, fairy wings",,,<lora:luna child:0.3>,,,,https://civitai.com/models/196560/luna-child,qldqn123
+7,スター,"star sapphire, brown eyes, brown hair, long hair, blunt bangs, blue bow, blue dress, blue ribbon, long sleeves, wide sleeves, fairy wings",,,<lora:star sapphire:0.4>,,,,https://civitai.com/models/203200/star-sapphire,qldqn123
+8,ちゆり,"Kitashirakawa Chiyuri,white sailor hat, sailor hat, white hat, hat",,,<lora:b57b9a1477d66299dc51920ab0eb4eb8:0.6>,,,,https://civitai.com/models/196819,Deastlopy
+9,夢美,"OKAZAKI YUMEMI,red hair,Single braid,Red cape",,,<lora:okazakiyumemi-000004:0.5>,,,lycoris,https://civitai.com/models/100364,Chiruno
+10,萃香,"(Ibuki Suika:1.1),light brown hair,horns of oni,child, no sleeve white shirt,red ribbon,shoulders,handcuffs",,,,,,紫の服になりがち,,
+11,魔理沙,"kirisame marisa,blonde hair,witch's black hat",,,,,,,,
+12,ルーミア,"rumia,blonde hair",,,,"tied hair,twintail,side tail",,髪を結ぶ頻度が高いのでネガ必須,,
+13,大妖精,"daiyousei, green hair, short hair, side ponytail, yellow ribbon, blue vest, yellow ascot, white shirt, puffy short sleeves, blue skirt, fairy wings",,,,,,,,
+14,チルノ,"cirno,blue hair",,,,,,,,
+15,咲夜,"izayoi sakuya,silver hair",,,,,,,,
+16,レミリア,"remilia scarlet,zun hat",,,,"(pink hair),red hair",,,,
+17,アリス,"alice margatroid,blonde hair,headband",,,,"(tied hair),(twintails),bunny ears headband,animal ears",,,,
+18,リリーＷ,"Lily White,blonde hair,(white cape with big ribbon),white hat with red ribbon,white cloth,fairy wings",,,<lora:llw:0.6>,,,,https://civitai.com/models/86188?modelVersionId=96718,kozue
+19,リリーB,"Lily Black,blonde hair,(black cape with big ribbon),black hat with red ribbon,black cloth,fairy wings",,,<lora:llw:0.6>,,,,,
+20,リリカ,"Lyrica Prismriver,Lyrica,brown hair, short hair,hat,white collared shirt,long sleeves,red vest",,,<lora:lyrica:0.6>,,,,https://civitai.com/models/87046?modelVersionId=92610,kozue
+21,メルラン,"Merlin Prismriver,Merlin,white blue hair,short hair,hat,Bedhead,(wavy hair:1.2),waby bangs, pink vest, white collared shirt,long sleeves",,,<lora:merlin:0.6>,,,,https://civitai.com/models/87054,kozue
+22,ルナサ,"Lunasa Prismriver,Lunasa,blonde hair,short hair,hat,long sleeves,black vest",,,<lora:lunasa:0.6>,,,,https://civitai.com/models/87039,kozue
+23,妖夢,"konpaku youmu,silver hair",,,,,,white spiritとか書いても半霊は出なかった,,
+24,橙,"touhou,(Chen),cat ear,brown hair,very short hair,red cloth",,,,,,,,
+25,藍,"(Yakumo Ran:1.2), tabard, zun hat,[fox tails]",,,,,,キャラデザが情報過多なのか、ウェイトを上げると絵柄を壊されがち,,
+26,紫,"Yakumo Yukari, zun hat with red ribbon",,,,"animal tails,fox tails",,尻尾生えがち,,
+27,リグル,"Wriggle Nightbug,antennae,green hair",,,,,,名前だけでもかなり安定する,,
+28,ミスティア,"Mystia Lorelei,pink hair,hat",,,,,,よく学習されているが帽子が不安定,,
+29,文,"Shameimaru Aya,black hair,touhou",,,,,,AIはtouhou＝文ボンボンだと思っている節があるが、文本人には有用,,
+30,映姫,"Shiki Eiki,Yamaxanadu,green hair",,,,,,補正しないとやたら長髪になる、冠がいまいち不安定だが何と表現したらいいんだ,,
+31,早苗,"Kochiya Sanae,green hair",,,,,,,,
+32,神奈子,"(Yasaka Kanako:1.2),purple hair,%高身長%",,,,,,名前で8割正解までいくが違和感あり,,
+33,諏訪子,"(Moriya Suwako:1.2),suwako,touhou,blonde hair,brown hat with eyeballs",,,,,,だいぶわかってる感は出してくるものの惜しい感じで安定しない,,
+34,天子,"(Hinanawi Tenshi),deep blue hair,hat with peach",,,,,,,,
+35,衣玖,"Nagae Iku,purple hair, short hair,hat ribbon,hat,bow,ascot,shawl,frills",,,<lora:nagaeiku:0.6>,,,,https://civitai.com/models/115639,kozue
+36,お燐,"animal ears, red hair,short hair,twin braids, red eyes,hair bow,multiple tails,ribbon, green dress,nekomata",,,<lora:KaenbyouRin:0.6>,,,,https://civitai.com/models/106239,kozue
+37,お空,"(Reiuji Utsuho:1.2),black hair,green ribbon",,,,,,空→おくうに書き換え,,
+38,こいし,"(Komeji Koishi:1.2),white green hair,hat",,,,,,whiteもgreenもコレジャナイ感があったがwhite greenでいいのかー。帽子つけないと黄色いリボンが頭につく,,
+39,ナズーリン,"Nazrin,gray hair",,,,,,,,
+40,小傘,"heterochromia, blue hair,short hair,long sleeves, blue skirt,karakasa obake,umbrella, geta,red eye",,,<lora:TataraKogasa:0.6>,,,,https://civitai.com/models/108651?modelVersionId=116971,kozue
+41,ぬえ,"houjuu nue, black hair,short hair,red eyes,red bow,short sleeves,wristband,snake,,black dress,black thighhighs,asymmetrical wings,",,,<lora:NueHoujyuu:0.6>,,,,https://civitai.com/models/113876/houjuu-nue-touhou-project,kozue
+42,はたて,"Himekaidou Hatate,Hatate,brown hair, twintails, tokin hat,short sleeves shirt,purple necktie",,,,,,だいたい合ってるけどなんか違う子が安定して出てくる,,
+43,華扇,"ibaraki kasen, 1girl, solo, double bun,  pink hair,short hair,pink eyes, flower tabard,bandages arm,ribbon, green skirt,  short sleeves, puffy sleeves, chinese clothes, shackles, chain, shirt",,,<lora:ibarakikasen:0.6>,two horns in head,,,https://civitai.com/models/141118/ibaraki-kasen-touhou-project,kozue
+44,エレン,"ellen_(touhou), Hairband_ribbon, hair_ribbon, blonde_hair, long_hair, Curly_hair, green_eyes,red_vest, red_skirt, skirt_set, white_shirt, turtleneck, puffy_short_sleeves, short_sleeves,white_apron, waist_apron, white_bow, waist_bow",,,<lora:Ellen_Touhou_PC-98:0.6>,,,,https://civitai.com/models/164340/ellen-touhou-pc-98,tremolomeasure
+45,理香子,"asakura rikako, glasses, hair ribbon, purple hair, white coat, yellow ribbon, white ribbon, long hair, violet eyes, long sleeves, black pants, hairband",,,<lora:Rikako_Asakura-000010:0.6>,,,,https://civitai.com/models/193817/rikako-asakura,Supermachoman
+46,明羅,"tpmeira, ponytail, hair ribbon,purple hair,japanese clothes, kimono, wide sleeves",,,<lora:touhou_meira-12:0.8>,,,,https://civitai.com/models/122609/meira-or-touhou,justTNP
+47,里香,"brown hair,braids,dress shirt",,,,,,できません,,
+48,ルイズ,"blonde hair,medium hair,updo,(hat:1.3),white round brim hat with purple bow,white hat,white dress",,,,,,できません,,
+49,さとり,"Komeiji Satori,pink hair",,,,,,サードアイまで完璧,,
+50,フラン,"flandre scarlet,zun hat,blonde hair",,,,,,hatがあると衣装が安定する,,
+51,にとり,"Kawashiro Nitori,blue hair,hat",,,,,,帽子をかぶせると光学迷彩スーツも着るようになった,,
+52,鈴仙,"Reisen Udongein Inaba,pink hair,dressed shirt,red tie",,,,,,夏服の方が自然に半脱ぎになりやすい。たまにブレザーも着る,,
+53,てゐ,"(Inaba Tewi),black hair,white lop-eared,pink cloth",,,,,,高い頻度で別人になる。髪の長さが不安定。にんじんアクセは巨大化して暴れるので外した,,
+54,パチュリー,"patchouli knowledge,hat",,,,twintails,,,,
+55,白蓮,"Hijiri Byakuren,Byakuren,gradation hair",,,,,,髪色が2割くらい失敗する,,
+56,神子,"toyosatomimi no miko,pointy hair,earmuffs, cape,brown hair, short hair,brown eyes,bracelet, sleeveless, ribbon,skirt,",,,<lora:ToyosatomiminoMiko:0.8>,,,,https://civitai.com/models/122441?modelVersionId=133322,kozue
+57,こころ,"HATA NO KOKORO,pink hair,pink eyes,bow,long sleeves,plaid shirt,bubble skirt,fox mask",,,<lora:HatanoKokoro:0.7>,"animal girl,animal ear",,,https://civitai.com/models/122464,kozue
+58,美鈴,"hong meiling,red hair",,,,,,,,
+59,小悪魔,"tohou, koakuma,red hair",,,,,,不安定,,
+60,パルスィ,Mizuhashi Parsee,,,,,,謎に学習度が高い,,
+61,妹紅,Fujiwara no Mokou,,,,,,,,
+62,輝夜,"Houraisan Kaguya,black hair,pink kimono",,,,,,衣装の解釈がなかなか合わない,,
+63,影狼,"imaizumi kagerou,animal ears, brown hair,long hair,red eyes,brooch, wolf tail,long sleeves,dress,",,,<lora:imaizumikagerou:0.7>,,,,https://civitai.com/models/130521?modelVersionId=143179,kozue
+64,勇儀,"Hoshiguma Yuugi,single horn,%高身長%,blonde hair",,,,double horn,,ちゃんと記述すれば出せそう,,
+65,椛,"Inubashiri Momiji,white hair,touhou",,,,,,名前だけで髪色以外は十分,,
+66,幽々子,"saigyouji yuyuko,pink hair,zun hat",,,,blue hair,,,,
+67,慧音,"Kamishirasawa Keine,silver hair,blue headwear with red ribbon,blue clothes",,,,"tied hair,twintail",,惜しいところまで来てるが別人になりやすい,,
+68,幽香,"Kazami Yuuka,green hair,red plaid vest,long sleeves",,,,,,髪は安定、服は指定しないと裸族だがred plaidでそれらしいのを着る。若干違う感はある,,
+69,マミゾウ,Futatsuiwa Mamizou ,,,,,,,,
+70,小鈴,"Motoori Kosuzu,kosuzu,checkered kimono ,checkered clothes,hair bell, yellow apron",,,<lora:char-kosuzu:0.6>,,,,https://civitai.com/models/97943/kosuzu-motoori-touhou,momoura
+71,針妙丸,"sukuna shinmyoumaru, 1girl,minigirl,bowl hat,ahoge,purple hair, short hair,red eyes,japanese clothes,frilled kimono,obi,sash,long sleeves, wide sleeves,",,,<lora:SukunaShinmyoumaru:0.6>,,,,https://civitai.com/models/132444,kozue
+72,永琳,"(Yagokoro Eirin),silver hair,long sigle braid,blue nurse cap",,,,,,服装が無理,,
+73,蛮奇,"sekibanki,red hair,hair bow,red eyes,short hair,cape,long sleeves, shirt,skirt,",,,<lora:Sekibanki:0.6>,,,,https://civitai.com/models/129140?modelVersionId=141486,kozue
+74,レティ,"letty whiterock,hat, scarf, short hair, light purple hair, purple eyes, long sleeves,puffy sleeves,waist apron,skirt,",,,<lora:letty:0.6>,,,,https://civitai.com/models/84422?modelVersionId=89754,kozue
+75,メディスン,"medicine melancholy, blonde hair, short hair,ribbon,blue eyes,black shirt,red skirt,bow",,,<lora:medicine:0.7>,,,,https://civitai.com/models/92149?modelVersionId=98239,kozue
+76,小町,"(Onozuka Komachi:1.2),%高身長%,oriental dress,blue and white dress,white sleeves,touhou,red hair",,,,,,服装をもっと詳細に記述できれば学習データを引き出せそうな手ごたえはある,,
+77,静葉,"aki shizuha, blonde hair, short hair, yellow eyes, leaf hair ornament,red shirt,red skirt,long sleeves",,,<lora:AkiShizuha:0.8>,,,,https://civitai.com/models/96783?modelVersionId=103406,kozue
+78,穣子,"aki minoriko,red hat,grapes,blonde hair,short hair,red eyes,ribbon,wide sleeves, dress,",,,<lora:AkiMinoriko:0.8>,,,,https://civitai.com/models/96750?modelVersionId=103362,kozue
+79,雛,"(Kagiyama Hina:1.3),green hair,red ribbon,touhou",,,,,,名前強調でだいぶ寄せられるが不安定,,
+80,阿求,"hieda no akyuu,Akyuu,green Kimono,japanese clothes,yellow sleeves,red hakama,purple hair,(white flower on hair:0.8)",,,<lora:HiedaNoAkyuuV1:0.7>,,,,https://civitai.com/models/73129/hieda-no-akyuu-touhou-project,rerorerorero
+81,蓮子,"renko, black victorian hat, short black hair, black capelet, red tie, white shirt, black pleated skirt",,,"<lora:renko:0.8:1:lbw=0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0>",,,,https://civitai.com/models/15248/usami-renko-touhou-project,Usami_Hearn
+82,メリー,"maribel hearn, hat, white hat, short wavy hair, blonde hair, golden eyes, purple dress",,,"<lora:maribel_hearn_v2:0.9:0.4:lbw=0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0>",,,,https://civitai.com/models/16299?modelVersionId=19775,Usami_Hearn
+83,キスメ,"kisume,green hair,hair bobbles,twintails, green eyes,japanese clothes,white clothes",,"bucket,in bucket,in container",<lora:kisume:0.6>,,,,https://civitai.com/models/102507?modelVersionId=109675,kozue
+84,ヤマメ,"kurodani yamame,blonde hair,short hair, dress, ribbon,hair bow,brown eyes,ponytail,",,,<lora:KurodaniYamame:0.6>,,,,https://civitai.com/models/104203/kurodani-yamame-touhou-project,kozue
+85,一輪,"kumoi ichirin,(hood:1.1),kesa,wide sleeves,jewelry,capelet, blue eyes,blue hair,dress",,,<lora:IchirinKumoi:0.8>,,,,https://civitai.com/models/109763/kumoi-ichirin-and-unzan-touhou-project,kozue
+86,ムラサ,"murasa minamitsu,hat,sailor,gren eyes,short hair,black hair,sailor collar,white shirt,white skirt",,,<lora:MinamitsuMurasa:0.8>,,,,https://civitai.com/models/110157?modelVersionId=118753,kozue
+87,星,"toramaru shou,blonde hair,multicolored hair,short hair,hair ornament,yellow eyes,shawl,ribbon, long sleeves, wide sleeves,shirt,tiger print,red skirt,white pants,",,,<lora:ShouToramaru:0.8>,,,,https://civitai.com/models/111046?modelVersionId=119744,kozue
+88,響子,"kasodani kyouko,animal ears, green hair,short hai,green eyes,long sleeves,dress,",,,<lora:KasodaniKyouko:0.8>,,,,https://civitai.com/models/113994?modelVersionId=123189,kozue
+89,芳香,"miyako yoshika,hat,star hat ornament,ofuda,blue hair,short hair,blue eyes,tangzhuang,red shirt,short sleeves,  skirt,pale skin, jiangshi,",,"zombie pose, outstretched arms",<lora:MiyakoYoshika:0.8>,,,,https://civitai.com/models/114834?modelVersionId=124172,kozue
+90,青娥,"kaku seiga, blue hair,short hair,blue eyes,hair rings,hair stick,shawl,hagoromo,open vest,white vest,short sleeves, blue dress,flower,floral print,",,,<lora:KakuSeiga:0.8>,,,,https://civitai.com/models/116595?modelVersionId=126267,kozue
+91,屠自古,"soga no tojiko,hat,green hair,short hair,green eyes,long sleeves, green dress",,"ghost tail,ghost legs,",<lora:SoganoTojiko:0.8>,feet,,足,https://civitai.com/models/118347?modelVersionId=128372,kozue
+92,布都,"mononobe no futo, hat,long hair,grey hair, ponytail, grey eyes, shirt,skirt,ribbon,japanese clothes,wide sleeves, long sleeves",,,<lora:mononobenofuto:0.8>,,,Loraはなくてもある程度いける,https://civitai.com/models/118339?modelVersionId=128357,kozue
+93,わかさぎ姫,"wakasagihime,mermaid, monster girl,blue hair,short hair,blue eyes,head fins,japanese clothes, kimono,sash,obi,wide sleeves, long sleeves",,,<lora:Wakasagihime:0.6>,,,,https://civitai.com/models/129092/wakasagihime-touhou-project,kozue
+94,弁々,"tsukumo benben, purple hair, hair ornament,long hair, flower,purple eyes, twintails, long sleeves, dress,",,,<lora:TsukumoBenben:0.7>,,,,https://civitai.com/models/130527/tsukumo-benben-touhou-project,kozue
+95,八橋,"tsukumo yatsuhashi,brown hair, short hair,brown eyes,hairband,long sleeves, shirt,skirt",,,<lora:TsukumoYatsuhashi:0.7>,,,,https://civitai.com/models/130559/tsukumo-yatsuhashi-touhou-project,kozue
+96,雷鼓,"horikawa raiko,red hair,short hair,red eyes,necktie,white  jacket,shirt,white skirt,",,,<lora:RaikoHorikawa:0.7>,,,,https://civitai.com/models/135617/horikawa-raiko-touhou-project,kozue
+97,正邪,"kijin seija, horns,short hair,multicolored hair,red eyes,bow,short sleeves, bracelet, dress,",,,<lora:KijinSeija:0.7>,,,,https://civitai.com/models/132437/kijin-seija-touhou-project,kozue
+98,依姫,"watatsuki_no_yorihime,purple hair,ponytail,yellow ribbon, purple_hair, long_hair,very_long_hair, red clothes,single_strap, loose_belt, white sleeves, gold_bracelet, long_skirt, opened_long_skirt, ",,,"<lora:watatsuki_no_yorihime:0.5:0.5:lbw=1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0>",,,Loraの癖が強い,https://civitai.com/models/134844/watatsukinoyorihime,TK31
+99,豊姫,"watatsuki_no_toyohime, long hair, blonde hair, red eyes, white hat, hat_ribbon,white sleeves, pinafore_dress, purple_blue_dress,single_strap, loose_belt",,,<lora:watatsuki_no_toyohime:1>,,,同じ作者のLoraでも依姫よりずっと良い結果が出る,https://civitai.com/models/165822/watatsukinotoyohime,TK31
+100,レイセン,"Reisen2, skyblue hair",,,<lora:reisen2:1>,,,髪色と耳の形が狂いやすい,https://civitai.com/models/193060/reisen-reisen-2-in-touhou-bougetsushou,asnr3shine
+101,朱鷺子,"tokiko, head wings, wings, dress, two-tone hair, blue hair, white hair, red eyes",,,<lora:touhou_tokiko-10:0.8>,,,,https://civitai.com/models/107048/tokiko-or-touhou,justTNP
+102,神綺,"Shinki \(touhou\), light blue eyes, white hair, side ponytail, 1girl, hair bobbles, long hair, red dress, long sleeves, capelet, frilled capelet, boots, multiples wings, black bowtie",,,<lora:Shinki_Touhou_pc98:0.8>,,,,https://civitai.com/models/232950/shinki-touhou-pc-98,Supermachoman
+103,夢子,"yumeko_(touhou), long_hair, blonde_hair,red dress,maid_headdress",,,"<lora:yumeko_(touhou):0.8:1:lbw=0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0>",,,,https://civitai.com/models/153163/yumekotouhou,TK31
+104,ユキ,"blonde hair, medium hair,black hat,dress shirt,black vest,black skirt",,,,,,できません,,
+105,マイ,"skyblue hair, medium hair,white dress,white bow,(hair bow:1.2),white wings",,,,,,できません,,
+106,菫子,"usami sumireko, hat,hat bow, brown hair,low twintails,glasses,brown eyes,cape,boo tie,plaid vest,shirt,plaid skirt,long sleeves,  clothes writing,bolo tie",,,<lora:SumirekoUsami:0.7>,,,,https://civitai.com/models/141197/usami-sumireko-touhou-project,kozue
+107,清蘭,"seiran \(touhou\),rabbit ears,earclip,long hair,  blue hair, red eyes,collarbone,  puffy short sleeves, blue dress,frilled dress,  crescent print, star print,  bloomers",,,<lora:seiran:0.7>,,,,https://civitai.com/models/147058/seiran-touhou-project,kozue
+108,鈴瑚,"ringo \(touhou\),hat, flat cap,rabbit ears,blonde hair,short hair,,red eyes,  blonde hair,orange shirt,yellow shorts, navel, yellow shorts, short sleeves,",,,<lora:ringo:0.7>,,,,https://civitai.com/models/147032?modelVersionId=163906,kozue
+109,ドレミー,"doremy sweet, nightcap,blue hair,short hair,blue eyes,short sleeves, dress,pom pom \(clothes\), tapir tail,",,,<lora:DoremySweet:0.7>,,,,https://civitai.com/models/151959?modelVersionId=169986,kozue
+110,サグメ,"kishin sagume,white hair,short hair,  red eyes,bow, single wing,white jacket, purple dress,long sleeves,",,,<lora:KishinSagume:0.7>,,,,https://civitai.com/models/151989/kishin-sagume-touhou-project,kozue
+111,クラウンピース,"clownpiece,jester cap,long hair,blonde hair, red eyes,neck ruff,  striped dress,star (symbol),star print, polka dot,short sleeves,  pantyhose, american flag dress,short dress,  fairy wings",,,<lora:Clownpiece:0.7>,,,,https://civitai.com/models/155426/clownpiece-touhou-project,kozue
+112,純狐,"junko \(touhou\),hat,pom pom \(clothes\),long hair,orange hair, yellow ribbon,long sleeves, chinese clothes, tabard,black dress,sash, crescent,tassel,",,,<lora:junko:0.7>,,,,https://civitai.com/models/155555/junko-touhou-project,kozue
+113,ヘカーティア,"hecatia lapislazuli,polos crown,red hair,short hair,red eyes,chain,collar,off shoulder shirt,clothes writing,belt,multicolored skirt,plaid skirt,miniskirt,",,,<lora:HecatiaLapislazuli:0.7>,,,,https://civitai.com/models/155605/hecatia-lapislazuli-touhou-project,kozue
+114,くるみ,"blonde hair,long hair,white ribbon,devil wing,dress shirt, black skirt,suspenders",,,,,,できません,,
+115,エリー,"blonde hair,medium hair,(curly hair:1.1),(drill hair:0.7),(hat:1.3),white round brim hat with red bow,white hat,hat_ribbon,red dress",,,,,,できません,,
+116,夢月,"Mugetsu, short hair, yellow eyes, blonde hair, maid headdress, maid, blue dress",,,<lora:Mugetsu:0.8>,,,,https://civitai.com/models/160628/mugetsu-touhou-project,grobique
+117,幻月,"Gengetsu,wings, blonde hair, yellow eyes, short hair, hair bow, red vest, white dress, parted bangs, separated bangs",,,<lora:Gengetsu-10:0.7>,,,,https://civitai.com/models/158011?modelVersionId=178796,grobique
+118,ラルバ,"Eternity Larva, antennae, leaf on head,short hair, aqua hair, brown eyes,   butterfly wings,  short sleeves, multicolored clothes,multicolored dress,fairy,",,,<lora:EternityLarva:0.6>,,,,https://civitai.com/models/157204/eternity-larva-touhou-project,kozue
+119,ネムノ,"sakata nemuno,long hair,grey hair,wavy hair,  red eyes,bare shoulders, single strap, multicolored dress,long sleeves,",,,<lora:SakataNemuno:0.7>,,,,https://civitai.com/models/161618/sakata-nemuno-touhou-project,kozue
+120,あうん,"single horn,long hair,green hair,curly hair,green eyes,red shirt,collared shirt, ,short sleeves,shorts,cloud print,buttons,tail",,,<lora:KomanoAunn:0.6>,,,,https://civitai.com/models/161647,kozue
+121,成美,"Yatadera Narumi,hat,ajirogasa,long hair,black hair,red eyes,twin braids,long earlobes,  red capelet,grey dress,long sleeves, buttons, clothes writing",,,<lora:NarumiYatadera:0.6>,,,,https://civitai.com/models/167155/yatadera-narumi-touhou-project,kozue
+122,舞,"teireida mai, hat,tate eboshi,short hair with long locks, green hair,green eyes, short sleeves,bow,green dress, ribbon,frills,waist apron,ribbon,",,,<lora:SatonoxMai:0.6>,,,舞と里乃セットのLora,https://civitai.com/models/178608/nishida-satono-x-teireida-mai-touhou-x-project,kozue
+123,里乃,"nishida satono, hat,tate eboshi,short hair with long locks, brown hair,purple eyes, short sleeves,bow,purple dress, ribbon,frills,waist apron,ribbon,",,,<lora:SatonoxMai:0.6>,,,舞と里乃セットのLora,https://civitai.com/models/178608/nishida-satono-x-teireida-mai-touhou-x-project,kozue
+124,隠岐奈,"matara okina,hat,long hair,blonde hair, yellow eyes, long sleeves,wide sleeves,detached sleeves, white shirt, tabard, green skirt,constellation print,",,,<lora:MataraOkina:0.6>,,,,https://civitai.com/models/178648/matara-okina-touhou-project,kozue
+125,女苑,"yorigami jo'on,top hat,hat bow,red bow,hair bow,brown hair, sunglasses,eyewear on head,drill hair,orange eyes,earrings,gem, jewelry, bow, ring,pendant,necklace,buckle, high collar, long sleeves,wide sleeves,bracelet, purple coat, tachi-e, open clothes, belt, white dress,red ribbon, floral print, fire,",,,<lora:Yorigami:0.6>,,,女苑と紫苑セットのLora,https://civitai.com/models/156747/yorigami-sisters-touhou-project,kozue
+126,紫苑,"yorigami shion, very long hair, absurdly long hair, blue hair, blue eyes,hair bow,hoodie,short sleeves,  debt, bracelet,blue skirt, stuffed cat,damaged, shaded face,",,,<lora:Yorigami:0.6>,,,女苑と紫苑セットのLora,https://civitai.com/models/156747/yorigami-sisters-touhou-project,kozue
+127,瓔花,"ebisu youka,blonde hair,long hair,long earlobes,brown eyes,blouse,white shirt, frills skirt, white skirt, skirt set,  dark skin,dark-skinned female,",,,<lora:EbisuYouka:0.7>,,,,https://civitai.com/models/186832?modelVersionId=209771,kozue
+128,潤美,"ushizaki urumi ,red horns, split-color hair,ahoge,cow ears,red eyes,cleavage,haori, wide sleeves, japanese clothes,crop top,  navel, cow print,yellow shorts,frilled shorts,cow tail,",,,<lora:UshizakiUrumi:0.7>,,,,https://civitai.com/models/187315/ushizaki-urumi-touhou-project,kozue
+129,久侘歌,"niwatari kutaka,blonde hair, red hair,short hair,multicolored hair, bird on head,red eyes,wings,red ribbon,short sleeves,white shirt, orange dress,bird tail,",,,<lora:KutakaNiwatari:0.7>,,,,https://civitai.com/models/196884/niwatari-kutaka-touhou-project,kozue
+130,八千慧,"kicchou yachie, dragon horns,blonde hair, short hair,red eyes,ribbon,short sleeves,blue shirt,blue skirt,turtle shell, dragon tail,dragon girl, pleated skirt,",,,<lora:KitchoYachie:0.7>,,,,https://civitai.com/models/196918/kitcho-yachie-touhou-project,kozue
+131,磨弓,"joutouguu mayumi,double bun,blonde hair,short hair,hair ribbon,yellow eyes, short sleeves,vambraces, armored dress, white shirt,white pants,",,,<lora:JoutouguMayumi:0.8>,,,,"joutouguu mayumi,1girl,double bun,blonde hair,short hair,hair ribbon,yellow eyes, short sleeves,vambraces, armored dress, white shirt,white pants,",kozue
+132,袿姫,"haniyasushin keiki, head scarf, blue hair,long hair,red eyes,jewelry,magatama necklace,long puffy sleeves,  arm ribbon,single strap, yellow dress,green apron, pocket,",,,<lora:HaniyasushinKeiki:0.7>,,,,https://civitai.com/models/207197/haniyasushin-keiki-touhou-project,kozue
+133,早鬼,"kurokoma saki, cowboy hat,black hair,long hair,ponytail,red eyes,bandana, white scarf,multicolored clothes,bare shoulder,short sleeves,blue shirt,wings,multicolored dress, brown skirt,plaid skirt,overskirt,horse tail,",,,<lora:KurokomaSaki:0.8>,,,,https://civitai.com/models/207252/kurokoma-saki-touhou-project,kozue
+134,美宵,"okunoda miyoi,purple skirt,short sleeves,blue shirt,animal hat,pink hair",,,<lora:touhou_okunoda-10:0.7>,,,,https://civitai.com/models/111279/miyoi-okunoda-or-touhou,justTNP
+135,ミケ,"godoukuji mike,cat ears,multicolored hair, white hair,short hair,orange eyes,neck bell,collar,crop top, multicolored shirt,short sleeves, navel,multicolored skirt, cat tail,calico,",,,<lora:GodoukujiMike:0.9>,,,,https://civitai.com/models/246989/godoukuji-mike-touhou-project,kozue
+136,たかね,"yamashiro takane,camouflage, hat,green hair,medium hair,green eyes,key,camouflage shirt,long sleeves,camouflage skirt,frilled skirt,pocket,",,,<lora:YamashiroTakane:0.7>,,,,https://civitai.com/models/247014/yamashiro-takane-touhou-project,kozue
+137,駒草,"komakusa sannyo,purple hair, ponytail,long hair,yellow ribbon, red eyes,japanese clothes,red kimono,long sleeves,wide sleeves, purple skirt,",,,<lora:KomakusaSannyo:0.7>,,,,https://civitai.com/models/251220/komakusa-sannyo-touhou-project,kozue
+138,魅須丸,"tamatsukuri misumaru,tiara,blonde hair,brown hair, multicolored hair,short hair,brown eyes, orb,jewelry,gem, magatama, rainbow orde,red vest,white shirt,puffy short sleeves, orange skirt, sash,",,,<lora:TamatsukuriMisumaru:0.8>,,,,https://civitai.com/models/251225/tamatsukuri-misumaru-touhou-project,kozue
+139,典,"kudamaki tsukasa, fox,girl,fox ears, blonde hair, short hair,yellow eyes,ribbon, green ribbon,mandarin collar, short sleeves,white romper,fox tail,",,,<lora:TsukasaKudamaki:0.7>,,,,https://civitai.com/models/251231/kudamaki-tsukasa-touhou-project,kozue
+140,龍,"iizunamaru megumu,tokin hat, long hair,blue hair,red eyes,shoulder armor,single pauldron, gem,sleeveless coat,black coat, dress,frilled dress,ribbon trim,pom pom (clothes),",,,<lora:IizunamaruMegumu:0.7>,,,,https://civitai.com/models/251228/iizunamaru-megumu-touhou-project,kozue
+141,千亦,"Tenkyuu Chimata, multicolored hairband,multicolored dress,zipper lines (clothes),cape,cloud print,brown bag belt,pink boots",,,"<lora:Tenkyuu_Chimata_v2.0:0.7:0.7:lbw=1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1>",,,,https://civitai.com/models/18187/tenkyuu-chimataprojecttouhou-project,RepU
+142,百々世,"Himemushi Momoyo,patterned clothing, black shirt, green ring, orange ribbon, orange bow, black skirt",,,<lora:Himemushi_Momoyo:0.7>,,,,https://civitai.com/models/62681?modelVersionId=67250,RepU
+143,尤魔,"toutetsu yuuma,white hair,short hair,curly hair,sheep horns, horn ribbon, pointy ears, earrings, sharp teeth, red eyes, jewelry, patterned clothing,red sleeves, detached sleeves, bare shoulders,blue vest,blue skirt,",,,<lora:ToutetsuYuuma:0.7>,,,,https://civitai.com/models/231823/toutetsu-yuuma-touhou-project,kozue
+144,影華扇,"kasen ibaraki, kasenarm, pink hair, pink eyes, horns, manacles, tabard, puffy sleeves, short sleeves, green skirt",,,<lora:char-kasen:0.8>,animal ear,,,https://civitai.com/models/95398/kasen-ibaraki-3-in-1,momoura
+145,小兎姫,"red hair,low ponytail,long hair,japanese cloth,purple kimono",,,,,,できません,,
+146,エリス,"blond hair,long hair,red hairbow,devil wing,red dress",,,,,,できません,,
+147,サリエル,"sariel_(touhou), toriel, silver_blue_hair, red_eyes, purple dress, emblem_on_chest, tabard, long_sleeves, hair_between_eyes, very_long_hair, wings, ((multiple wings, seraph)):2, angel wings, feathered wings, angel_with_six_wings, white wings,",,,<lora:sariel_(touhou):0.5>,,,,https://civitai.com/models/157455/sarieltouhou,TK31
+148,サラ,"pink hair,(one side up),red dress, white sleeves, short sleeves",,,,,,できません,,
+149,オレンジ,"red hair,long hair,yellow hat,mobcap,green dress",,,,,,できません,,
+150,コンガラ,"Konngara, wide sleeves, black hair, ponytail, red kimono, long sleeves, sleeveless kimono, grey sleeve, single horn, sash, ribbon, oni horn",,,<lora:Konngara_Touhou:0.6>,,,,https://civitai.com/models/158997/konngara,Supermachoman
+151,ユウゲンマガン,,,,,,,,,
+152,キクリ,,,,,,,,,
+153,美天,"son biten, brown eyes, solo,bare shoulders, weapon, feet, long hair,  detached sleeves, monkey tail, jewelry, staff, brown hair, tail",,,"<lora:SON_BITEN_V1-09:0.6:1:lbw=1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0>",,,,https://civitai.com/models/128394?modelVersionId=140568,JustNobodyAI
+154,慧ノ子,"enoko mitsugashira, skirt, jewelry, off shoulder,",,hand snare,<lora:enoko-07:1>,,,,https://civitai.com/models/134542/enoko-mitsugashira-project-touhou,ALEKSEYR554
+155,ちやり,"chiyari tenkajin,green shirt,shorts",,,<lora:chiyari_tenkajin-07:1>,,,,https://civitai.com/models/129331/chiyari-tenkajin-touhou-19-project,ALEKSEYR554
+156,日狭美,"hisami yomotsu,purple dress, elbow gloves, side slit, ",,covered eyes,<lora:hisami_yomotsu-05:1>,,,covered eyesをつけ外しするギミックあり,https://civitai.com/models/132284/hisami-yomotsu-touhou-project,ALEKSEYR554
+157,残無,,,,,,,,,
