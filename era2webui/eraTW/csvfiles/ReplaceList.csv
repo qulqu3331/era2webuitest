@@ -20,3 +20,12 @@
 正方形,512x512,解像度欄も置換対象とする。
 縦長,512x640,
 横長,640x512,
+,,
+,,
+和室,tatami,
+和寝室,"tatami,futon,sheets",
+土間の台所,"Dirt ground, on ground, antiqued kitchen, antiqued interior",土間にならない
+木造の小部屋,"simple wooden floor,simple wooden wall, wood grain,(simple background:0.8)",
+小さな畑,"vegetable garden,crops,plowed ground,wooden fence",
+木造家屋の庭,"outdoors,bare soil ground,open area surrounded by forest,(Exterior of old wooden house:0.8),tree",
+洋室,interior of western-style house,
