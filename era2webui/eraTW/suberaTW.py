@@ -73,7 +73,7 @@ class PromptMakerTW(PromptMaker):
         self.create_season_element()#季節 屋内外問わず
         self.get_kaizoudo() #解像度
         #屋内なら天気は無し
-        if self.flags.get("indoor"):
+        if not self.flags.get("indoor"):
             self.create_weather_element() #天候
         self.create_timezone_element() #時間帯
         
@@ -428,15 +428,15 @@ class PromptMakerTW(PromptMaker):
 
         # チェックするビット位置のリスト
         ejaculation_places = {
-                1: "(cum in pussy,internal ejaculation)",
-                2: "(cum in ass)",
-                4: "(cum on hand, ejaculation, projectile cum)",
-                8: "(cum in mouth)",
-                16: "(cum on breasts, ejaculation, projectile cum)",
-                32: "(cum on lower body, ejaculation, projectile cum)",
-                64: "(cum on feet, ejaculation, projectile cum)",
-                128: "(cum on stomach, ejaculation, projectile cum)",
-                256: "(ejaculation, projectile cum)"
+                2: "(cum in pussy,internal ejaculation)",
+                4: "(cum in ass)",
+                8: "(cum on hand, ejaculation, projectile cum)",
+                16: "(cum in mouth)",
+                32: "(cum on breasts, ejaculation, projectile cum)",
+                64: "(cum on lower body, ejaculation, projectile cum)",
+                128: "(cum on feet, ejaculation, projectile cum)",
+                256: "(cum on stomach, ejaculation, projectile cum)",
+                512: "(ejaculation, projectile cum)"
             }
         for bit, description in ejaculation_places.items():
             if self.cump & bit != 0:
