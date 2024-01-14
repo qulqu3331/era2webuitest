@@ -402,6 +402,21 @@ class PromptMaker():
         # milkはときどきグラスが出る
 
 
+    def create_event_element(self):
+        #特殊イベントでないときは"scene"の値でcsvを検索する
+        eve = "Event.csv"
+        self.flags["drawchara"] = bool(csvm.get_df(eve,"名称","汎用調教","キャラ描画"))
+        self.flags["drawface"] = bool(csvm.get_df(eve,"名称","汎用調教","顔描画"))
+        self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称","汎用調教","胸描画"))
+        self.flags["drawvagina"] = bool(csvm.get_df(eve,"名称","汎用調教","ヴァギナ描画"))
+        self.flags["drawanus"] = bool(csvm.get_df(eve,"名称","汎用調教","アナル描画"))
+
+        prompt = csvm.get_df(eve,"名称",self.scene,"プロンプト")
+        negative = csvm.get_df(eve,"名称",self.scene,"ネガティブ")
+
+        self.add_element("event", prompt, negative)
+
+        
     def create_chara_element(self):
         """
         このcreate_chara_elementメソッドは、キャラクターの描画に関するプロンプトを生成するために使うんだ。
@@ -542,16 +557,6 @@ class PromptMaker():
                 prompt = csvm.get_df(efc,"名称","妊娠後期","プロンプト")
                 self.add_element("effect", prompt, None)
 
-        
-        if self.sjh.get_save("時間停止") != 0:
-            prompt = csvm.get_df(efc,"名称","時間停止","プロンプト")
-            nega = csvm.get_df(efc,"名称","時間停止","ネガティブ")
-            self.add_element("effect", prompt, nega)
-
-        if self.sjh.get_save("睡眠") != 0:
-            prompt = csvm.get_df(efc,"名称","睡眠中","プロンプト")
-            nega = csvm.get_df(efc,"名称","睡眠中","ネガティブ")
-            self.add_element("effect", prompt, nega)
 
     def create_body_element(self):
         """

@@ -40,10 +40,10 @@ class PromptMakerTW(PromptMaker):
         self.initialize_class_variables()#判定に必要なセーブデータを一括取得 #0 or 1はBoolにするかも
         self.prompt =    {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
                           "chara":"","cloth":"","train": "","emotion": "","stain": "",\
-                          "潤滑": "","effect": "", "body": "","hair": ""}
+                          "潤滑": "","effect": "", "body": "","hair": "","event":""}
         self.negative =  {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
                           "chara":"","cloth":"", "train": "","emotion": "","stain": "",\
-                          "潤滑": "","effect": "","eyes": "", "body": "","hair": ""}
+                          "潤滑": "","effect": "","eyes": "", "body": "","hair": "","event":""}
         self.flags = {"drawchara":True,"drawface":True,"drawbreasts":False,\
             "drawvagina":False,"drawanus":False,"主人公以外が相手":False,"indoor":False}
         self.width = 0
@@ -76,6 +76,14 @@ class PromptMakerTW(PromptMaker):
         if self.flags.get("indoor"):
             self.create_weather_element() #天候
         self.create_timezone_element() #時間帯
+        
+        # 一般EVENT
+        if not self.scene in ["TRAIN","ターゲット切替","マスター移動"]:#例外シーンを作るたびにここに列挙しないといけない
+            self.create_event_element() #継承
+            self.create_equip_element()#一時装備
+            if self.flags["drawvagina"]:
+                self.create_juice_element()#汁
+                self.create_stain_element()#如何わしい汚れ
 
         if self.scene == "TRAIN":
             self.create_train_element()#行動
@@ -504,6 +512,16 @@ class PromptMakerTW(PromptMaker):
             elif (self.birth - self.days) <= 8:
                 prompt = csvm.get_df(efc,"名称","妊娠後期","プロンプト")
             self.add_element("effect", prompt, None)
+        
+        if self.sjh.get_save("時間停止") != 0:
+            prompt = csvm.get_df(efc,"名称","時間停止","プロンプト")
+            nega = csvm.get_df(efc,"名称","時間停止","ネガティブ")
+            self.add_element("effect", prompt, nega)
+
+        if self.sjh.get_save("睡眠") != 0:
+            prompt = csvm.get_df(efc,"名称","睡眠中","プロンプト")
+            nega = csvm.get_df(efc,"名称","睡眠中","ネガティブ")
+            self.add_element("effect", prompt, nega)
 
 
     def create_body_element(self):
