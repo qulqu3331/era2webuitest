@@ -635,8 +635,8 @@ class ExpressionTW(Expression):
 
         if (self.sjh.get_save("abl")["従順"] > 4) or (self.sjh.get_save("好感度") > 200):
             self.emolevel["退屈Lv"] -= 1
-        if self.emoflags["強い情動"]: # 余裕ないときには退屈な表情はしない
-            self.emolevel["退屈Lv"] = 0
+        # if self.emoflags["強い情動"]: # 余裕ないときには退屈な表情はしない
+        #     self.emolevel["退屈Lv"] = 0
 
     def prompt_debug_emo(self):
         for key, value in self.emopro.items():

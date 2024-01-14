@@ -48,7 +48,7 @@ class PromptMakerTW(PromptMaker):
             "drawvagina":False,"drawanus":False,"主人公以外が相手":False,"indoor":False}
         self.width = 0
         self.height = 0
-        self.initialize_class_variablesTW()#判定に必要なセーブデータを一括取得
+        #self.initialize_class_variablesTW()#判定に必要なセーブデータを一括取得
 
 
     def generate_prompt(self):
@@ -503,7 +503,7 @@ class PromptMakerTW(PromptMaker):
                 prompt = csvm.get_df(efc,"名称","妊娠中期","プロンプト")
             elif (self.birth - self.days) <= 8:
                 prompt = csvm.get_df(efc,"名称","妊娠後期","プロンプト")
-                self.add_element("effect", prompt, None)
+            self.add_element("effect", prompt, None)
 
 
     def create_body_element(self):
@@ -516,7 +516,7 @@ class PromptMakerTW(PromptMaker):
 
         このメソッドを使えば、キャラクターの体の特徴を効果的に表現できるぜ！
         """
-        tal = self.get_csvname("talent")
+        tal = "Talent.csv"
 
         # 乳サイズ
         if self.flags["drawbreasts"]:
@@ -561,7 +561,7 @@ class PromptMakerTW(PromptMaker):
         長髪、セミロング、ショートカット、ツインテールなど、さまざまな髪型を考慮に入れる。
         髪型はキャラクターの個性を表現するのに重要な要素だから、しっかりと反映させるんだ。
         """
-        tal = self.get_csvname("talent")
+        tal = "Talent.csv"
         talents = ["長髪","セミロング","ショートカット","ポニーテール","ツインテール",\
                    "サイドテール","縦ロール","ツインリング","三つ編み","短髪","おさげ髪",\
                    "ポンパドール","ポニーアップ","サイドダウン","お団子髪","ツーサイドアップ",\
@@ -585,14 +585,14 @@ class PromptMakerTW(PromptMaker):
         """
         # TRAINとその他のEVENTで読み取るcsvが異なる
         if self.scene == "TRAIN":
-            tra = self.get_csvname("train")
+            tra = "Train.csv"
             kaizoudo = csvm.get_df(tra,"コマンド名",self.com,"解像度")
         #これ用のプロンプトや解像度はあとでCSVにかく
         elif self.scene == "マスター移動" or self.scene == "ターゲット切替":
             return
 
         else:
-            eve = self.get_csvname("event")
+            eve = "Event.csv"
             kaizoudo = csvm.get_df(eve,"名称",self.scene,"解像度")
             self.width, self.height = get_width_and_height(kaizoudo)
 
