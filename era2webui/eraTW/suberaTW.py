@@ -48,8 +48,11 @@ class PromptMakerTW(PromptMaker):
             "drawvagina":False,"drawanus":False,"主人公以外が相手":False,"indoor":False}
         self.width = 0
         self.height = 0
-        #self.initialize_class_variablesTW()#判定に必要なセーブデータを一括取得
+        self.initialize_class_variablesTW()#判定に必要なセーブデータを一括取得
 
+    def initialize_class_variablesTW(self):
+        self.panty = self.sjh.get_save("lower_underwear") #str
+        self.uniquepanty = self.sjh.get_save("固有下着") #int (boole
 
     def generate_prompt(self):
         """
@@ -68,6 +71,7 @@ class PromptMakerTW(PromptMaker):
         このメソッドを使って、どんなシナリオにもバッチリ対応できる呪文を作れるぜ！
         """
         #呪文に含めるかの条件分岐はあとで考える
+        self.update()
         self.create_situation_element() #シチュエーション｢マスター移動｣｢ターゲット切替｣
         self.create_location_element() #場所
         self.create_season_element()#季節 屋内外問わず
@@ -95,6 +99,12 @@ class PromptMakerTW(PromptMaker):
                 self.create_juice_element()#汁
                 self.create_traineffect_element() #噴乳はここでない気がする
                 self.create_stain_element()#如何わしい汚れ
+            if self.com == "スカートをめくる":
+                self.create_panty_element()
+
+        if self.scene == "パンツをくすねる":
+            self.create_panty_element()
+
 
         #主人公しか居ない時はフラグをOFF 連れ出すときもOFFになる
         if self.charno == 0:
@@ -177,10 +187,11 @@ class PromptMakerTW(PromptMaker):
                 self.com = "ナイズリ"
 
         # 着衣時の胸愛撫はCHAKUMOMIのLoraを適用
-        # キャラLoraと相性よくないみたいでつらい
         if self.upwear != 0:
             if self.com == "胸愛撫":
-                self.com = "着衣胸愛撫"
+                self.com = "着衣胸愛撫"            
+            if self.com == "胸揉み":
+                self.com = "着衣胸揉み"
 
 
     def create_situation_element(self):
@@ -201,11 +212,11 @@ class PromptMakerTW(PromptMaker):
                     # targetがいないとき #この条件はTWではうまく動かない
                     self.add_element("situation", "(empty scene)", "(1girl:1.7)")
 
-        else:
-            self.add_element("situation", "1girl standing, detailed scenery in the background", None)
-            #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
-            self.flags["drawchara"] = True
-            self.flags["drawface"] = True
+            else:
+                self.add_element("situation", "1girl standing, detailed scenery in the background", None)
+                #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
+                self.flags["drawchara"] = True
+                self.flags["drawface"] = True
 
 
     def create_location_element(self):
@@ -422,7 +433,7 @@ class PromptMakerTW(PromptMaker):
         ビット演算ってのは、数字をビット単位で見て、特定のビットが立っているかどうかをチェックする方法だ。
         たとえば、'射精箇所'がビットで示されていて、各ビットが特定の射精箇所を表しているんだ。
         """
-        efc = "effect"
+        efc = "Effect.csv"
         #;TFLAG:1 射精箇所 (ビット0=コンドーム 1=膣内 2=アナル 3=手淫 4=口淫 5=パイズリ 6=素股 7=足コキ 8=体表 9=アナル奉仕
         #なにこれ? → 20=手淫フェラ 21=パイズリフェラ22=シックスナイン 24=子宮口 25=疑似 26=授乳プレイ
 
@@ -566,8 +577,7 @@ class PromptMakerTW(PromptMaker):
         and_list = set(self.talent) & set(chk_list)
         # リストに一致しないとき即ち普通乳のとき
         if (len(and_list)) == 0:
-            # 胸愛撫、ぱふぱふ、後背位胸愛撫
-            if self.comno in ("6","606","702"):
+            if self.com in ("胸愛撫","胸揉み","パイズリ","着衣胸愛撫","着衣胸揉み"):
                 self.add_element("body", "small breasts", None)
 
 
@@ -612,7 +622,7 @@ class PromptMakerTW(PromptMaker):
         else:
             eve = "Event.csv"
             kaizoudo = csvm.get_df(eve,"名称",self.scene,"解像度")
-            self.width, self.height = get_width_and_height(kaizoudo)
+        self.width, self.height = get_width_and_height(kaizoudo)
 
 
     # 服装
@@ -706,6 +716,19 @@ class PromptMakerTW(PromptMaker):
             or (self.sjh.get_save("コマンド") == "1"):
             if self.sjh.get_save("下半身下着2") != 0:
                 self.add_element("cloth", "(pantie aside)", None)
+
+    # パンツの柄描画
+    def create_panty_element(self):
+        if not self.uniquepanty:
+            #ふつうのパンツ（固有パンツ以外）
+            prompt = csvm.get_df("Cloth.csv","衣類名", self.panty,"プロンプト")
+            nega = csvm.get_df("Cloth.csv","衣類名", self.panty,"ネガティブ")
+            self.add_element("cloth", prompt, nega)
+        else:
+            #固有パンツの場合
+            prompt = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着プロンプト")
+            nega = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着ネガティブ")
+            self.add_element("cloth", prompt, nega)
 
 
     def prompt_debug(self):

@@ -30,12 +30,12 @@ IF ARGS == "TACHIE"
 	IF FLAG:8800 == 1
 		SCENE = ターゲット切替
 ;		PRINTFORML %CALLNAME:target%を選択した
-		WAIT
+;		WAIT
 		FLAG:8800 = 0
 	ELSEIF FLAG:8800 == 2
 		SCENE = マスター移動
 ;		PRINTFORML 移動直後です
-		WAIT
+;		WAIT
 		FLAG:8800 = 0
 			ELSEIF FLAG:8800 == 3
 		SCENE = 真名看破
@@ -48,8 +48,8 @@ IF ARGS == "TACHIE"
 	ENDIF
 ENDIF
 
-;引数TRAINで移動コマンドのとき、立ち絵と重複しないようにここで終了する
-IF (ARGS == "TRAIN") && (SELECTCOM == 400)
+;引数TRAINで移動コマンドのとき、立ち絵と重複しないようにここで終了する(400移動、405出掛ける）
+IF (ARGS == "TRAIN") && (SELECTCOM == 400)||(SELECTCOM == 405)
 	RETURN 0
 ENDIF
 
@@ -248,14 +248,14 @@ LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
 	LOCALS = %LOCALS%\},
 
 ;lower_underwear_NAME
-LOCALS = %LOCALS%"lower_underwear":\{
-LOCALS:1 = %PANTSNAME(EQUIP:NO:下半身下着２, NO)%
-LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
-	; 余分なカンマを削除
-	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
-	LOCALS = %LOCALS%\},
+LOCALS = %LOCALS%"lower_underwear":"%PANTSNAME(EQUIP:NO:下半身下着２, NO)%",
 
-
+;固有下着の判定
+IF EQUIP:NO:下半身下着２ == 18
+	LOCALS = %LOCALS%"固有下着":1,
+ELSE
+	LOCALS = %LOCALS%"固有下着":0,
+ENDIF
 
 
 ;TEQUIP------------------------------------------------------------------
@@ -298,7 +298,7 @@ LOCALS = %LOCALS%"前回コマンド":{PREVCOM},
 LOCALS = %LOCALS%"PLAYER":{PLAYER},
 LOCALS = %LOCALS%"時間":{TIME},
 LOCALS = %LOCALS%"日付":{DAY},
-
+LOCALS = %LOCALS%"月":"%GET_MONTH()%",
 LOCALS:1 = %GET_WEATHER()%
 LOCALS = %LOCALS%"天気":"%LOCALS:1%",
 
