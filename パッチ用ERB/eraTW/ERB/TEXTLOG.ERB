@@ -48,8 +48,8 @@ IF ARGS == "TACHIE"
 	ENDIF
 ENDIF
 
-;引数TRAINで移動コマンドのとき、立ち絵と重複しないようにここで終了する(400移動、405出掛ける）
-IF (ARGS == "TRAIN") && (SELECTCOM == 400)||(SELECTCOM == 405)
+;引数TRAINで移動コマンドのとき、立ち絵と重複しないようにここで終了する(400移動、405出掛ける、604散策する）
+IF (ARGS == "TRAIN") && ((SELECTCOM == 400)||(SELECTCOM == 405)||(SELECTCOM == 604))
 	RETURN 0
 ENDIF
 
