@@ -402,7 +402,7 @@ class PromptMaker():
         # milkはときどきグラスが出る
 
 
-    def create_evaent_element(self):
+    def create_event_element(self):
         #特殊イベントでないときは"scene"の値でcsvを検索する
         eve = "Event.csv"
         self.flags["drawchara"] = bool(csvm.get_df(eve,"名称",self.scene,"キャラ描画"))
