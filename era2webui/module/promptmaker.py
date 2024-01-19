@@ -402,21 +402,22 @@ class PromptMaker():
         # milkはときどきグラスが出る
 
 
-    def create_event_element(self):
+    def create_evaent_element(self):
         #特殊イベントでないときは"scene"の値でcsvを検索する
         eve = "Event.csv"
-        self.flags["drawchara"] = bool(csvm.get_df(eve,"名称","汎用調教","キャラ描画"))
-        self.flags["drawface"] = bool(csvm.get_df(eve,"名称","汎用調教","顔描画"))
-        self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称","汎用調教","胸描画"))
-        self.flags["drawvagina"] = bool(csvm.get_df(eve,"名称","汎用調教","ヴァギナ描画"))
-        self.flags["drawanus"] = bool(csvm.get_df(eve,"名称","汎用調教","アナル描画"))
+        self.flags["drawchara"] = bool(csvm.get_df(eve,"名称",self.scene,"キャラ描画"))
+        self.flags["drawface"] = bool(csvm.get_df(eve,"名称",self.scene,"顔描画"))
+        self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称",self.scene,"胸描画"))
+        self.flags["drawvagina"] = bool(csvm.get_df(eve,"名称",self.scene,"ヴァギナ描画"))
+        self.flags["drawanus"] = bool(csvm.get_df(eve,"名称",self.scene,"アナル描画"))
+        self.flags["drawlocation"] = bool(csvm.get_df(eve,"名称",self.scene,"背景描画"))
 
         prompt = csvm.get_df(eve,"名称",self.scene,"プロンプト")
         negative = csvm.get_df(eve,"名称",self.scene,"ネガティブ")
 
         self.add_element("event", prompt, negative)
 
-        
+
     def create_chara_element(self):
         """
         このcreate_chara_elementメソッドは、キャラクターの描画に関するプロンプトを生成するために使うんだ。

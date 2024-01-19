@@ -90,7 +90,7 @@ class PromptMakerYM(PromptMaker):
         if not self.scene in ["BEFORE","TRAIN","AFTER"]:
             self.create_event_element() #独自メソッド
 
-        if self.scene == "BEFFORE":
+        if self.scene == "BEFORE":
             self.create_train_beffore_element() #独自メソッド
 
         if self.scene == "TRAIN":
@@ -224,8 +224,11 @@ class PromptMakerYM(PromptMaker):
         tra = "Train.csv"
         eve = "Event.csv"
 
-        #0 以上だと成功
-        if self.succ < 0:
+        # self.succ 成功で1、失敗で0だが
+        # 「成否判定なしの成功」でも0をとることがある
+        # 「成否判定あり」かつ フラグが失敗　のときのみ拒否プロンプトを参照する
+        # YMの場合、「成否判定の有無」を取得するすべが見つかっていないので、Train.csvに手動で記述することにした
+        if bool(csvm.get_df(tra,"コマンド番号",self.comNo,"成否判定の有無")) and (self.succ == 0):# このやりかたでboolに変換すると空欄=>文字列ERROR=>TRUEになるのがちょっと厄介
             deny = csvm.get_df(tra,"コマンド番号",self.comNo,"拒否プロンプト")
             if deny != "ERROR":
                 # 拒否プロンプトがERRORでない場合、拒否プロンプトを出力
@@ -272,14 +275,14 @@ class PromptMakerYM(PromptMaker):
         eve = "Event.csv"
         efc = "Effect.csv"
         if "恋慕" in self.talent and self.hp >= 500:
-            self.Scene = "AFTERピロートーク"
+            self.scene = "AFTERピロートーク"
         else:
             # 軽い調教なら座る
             if self.hp >= 1300 or self.hp >= 500:
-                self.Scene = "AFTER"
+                self.scene = "AFTER"
             else:
                 #疲れたら寝る
-                self.Scene = "AFTER疲労"
+                self.scene = "AFTER疲労"
                 #体力がなくなるまで調教した
                 if self.hp < 550 and self.hp < 100:
                     prompt = csvm.get_df(efc,"名称","AFTER用事後Lora","プロンプト")
@@ -293,8 +296,8 @@ class PromptMakerYM(PromptMaker):
                     #     prompt += "(milk and blood from pussy:1.4)"
                     ## いい表現が見つかったら
 
-        prompt = csvm.get_df(eve,"名称",self.Scene,"プロンプト")
-        negative = csvm.get_df(eve,"名称",self.Scene,"ネガティブ")
+        prompt = csvm.get_df(eve,"名称",self.scene,"プロンプト")
+        negative = csvm.get_df(eve,"名称",self.scene,"ネガティブ")
         self.add_element("train_after", prompt, negative)
 
         self.flags["drawchara"] = bool(csvm.get_df(eve,"名称","汎用調教","キャラ描画"))
@@ -351,17 +354,17 @@ class PromptMakerYM(PromptMaker):
 
     def create_event_element(self):
         #独自メソッド
-        #------------ここまでAFTER-ここから一般イベント---------------------
         #特殊イベントでないときは"scene"の値でcsvを検索する
         eve = "Event.csv"
-        self.flags["drawchara"] = bool(csvm.get_df(eve,"名称","汎用調教","キャラ描画"))
-        self.flags["drawface"] = bool(csvm.get_df(eve,"名称","汎用調教","顔描画"))
-        self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称","汎用調教","胸描画"))
-        self.flags["drawvagina"] = bool(csvm.get_df(eve,"名称","汎用調教","ヴァギナ描画"))
-        self.flags["drawanus"] = bool(csvm.get_df(eve,"名称","汎用調教","アナル描画"))
+        self.flags["drawchara"] = bool(csvm.get_df(eve,"名称",self.scene,"キャラ描画"))
+        self.flags["drawface"] = bool(csvm.get_df(eve,"名称",self.scene,"顔描画"))
+        self.flags["drawbreasts"] = bool(csvm.get_df(eve,"名称",self.scene,"胸描画"))
+        self.flags["drawvagina"] = bool(csvm.get_df(eve,"名称",self.scene,"ヴァギナ描画"))
+        self.flags["drawanus"] = bool(csvm.get_df(eve,"名称",self.scene,"アナル描画"))
+        self.flags["drawlocation"] = bool(csvm.get_df(eve,"名称",self.scene,"背景描画"))
 
-        prompt = csvm.get_df(eve,"名称",self.Scene,"プロンプト")
-        negative = csvm.get_df(eve,"名称",self.Scene,"ネガティブ")
+        prompt = csvm.get_df(eve,"名称",self.scene,"プロンプト")
+        negative = csvm.get_df(eve,"名称",self.scene,"ネガティブ")
 
         self.add_element("event", prompt, negative)
 
