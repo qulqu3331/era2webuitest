@@ -19,6 +19,7 @@
 @OUTPUT_TXT(ARGS,ARG = 0)
 #DIMS SCENE
 #DIM LOOP_CHR
+#DIM 場所ID
 
 ;基本的には第1引数だけ指定して呼び出す。
 ;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
@@ -289,6 +290,29 @@ LOCALS = %LOCALS%"success":{TFLAG:193},
 ;キャラ名称-------------------------------------------------------------
 LOCALS = %LOCALS%"target":"%CALLNAME:(TARGET)%",
 
+;------------------------------------------------------------------------
+;作った料理
+LOCALS = %LOCALS%"作った料理":"%DISH_NAME%",
+
+;現在位置----------------------------------------------------------------
+場所ID = CFLAG:MASTER:現在位置
+
+;MAPIDは場所ID/100で算出できる
+;拠点MAPの場合
+IF (場所ID/100) == MAIN_MAP
+	LOCAL = 8000
+	LOCALS = %LOCALS%"現在位置Str":"{LOCAL+場所ID}",
+;拠点MAP以外の場合
+ELSE
+	LOCAL = 6000
+	LOCALS = %LOCALS%"現在位置Str":"{LOCAL+(場所ID/10)}",
+ENDIF
+
+;場所ID、地名には重複があるのでたぶん使わない
+LOCALS = %LOCALS%"場所ID":"{場所ID}",
+LOCALS = %LOCALS%"現在位置":"%NAME_FROM_PLACE(場所ID)%",
+LOCALS = %LOCALS%"MAPID":"{場所ID/100}",
+
 
 ;ここから単項目で数値型---------------------------------------------------
 LOCALS = %LOCALS%"キャラ固有番号":{NO},
@@ -327,7 +351,7 @@ LOCALS = %LOCALS%"宴会参加":{CFLAG:20},
 LOCALS = %LOCALS%"浮気バレ":{CFLAG:40},
 LOCALS = %LOCALS%"オナバレ":{CFLAG:41},
 LOCALS = %LOCALS%"夜這い":{CFLAG:42},
-LOCALS = %LOCALS%"現在位置":"%NAME_FROM_PLACE(CFLAG:ARG:現在位置)%",
+
 LOCALS = %LOCALS%"睡眠":{CFLAG:313},
 
 LOCALS = %LOCALS%"うふふ":{CFLAG:317},

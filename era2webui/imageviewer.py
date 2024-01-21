@@ -34,9 +34,20 @@ class FileMonitor(FileSystemEventHandler):
 
         targetwindow = self.subwindows[self.counter]
         targetcanvas = self.canvases[self.counter]
+
         self.counter += 1
         if self.counter == self.max_windows_number:
             self.counter = 0
+
+        #ウィンドウ配置をローテーション
+        if self.max_windows_number > 1:
+            tempx = self.subwindows[self.max_windows_number-1].winfo_x()
+            tempy = self.subwindows[self.max_windows_number-1].winfo_y()
+            for i in range(0, self.max_windows_number-1):#この場合iの最大値はself.max_windows_number-2になる。max2枚ならi=0の1回だけ。
+                x=self.subwindows[self.max_windows_number-2-i].winfo_x()
+                y=self.subwindows[self.max_windows_number-2-i].winfo_y()
+                self.subwindows[self.max_windows_number-1-i].geometry(f"+{x}+{y}")
+            self.subwindows[0].geometry(f"+{tempx}+{tempy}")
 
         image = Image.open(image_path)
         size = (round(image.width * self.scaling), round(image.height * self.scaling))
