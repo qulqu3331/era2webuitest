@@ -12,6 +12,7 @@ from module.csv_manager import CSVMFactory
 from module.sub import get_width_and_height
 from module.promptmaker import PromptMaker
 from eraTW.emoTW import ExpressionTW
+import random
 csvm = CSVMFactory.get_instance()
 class PromptMakerTW(PromptMaker):
     """
@@ -40,10 +41,10 @@ class PromptMakerTW(PromptMaker):
         self.initialize_class_variables()#判定に必要なセーブデータを一括取得 #0 or 1はBoolにするかも
         self.prompt =    {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
                           "chara":"","cloth":"","train": "","emotion": "","stain": "",\
-                          "潤滑": "","effect": "", "body": "","hair": "","event":""}
+                          "潤滑": "","effect": "", "body": "","hair": "","event":"","item":""}
         self.negative =  {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
                           "chara":"","cloth":"", "train": "","emotion": "","stain": "",\
-                          "潤滑": "","effect": "","eyes": "", "body": "","hair": "","event":""}
+                          "潤滑": "","effect": "","eyes": "", "body": "","hair": "","event":"","item":""}
         self.flags = {"drawchara":True,"drawface":True,"drawbreasts":False,\
             "drawvagina":False,"drawanus":False,"drawlocation":False,"主人公以外が相手":False,"indoor":False}
         self.width = 0
@@ -101,10 +102,19 @@ class PromptMakerTW(PromptMaker):
                 self.create_juice_element()#汁
                 self.create_traineffect_element() #噴乳はここでない気がする
                 self.create_stain_element()#如何わしい汚れ
+
             if self.com == "スカートをめくる":
                 self.create_panty_element()
             if self.com == "料理を作る":
-                self.create_dish_element()
+                self.create_item_element("料理を作る")
+                print(self.succ)
+            if self.com in ["食事を取る","食事をふるまう"]:
+                self.create_item_element("食事を取る")
+                print(self.succ)
+            if self.com == "採集する":
+                self.create_item_element("採集する")
+                print(self.succ)
+            
 
         if self.scene == "パンツをくすねる":
             self.create_panty_element()
@@ -276,6 +286,11 @@ class PromptMakerTW(PromptMaker):
                 prompt,nega = "",""
         self.add_element("weather", prompt, nega)
 
+        #雨が降ってて塗れっぱなしは妙だったので
+        if self.weath in ["雨","大雨","豪雨"]:
+            if (self.charno != 0) and (self.flags["drawchara"] == True):
+                prompt = ",holding an umbrella"
+                self.add_element("weather", prompt, None)
 
     def create_timezone_element(self):
         """
@@ -750,11 +765,50 @@ class PromptMakerTW(PromptMaker):
             nega = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着ネガティブ")
             self.add_element("cloth", prompt, nega)
 
-    def create_dish_element(self):
-        prompt = csvm.get_df("Dish.csv","名称", self.dish,"プロンプト")
-        nega = csvm.get_df("Dish.csv","名称", self.dish,"ネガティブ")
-        #暫定でtrain
-        self.add_element("train", prompt, nega)
+    def create_item_element(self,group):
+        if group == "料理を作る":
+            prompt = csvm.get_df("Dish.csv","名称", self.dish,"プロンプト")
+            nega = csvm.get_df("Dish.csv","名称", self.dish,"ネガティブ")
+            self.add_element("item", prompt, nega)
+        if group == "食事を取る":
+            prompt = csvm.get_df("Dish.csv","名称", self.dish,"プロンプト")
+            nega = csvm.get_df("Dish.csv","名称", self.dish,"ネガティブ")
+            self.add_element("item", prompt, nega)
+
+        if group == "採集する":
+            if self.succ > 0:#失敗ならスキップ
+                #同伴キャラの有無で分岐
+                #採取コマンドではTFLAG:193の数値で入手アイテム番号がわかる。成否判定と同じ変数を使っている。
+                getitem = self.succ
+                if self.charno == 0:
+                    prompt = csvm.get_df("Item.csv","ID", getitem,"プロンプト")
+                    prompt += " on the ground,close-up,simplified illustration,clip art"
+                    nega = "hand,finger"
+                else:
+                    #アイテム入手　はしゃぐ女の子のランダム3パターン
+                    selector = random.randint(1,3)
+                    if selector == 1:
+                        prompt = "(1girl holding "
+                        prompt += csvm.get_df("Item.csv","ID", getitem,"プロンプト")
+                        prompt += " out to viewer:1.4),"
+                    elif selector == 2:
+                        prompt = "(squatting:0.8),(1girl found "
+                        prompt += csvm.get_df("Item.csv","ID", getitem,"プロンプト")
+                        prompt += " on the ground:1.4),"
+                    else:
+                        prompt = "(leaning forward :0.8),(1girl picked up "
+                        prompt += csvm.get_df("Item.csv","ID", getitem,"プロンプト")
+                        prompt += " from the ground:1.4),"
+
+                    prompt += "innocent smile,open mouth,"#表情筋が未実装なので、かわいいリアクションをつけておく
+                    nega = "(eating:1.3)"
+
+                    if getitem == 636:#ふん
+                        prompt = ""
+
+
+                self.add_element("item", prompt, nega)
+
 
 
     def prompt_debug(self):
