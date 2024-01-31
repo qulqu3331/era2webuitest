@@ -40,10 +40,10 @@ class PromptMakerTW(PromptMaker):
         self.sjh = sjh
         self.initialize_class_variables()#判定に必要なセーブデータを一括取得 #0 or 1はBoolにするかも
         self.prompt =    {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
-                          "chara":"","cloth":"","train": "","emotion": "","stain": "",\
+                          "chara":"","cloth":"","train": "","emotion": "","stain": "","activity":"",\
                           "潤滑": "","effect": "", "body": "","hair": "","event":"","item":""}
         self.negative =  {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
-                          "chara":"","cloth":"", "train": "","emotion": "","stain": "",\
+                          "chara":"","cloth":"", "train": "","emotion": "","stain": "","activity":"",\
                           "潤滑": "","effect": "","eyes": "", "body": "","hair": "","event":"","item":""}
         self.flags = {"drawchara":True,"drawface":True,"drawbreasts":False,\
             "drawvagina":False,"drawanus":False,"drawlocation":False,"主人公以外が相手":False,"indoor":False}
@@ -55,7 +55,12 @@ class PromptMakerTW(PromptMaker):
         self.loca   = self.sjh.get_save("現在位置Str")#str
         self.panty = self.sjh.get_save("lower_underwear") #str
         self.uniquepanty = self.sjh.get_save("固有下着") #int (boole
-        self.dish = self.sjh.get_save("作った料理") #str
+        self.dish = self.sjh.get_save("料理名") #str
+        self.activityduration = self.sjh.get_save("自由行動") #int
+        self.activitytype = self.sjh.get_save("自由行動内容") #int
+        self.working = self.sjh.get_save("仕事中") #int (boole
+        self.jobname = self.sjh.get_save("仕事名") #str
+        self.jobno = self.sjh.get_save("職種") #str
 
     def generate_prompt(self):
         """
@@ -105,17 +110,19 @@ class PromptMakerTW(PromptMaker):
 
             if self.com == "スカートをめくる":
                 self.create_panty_element()
+
             if self.com == "料理を作る":
                 self.create_item_element("料理を作る")
-                print(self.succ)
             if self.com in ["食事を取る","食事をふるまう"]:
                 self.create_item_element("食事を取る")
-                print(self.succ)
             if self.com == "採集する":
                 self.create_item_element("採集する")
-                print(self.succ)
-            
 
+            # 自由行動や仕事の描写　ここだとTrainのプロンプトと2重に描写することになる。問題があったら考える。
+            if self.com in ["仕事を手伝う","会話","お茶を淹れる","時間停止"]:
+                self.create_activity_element()
+
+            
         if self.scene == "パンツをくすねる":
             self.create_panty_element()
 
@@ -216,6 +223,17 @@ class PromptMakerTW(PromptMaker):
             if self.com == "胸揉み":
                 self.com = "着衣胸揉み"
 
+        # 一人用コマンド　Targetがいるときは別のプロンプトを参照
+        if self.charno != 0:
+            if self.com in ["食事を取る","料理を作る","釣りをする","採集する"]:
+                self.com = self.com + "_一緒に"
+
+        #「自由行動に付き合う」の内容による分岐
+        if self.com == "自由行動に付き合う":
+            self.com = "自由行動に付き合う_"+ str(self.activitytype)
+
+
+
 
     def create_situation_element(self):
         """
@@ -235,12 +253,15 @@ class PromptMakerTW(PromptMaker):
             if self.charno == 0:
                 # targetがいないとき #この条件はTWではうまく動かない
                 self.add_element("situation", "(empty scene)", "(1girl:1.7)")
-
             else:
-                self.add_element("situation", "1girl standing, detailed scenery in the background", None)
-                #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
-                self.flags["drawchara"] = True
-                self.flags["drawface"] = True
+                # targetがいるとき 自由行動や仕事中の描写
+                self.create_activity_element()
+                #何もしてなければ通常の立ち絵
+                if self.prompt["activity"] == "":
+                    self.add_element("situation", "1girl standing, detailed scenery in the background", None)
+                    #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
+                    self.flags["drawchara"] = True
+                    self.flags["drawface"] = True
 
 
     def create_location_element(self):
@@ -765,6 +786,45 @@ class PromptMakerTW(PromptMaker):
             nega = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着ネガティブ")
             self.add_element("cloth", prompt, nega)
 
+
+    #自由行動や仕事 立ち絵表示と、会話などの一部コマンドでも呼ぶ
+    def create_activity_element(self):
+        if self.activityduration > 0:
+            #自由行動中
+            #Trainに書く。自由行動_0～自由行動_18
+            activity = "自由行動_" + str(self.activitytype)
+            tra = "Train.csv"
+            prompt = csvm.get_df(tra,"コマンド名",activity,"プロンプト")
+            negative = csvm.get_df(tra,"コマンド名",activity,"ネガティブ")
+            self.flags["drawchara"] =  bool(csvm.get_df(tra,"コマンド名",activity,"キャラ描画"))
+            self.flags["drawface"] =  bool(csvm.get_df(tra,"コマンド名",activity,"顔描画"))
+            self.flags["drawbreasts"] =  bool(csvm.get_df(tra,"コマンド名",activity,"胸描画"))
+            self.flags["drawvagina"] = bool(csvm.get_df(tra,"コマンド名",activity,"ヴァギナ描画"))
+            self.flags["drawanus"] = bool(csvm.get_df(tra,"コマンド名",activity,"アナル描画"))
+            self.flags["drawlocation"] = bool(csvm.get_df(tra,"コマンド名",activity,"背景描画"))
+            self.add_element("activity", prompt, negative)
+        elif self.working == 1:
+            #仕事中
+            #Trainに書く。
+            if self.jobname == "仕事":
+                #固有仕事名がないときは職種の数値で参照
+                job = "仕事_" + str(self.jobno)
+            else:
+                #固有仕事名
+                job = "仕事_" + str(self.jobname)
+            tra = "Train.csv"
+            prompt = csvm.get_df(tra,"コマンド名",job,"プロンプト")
+            negative = csvm.get_df(tra,"コマンド名",job,"ネガティブ")
+            self.flags["drawchara"] =  bool(csvm.get_df(tra,"コマンド名",job,"キャラ描画"))
+            self.flags["drawface"] =  bool(csvm.get_df(tra,"コマンド名",job,"顔描画"))
+            self.flags["drawbreasts"] =  bool(csvm.get_df(tra,"コマンド名",job,"胸描画"))
+            self.flags["drawvagina"] = bool(csvm.get_df(tra,"コマンド名",job,"ヴァギナ描画"))
+            self.flags["drawanus"] = bool(csvm.get_df(tra,"コマンド名",job,"アナル描画"))
+            self.flags["drawlocation"] = bool(csvm.get_df(tra,"コマンド名",job,"背景描画"))
+            self.add_element("activity", prompt, negative)
+
+
+    #入手アイテムや作成した料理
     def create_item_element(self,group):
         if group == "料理を作る":
             prompt = csvm.get_df("Dish.csv","名称", self.dish,"プロンプト")

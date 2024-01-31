@@ -1,739 +1,872 @@
-e2wNo,バリアント,値,,コマンド名,プロンプト,ネガティブ,解像度,キャラ描画,顔描画,胸描画,ヴァギナ描画,アナル描画,拒否プロンプト,拒否ネガティブ,備考,系統
-1,,0,,愛撫,"(((kiss pov))),blash,{|open mouth,tongue},half closed eyes,((close up lips)),saliva",,,,,,,,,,povのfingeringが出せない。プロンプト欄が空の場合、上半身だけ映す汎用調教になる(event.csvで記述),愛撫系コマンド
-2,,1,,クンニ,"((attacking,girl is throwing a punch at me)),((clenched fist)),pov,upper body","(penis),(self fingering:1.5),(musterbation:1.5),(hand on pussy:1.5)",,1,1,1,1,1,,,無理,愛撫系コマンド
-3,,2,,アナル愛撫,"(1girl and 1boy),faceless male,1girl is straddling on naked man lying,(pov stomach),((full of bubbles,foamy)),(((soap,foamy))),(((soap,foamy)))",(penis),,1,1,1,1,1,,,,愛撫系コマンド
-4,,3,,胸愛撫,"(1girl and 1boy),faceless male,1girl is straddling on naked man lying,(pov stomach),((full of bubbles,foamy)),(((soap,foamy))),(((soap,foamy)))","male's face,female masturbation,self grabbing",,1,1,1,0,0,,,,愛撫系コマンド
-5,,4,,指挿入れ,"(1girl and 1boy),faceless male,1girl is straddling on naked man lying,(pov stomach),((full of bubbles,foamy)),(((soap,foamy))),(((soap,foamy)))",,,1,1,1,0,0,,,,愛撫系コマンド
-6,,5,,フェラする,"(1girl and 1boy),faceless male,1girl is straddling on naked man lying,(pov stomach),((full of bubbles,foamy)),(((soap,foamy))),(((soap,foamy)))",,,1,1,1,0,0,,,,愛撫系コマンド
-7,,6,,キスする,"(FISH-EYE composition:1.3),nude,upper body ,from above,(Recorded girl:1.5),(viewfinder with crosshair and overlay interface ,overlay frame,battery icon,REC text and red circle:1.2),1girl in viewfinder looking at viewer","(penis,pov crotch,navel:1.4)",%正方形%,1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,男のPOV下腹部が出たがる,愛撫系コマンド
-8,,7,,自慰,"(FISH-EYE composition:1.3),nude,upper body ,from above,(Recorded girl:1.5),(viewfinder with crosshair and overlay interface ,overlay frame,battery icon,REC text and red circle:1.2),1girl in viewfinder looking at viewer",,,1,1,1,1,1,%汎用拒否%,%汎用拒否ネガ%,,愛撫系コマンド
-9,,9,,何もしない,"(FOOT JOB),1girl,1boy, penis,(FOOTJOB_POSITIONV2:0.5)",,,1,1,1,0,0,,,座っているか寝ているか気力体力で分岐したい,愛撫系コマンド
-10,,10,,ローター,"(Girl gets slapped),upper body","(penis),open pussy",,1,1,1,0,0,,,実際insert率は低め,基本道具使用コマンド
-11,,11,,電気按摩,"(standing sex :1.2),solo focus,(face), (Lower abdomen:1.3),nsfw,(vaginal sex,missionary:1.2),dutch angle,pusy,thigh,",(penis),,1,1,1,0,0,,,下半身はすぐ挿入したがるので写らないように誤魔化す,基本道具使用コマンド
-12,,12,,バイブ,"(standing sex :1.2),vaginal sex, ass,from behind,doggystyle,penis in pussy,breasts, nsfw, hetero, navel, nipples, penis, pussy,  sex","(penis),open pussy",,1,1,1,1,1,,,,基本道具使用コマンド
-13,,13,,アナルバイブ,"<lora:analBeads_v10:0.7:1:lbw=0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0>1girl all fours,(anarubizu:1.4), (sex toy), looking back, uncensored, no panties, from behind",,,1,1,1,1,1,,,,基本道具使用コマンド
-14,,14,,クリキャップ,"<lora:analBeads_v10:0.7:1:lbw=0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0>1girl all fours,(anarubizu:1.4), (sex toy), looking back, uncensored, no panties, from behind",,,1,1,1,0,0,,,,基本道具使用コマンド
-15,,15,,ニプルキャップ,"<lora:analBeads_v10:0.7:1:lbw=0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0>1girl all fours,(anarubizu:1.4), (sex toy), looking back, uncensored, no panties, from behind",,,1,1,1,0,0,,,,基本道具使用コマンド
-16,,16,,オナホール,"<lora:doubledick_v10:1>,A WOMAN HOLDING TWO DICKS,2MEN,SUCKING DICK,SUCKING COCK,CUM",,,1,1,1,0,0,,,,基本道具使用コマンド
-17,,17,,電極オナホール,"<lora:fuckedSillyFromBehind_v10:0.8>,(fucked silly, sex from behind, 1boy)",,,1,1,1,0,0,,,,基本道具使用コマンド
-18,,20,,正常位,"<lora:fuckedSillyFromBehind_v10:0.8>,(fucked silly, sex from behind, 1boy)",,%縦長%,1,1,1,1,0,,,,セックス系コマンド
-19,,21,,後背位,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,,1,1,1,1,1,,,,セックス系コマンド
-20,,22,,対面座位,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,%縦長%,1,1,1,1,0,,,暫定で騎乗位,セックス系コマンド
-21,,23,,背面座位,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,,1,1,1,1,1,,,暫定で後背位,セックス系コマンド
-22,,24,,騎乗位,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,,1,1,1,1,0,%汎用拒否%,%汎用拒否ネガ%,,セックス系コマンド
-23,,25,,逆レイプ,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,,1,1,1,0,0,,,,セックス系コマンド
-24,,26,,助手を犯す,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,,1,1,1,0,0,,,,セックス系コマンド
-25,,27,,対面立位,"<lora:missionaryPOVAnal_v10:1:1:lbw=0.6:0,0,0,0,0,0,1,1,0.6,1,0,0,0,0,0,0,0>,missionary POV Anal,lying,pov,nsfw ,anal sex,navel, camel Toe,pussy,missionary anal",,%縦長%,1,1,1,1,0,,,とりあえず正常位にstanding sexを追加,セックス系コマンド
-26,,28,,背面立位,"<lora:povWaistGrabConcept_v09:0.3:1:lbw=CT>,navel,pussy,(missionGrab,vaginal sex,missionaly,pov)",,,1,1,1,1,1,,,とりえあえず後背位にstanding sexを追加,セックス系コマンド
-27,,30,,正常位アナル,"<lora:povWaistGrabConcept_v09:0.3:1:lbw=CT>,navel,pussy,(missionGrab,vaginal sex,missionaly,pov)",,,1,1,1,1,1,,,アナルはLoraでないと難しい,アナルセックス系コマンド
-28,,31,,後背位アナル,"1boy and 1girl,naked girl kneels at the man's feet and kisses his feet,all fours,tongue,(licking someone's foot,Five toes:1.4)",,%縦長%,1,1,1,1,1,,,,アナルセックス系コマンド
-29,,32,,対面座位アナル,"1girl all fours, looking back, no panties, from behind",,,1,1,1,1,1,,,暫定で正常位,アナルセックス系コマンド
-30,,33,,背面座位アナル,"1girl all fours, looking back, no panties, from behind",,,1,1,1,1,1,,,暫定で後背位,アナルセックス系コマンド
-31,,34,,騎乗位アナル,"1girl all fours, looking back, no panties, from behind",,,1,1,1,1,0,%汎用拒否%,%汎用拒否ネガ%,暫定で正常位,アナルセックス系コマンド
-32,,35,,逆アナルレイプ,1girl drinking alcohol,,,1,1,1,0,0,,,,アナルセックス系コマンド
-33,,36,,助手のＡを犯す,"1girl, bust shot,arms behind back,(collarbone,breasts,nipples)",,,1,1,1,0,0,,,,アナルセックス系コマンド
-34,,37,,対面立位アナル,"1girl, bust shot,arms behind back,(collarbone,breasts,nipples)",,,1,1,1,1,1,,,,アナルセックス系コマンド
-35,,38,,背面立位アナル,"1girl,(gesturing no),(~:-\(:1.2),frown,(bust shot:1.1),(slit almond eyes:1.2)",,,1,1,1,1,1,,,,アナルセックス系コマンド
-36,,40,,手淫,"1girl,(gesturing no),(~:-\(:1.2),frown,(bust shot:1.1),(slit almond eyes:1.2)",multiple penis,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-37,,41,,フェラチオ,"1girl,(hairdresser's),(arranging her hair from behind,close up:1.4)",multiple penis,"%縦長%,%正方形%,%横長%",1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-38,,42,,パイズリ,"1girl,upper body,open mouth,((argued with viewer,heap abuse upon viewer))","multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-39,,43,,素股,"A girl is being whipped,nude,Birthmarks on the body","penis in pussy,inseration,(futanari,futa)",,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,騎乗素股が見つかるまで妥協,奉仕系コマンド
-40,,44,,アナル舐め強制,"A girl is being whipped,nude,Birthmarks on the body","penis,male's face",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-41,,45,,アナルおねだり,"A girl is taking a shower,(water pouring from a shower head:1.4),standing,in shower room",,,1,1,1,1,1,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-42,,46,,足舐め強制,"A girl is taking a shower,(water pouring from a shower head:1.4),standing,in shower room",,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,稀に惜しいのが出る,奉仕系コマンド
-43,,47,,足扱き,"ass,Girl on all fours with her hips facing away, Spanking,botomless{|slapmark,<lora:conceptSlapMark_v10:1>}","vaginal sex,inseration",,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,FOOTJOB_POSITIONV2はTI　タイツが出たり、足だけ違う人っぽくなりがち,奉仕系コマンド
-44,,48,,髪扱き,"ass,Girl on all fours with her hips facing away, Spanking,botomless{|slapmark,<lora:conceptSlapMark_v10:1>}","(2boys,multipul penis),(fellatio)",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-45,,49,,腋扱き,"bathtub,<lora:POVBlowjobCreampie_v3:0.7:nf>,{pov blowjob|pov deepthroat,deepthroat},{front|above},wet penis,nsfw",(multiple penis),,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-46,,50,,全身扱き,Handling of the whole body,,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-47,,51,,尻扱き,"from below,1girl,crossed legs,The girl is sticking her foot to viewer,((foot focus))","vaginal sex,inseration",,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-48,,52,,竿扱き,Girl with bath towel wrapped around her body is standing,,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-49,,53,,玉揉み強制,"in bathtub,sitting,relax,pov,(bathig together,face focus,close up:1.2)",,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-50,,54,,玉舐め強制,Needle stuck in girl's body.,,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-51,,55,,アナル愛撫強制,Needle stuck in girl's body.,,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-52,,56,,ナイズリ,"no panties,lower body focus,spread legs",,%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,奉仕系コマンド
-53,,60,,ローション,"no panties,lower body focus,spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-54,,61,,媚薬,"no panties,lower body focus,spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-55,,62,,利尿剤,"nsfw, <lora:testarmpitsex2:0.8:1:lbw=CT>,upper body,armpitsex,faceless male's lower body behind girl,(penis)",,,1,1,1,0,0,,,,薬品系コマンド
-56,,63,,座薬,"nsfw, 1girl,1boy, nsfw,arms at side,NIPPLE TWEAK,bust shot,<lora:conceptNippleTweak_v10:0.8>,small breasts,grabbing from behind",,,1,1,1,0,0,,,,薬品系コマンド
-57,,64,,座薬(膣),"nsfw, 1girl,1boy, nsfw,arms at side,NIPPLE TWEAK,bust shot,<lora:conceptNippleTweak_v10:0.8>,small breasts,grabbing from behind",,,1,1,1,0,0,,,,薬品系コマンド
-58,,65,,賢者の血,"nsfw,(all fours,facing away,ass,penis),pov,(from behind),1girl,1boy,<lora:qqq-buttjob-v2:0.8:1:lbw=NC>,buttjob",,,1,1,1,0,0,,,,薬品系コマンド
-59,,66,,排卵誘発剤,"nsfw,(close-up of girl's crotch:0.9),(pussy),spread legs,naked,botomless",,,1,1,1,0,0,,,,薬品系コマンド
-60,,67,,緊急避妊薬,"nsfw,(cute girl lying pleasuring herself),(woman masturbation),navel,(She teases her vagina with her hand),spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-61,,68,,産卵促進剤,"nsfw,(cute girl lying pleasuring herself),(woman masturbation),navel,(She teases her vagina with her hand),spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-62,,69,,陰核成長剤,"nsfw,(cute girl lying pleasuring herself),(woman masturbation),navel,(She teases her vagina with her hand),spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-63,,70,,興奮剤,"nsfw,(cute girl lying pleasuring herself),(woman masturbation),navel,(She teases her vagina with her hand),spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-64,,71,,助手避妊薬,"nsfw,(cute girl lying pleasuring herself),(woman masturbation),navel,(She teases her vagina with her hand),spread legs",,,1,1,1,0,0,,,,薬品系コマンド
-65,,72,,感覚増幅薬,"nsfw,(fellatio ,blow job,penis),<lora:testHeadgrabOr_v10:0.7:1:lbw=CT>,(hgrb),1boy, (head grab:1.4) , hand on another's head,(sanpaku:1.3),surprised,tears,(motion lines:1.2)",,,1,1,1,0,0,,,,薬品系コマンド
-66,,79,,お香を焚く,"nsfw,(fellatio ,blow job,penis),<lora:testHeadgrabOr_v10:0.7:1:lbw=CT>,(hgrb),1boy, (head grab:1.4) , hand on another's head,(sanpaku:1.3),surprised,tears,(motion lines:1.2)",,,1,1,1,0,0,,,,薬品系コマンド
-67,,80,,クリトリス注射,"nsfw,(fellatio,penis) ,pov crotch ,blow job,{|face focus|wide shot},{|side view},{|all fours},{|looking up}",,,1,1,1,0,0,,,,注射系コマンド
-68,,81,,ヴァギナ注射,"nsfw,(fellatio,penis) ,pov crotch ,blow job,{|face focus|wide shot},{|side view},{|all fours},{|looking up}",,,1,1,1,0,0,,,,注射系コマンド
-69,,82,,アナル注射,"nsfw,(fellatio,penis) ,pov crotch ,blow job,{|face focus|wide shot},{|side view},{|all fours},{|looking up}",,,1,1,1,0,0,,,,注射系コマンド
-70,,83,,バスト注射,"nsfw,(fellatio,penis) ,pov crotch ,blow job,{|face focus|wide shot},{|side view},{|all fours},{|looking up}",,,1,1,1,0,0,,,,注射系コマンド
-71,,84,,尿道注射,"nsfw,(fellatio,penis) ,pov crotch ,blow job,{|face focus|wide shot},{|side view},{|all fours},{|looking up}",,,1,1,1,0,0,,,,注射系コマンド
-72,,85,,Ｃ肥大注射,"nsfw,(NAIZURI),1girl, 1boy, pov,(penis:1.2), flat chest,looking at viewer, from above,<lora:naizuriConcept_v1:0.8:1:lbw=CT>",,,1,1,1,0,0,,,,注射系コマンド
-73,,86,,Ｃ賢者の血注射,"nsfw,{<lora:povWaistGrabConcept_v09:0.2>,doggyGrab,vaginal sex,from behind,ass,doggystyle,pov|<lora:doggystyleSideView_ekunesidedoggstyle:0.7>,sidedoggystyle, 1boy, ass, doggystyle, sex,all fours,torso grab,penis,vaginal}",,,1,1,1,0,0,,,,注射系コマンド
-74,,88,,採血注射,"nsfw,{<lora:povWaistGrabConcept_v09:0.2>,doggyGrab,vaginal sex,from behind,ass,doggystyle,pov|<lora:doggystyleSideView_ekunesidedoggstyle:0.7>,sidedoggystyle, 1boy, ass, doggystyle, sex,all fours,torso grab,penis,vaginal}",,,1,1,1,0,0,,,,注射系コマンド
-75,,90,,裸エプロン,"nsfw,1girl, 1boy, (hairjob:1.4),(penis on hair:1.3), solo focus, upper body, arms behind back, (grabbing another's hair:1.2), hand on another's head, <lora:hairjob_v10:1>",,,1,1,1,0,0,,,装備品のつけ外しするときの様子だけ書く。装備自体の描写はEquip.csv,羞恥プレイ系＋α
-76,,91,,スク水プレイ,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-77,,92,,お医者プレイ,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-78,,93,,コスプレ,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-79,,94,,助手コスプレ,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-80,,100,,ビデオ撮影,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck,fellatio,licking","camera,lens,Photography Equipment,recording studio",,1,1,1,0,0,,,,羞恥プレイ系＋α
-81,,101,,ビデオ鑑賞,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck,fellatio,licking",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-82,,102,,写真撮影,"nsfw,A girl grabs her own ass with both hands and thrusts it at me,botomless,pussy,hand,self grabbing ass",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-83,,103,,羞恥プレイ,"nsfw,botomless,navel,nude,<lora:povImminentPenetration_ipv1:1:1:lbw=CT>,1girl,1boy,  (pov crotch,penis), (imminent penetration:1.3), spread legs.(Cowgirl)",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-84,,104,,野外プレイ,"nsfw,botomless,navel,nude,<lora:povImminentPenetration_ipv1:1:1:lbw=CT>,1girl,1boy,  (pov crotch,penis), (imminent penetration:1.3), spread legs.(Cowgirl)",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-85,,105,,公開露出ライブ,"nsfw,cute girl sitting on floor,nude,relaxing",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-86,,106,,公衆肉便器プレイ,"nsfw,cute girl sitting on floor,nude,relaxing",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-87,,107,,裸体盛り,"nsfw,cute girl sitting on floor,nude,relaxing",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-88,,108,,ベビープレイ,"nsfw,Girl facing sideways,side views,upper body,(nude male,1boy,ass:1.3), (licking anus:1.4),<lora:conceptFemdomFellatio_v10:1:1:lbw=NC>,anilingus,1girl,faceless male",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-89,,109,,オムツにお漏らし,"nsfw,hetero,breast grab, 1boy, 1girl arms at side,hands,arms,bust shot,nipples,POVBREASTGRAB,POV HANDS,BREAST GRAB,<lora:povBreastGrab_v2:0.8:1:lbw=CT>",,,1,1,1,0,0,,,（未実装）,羞恥プレイ系＋α
-90,,110,,秘貝開帳,"nsfw,hetero,breast grab, 1boy, 1girl arms at side,hands,arms,bust shot,nipples,POVBREASTGRAB,POV HANDS,BREAST GRAB,<lora:povBreastGrab_v2:0.8:1:lbw=CT>",,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,羞恥プレイ系＋α
-91,,111,,放尿,"nsfw,hetero,breast grab, 1boy, 1girl arms at side,hands,arms,bust shot,nipples,POVBREASTGRAB,POV HANDS,BREAST GRAB,<lora:povBreastGrab_v2:0.8:1:lbw=CT>",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-92,,112,,剃毛,"nsfw,hetero,breast grab, 1boy, 1girl arms at side,hands,arms,bust shot,nipples,POVBREASTGRAB,POV HANDS,BREAST GRAB,<lora:povBreastGrab_v2:0.8:1:lbw=CT>",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-93,,113,,毛抜き,"nsfw,hetero,breast grab, 1boy, 1girl arms at side,hands,arms,bust shot,nipples,POVBREASTGRAB,POV HANDS,BREAST GRAB,<lora:povBreastGrab_v2:0.8:1:lbw=CT>",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-94,,114,,毛を抜かせる,"nsfw,hetero,hand job ,(hand on penis)",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-95,,115,,自慰見せつけ,"nsfw,hetero,hand job ,(hand on penis)",fellatio,%縦長%,1,1,1,0,0,,,,羞恥プレイ系＋α
-96,,116,,二人自慰見せつけ,"nsfw,hetero,hand job ,(hand on penis)",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-97,,117,,秘貝開帳見せつけ,"nsfw,hetero,small breasts,breast grab, 1boy, 1girl arms at side penetrated from behind,(middle-aged man behind girl),hands,arms,bust shot,<lora:breastGrabFromBehind_nikeBreastGrabFrom:0.5>,doggystyle sex,",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-98,,118,,二人秘貝見せつけ,"nsfw,nude,(sex toys:1.5),upper body ,lying,bust shot,motion lines,navel,Feels good sexually,(trembling effect motion lines:1.2),(vibration:1.2),(motion blur:1.2)",,,1,1,1,0,0,,,,羞恥プレイ系＋α
-99,,120,,焦らしプレイ,"nsfw,nude,(sex toys:1.5),upper body ,lying,bust shot,motion lines,navel,Feels good sexually,(trembling effect motion lines:1.2),(vibration:1.2),(motion blur:1.2)",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-100,,121,,射精止め,"nsfw,nude,(sex toys:1.5),upper body ,lying,bust shot,motion lines,navel,Feels good sexually,(trembling effect motion lines:1.2),(vibration:1.2),(motion blur:1.2)",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-101,,122,,豆責め,"nsfw,nude,lying,motion lines,navel,(trembling effect motion lines:1.0),(vibration:1.0),(motion blur:1.0), (vibrator on Lower abdomen:1.3),from below,pussy",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-102,,123,,豆絞り,"nsfw,nude,lying,motion lines,navel,(trembling effect motion lines:1.0),(vibration:1.0),(motion blur:1.0), (vibrator on Lower abdomen:1.3),from below,pussy",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-103,,124,,ローター自慰,"nsfw,nude,lying,motion lines,navel,(trembling effect motion lines:1.0),(vibration:1.0),(motion blur:1.0), (vibrator on Lower abdomen:1.3),from below,pussy",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-104,,125,,電マ自慰,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-105,,126,,顔面騎乗,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-106,,128,,亀頭責め,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-107,,130,,陰核クリップ,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-108,,131,,陰核電極,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-109,,132,,ペニスローター,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-110,,133,,電マペニス責め,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,Ｃ系拡張コマンド
-111,,135,,陰核測定,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,陰核成長系コマンド
-112,,136,,割礼,"nsfw,Posture of girl on all fours with buttocks protruding,from behind,((ass focus)),botomless",,,1,1,1,0,0,,,,陰核成長系コマンド
-113,,137,,射精機能開発,"nsfw,solo focus,(face),nsfw,(deep penetration missionary:0.8),(lying,spread legs, vaginal sex,missionary:1.1)",,,1,1,1,0,0,,,,陰核成長系コマンド
-114,,140,,尿道綿棒,"nsfw,solo focus,(face),nsfw,(deep penetration missionary:0.8),(lying,spread legs, vaginal sex,missionary:1.1)",,,1,1,1,0,0,,,,尿道系拡張コマンド
-115,,141,,カテーテル,"pov, (male masturbation:1.2),(pov hand), 1boy, 1girl, kneeling, arms at side,from above, <lora:povMaleMasturbation_v2:0.9:1:lbw=0,0,0,0,0,0,0.5,1,1,0.5,0,0,0,0,0,0,0>",,,1,1,1,0,0,,,,尿道系拡張コマンド
-116,,142,,採尿器,"pov,1girl,upper body,(confusion:1.3)",,,1,1,1,0,0,,,,尿道系拡張コマンド
-117,,143,,バルーンカテーテル,"pov,A girl having head patted,upperbody,<lora:testHeadgrabOr_v10:0.8:1:lbw=1,0,0,0,0,0,0.2,1,1,1,0,0,0,0,0,0,0>,(hgrb:1.4),1boy,(hand on another's head:1.2)",,,1,1,1,0,0,,,,尿道系拡張コマンド
-118,,144,,電極カテーテル,"pov,from above,upperbody,finger in another's mouth,(finger sucking),:o,(pov hand),<lora:murkysFingerSucking_1:0.7:1:lbw=CT>",,,1,1,1,0,0,,,,尿道系拡張コマンド
-119,,145,,飲尿する,"pov,from behind,1girl,(looking back),face focus,(bust shot),(nape:1.4),(close up:1.2),shoulder",,,1,1,1,0,0,,,,尿道系拡張コマンド
-120,,146,,尿道挿入,"pov,from behind,1girl,(looking back),face focus,(bust shot),(nape:1.4),(close up:1.2),shoulder",,,1,1,1,0,0,,,,尿道系拡張コマンド
-121,,150,,クスコ,"pov,from below,nsfw,(close up chest:1.2),(chest focus:1.2),bared breasts,nipples,stomach,(upper body),1girl looking down",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-122,,151,,ローター挿入,"pov,from below,nsfw,(close up chest:1.2),(chest focus:1.2),bared breasts,nipples,stomach,(upper body),1girl looking down",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-123,,152,,小陰唇指愛撫,"pov,straddling, upright straddle,arm support,nsfw,navel,pussy,cowgirlGrab,pov, cowgirl position, vaginal",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-124,,153,,愛液採集器,"pov,straddling, upright straddle,arm support,nsfw,navel,pussy,cowgirlGrab,pov, cowgirl position, vaginal",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-125,,155,,ヴァギナ電極,"pov,straddling, upright straddle,arm support,nsfw,navel,pussy,cowgirlGrab,pov, cowgirl position, vaginal",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-126,,156,,ヴァギナバーベル,"pov,straddling, upright straddle,arm support,nsfw,navel,pussy,cowgirlGrab,pov, cowgirl position, vaginal",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-127,,157,,ヴァギナバルーン,"pov,straddling, upright straddle,arm support,nsfw,navel,pussy,cowgirlGrab,pov, cowgirl position, vaginal",,,1,1,1,0,0,,,,Ｖ系拡張コマンド
-128,,170,,ローターＡ挿入,"scenic route, ",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-129,,171,,アナル電極,"sfw, girl, 1boy, pov,( penis:1.2), ass, from behind, (back:1.1),<lora:povAnalFromBehind_v2:0.5>,from above",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-130,,172,,アナルビーズ,"sfw, girl, 1boy, pov,( penis:1.2), ass, from behind, (back:1.1),<lora:povAnalFromBehind_v2:0.5>,from above",,%横長%,1,1,1,0,0,,,装備としては安定しないのでつけ外し時に描写。,Ａ系拡張コマンド
-131,,173,,拡張バルーン,"sfw, girl, 1boy, pov,( penis:1.2), ass, from behind, (back:1.1),<lora:povAnalFromBehind_v2:0.5>,from above",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-132,,174,,浣腸プレイ,"sfw, girl, 1boy, pov,( penis:1.2), ass, from behind, (back:1.1),<lora:povAnalFromBehind_v2:0.5>,from above",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-133,,175,,空気浣腸,"solo focus,(Fist of the North Star:1.8),(kenshiro:1.5),(deadly martial art known as Hokuto Shinken, which gives him the ability to kill his opponents by striking their secret vital points, which often results in an exceptionally violent and gory death.:1.5),(striking with his raising finger:1.5),(motion lines)",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-134,,179,,アナルバーベル,"standing,wide shot,from head to toe",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-135,,180,,アナル舐め,"standing,wide shot,from head to toe",(penis),,1,1,1,1,1,,,,Ａ系拡張コマンド
-136,,181,,アナル綿棒,"standing,wide shot,from head to toe",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-137,,182,,アナニー,"vaginal sex, ass,from behind,doggystyle,pov crotch,penis in pussy,breasts, nsfw, hetero, navel, nipples, penis, pussy,  sex",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-138,,183,,尻素股,"vaginal sex, ass,from behind,doggystyle,pov crotch,penis in pussy,breasts, nsfw, hetero, navel, nipples, penis, pussy,  sex",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-139,,184,,フリスク挿入,"Woman walking with her hands covering her naked body,standing,wide shot,from head to toe",,,1,1,1,0,0,,,,Ａ系拡張コマンド
-140,,186,,尻愛撫,"Woman walking with her hands covering her naked body,standing,wide shot,from head to toe",(penis),,1,1,1,1,1,,,,Ａ系拡張コマンド
-141,,187,,顔面騎乗アナル,Facial sitting anal,,,1,1,1,0,0,,,,Ａ系拡張コマンド
-142,,188,,アナルの皺数え,Number of anal wrinkles,(penis),,1,1,1,1,1,,,,Ａ系拡張コマンド
-143,,190,,乳首ローター,Nipple rotor,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-144,,191,,搾乳機,Milking machine,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-145,,192,,乳腺開発,Mammary gland development,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-146,,193,,乳房電極,Breast electrode,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-147,,194,,サラシ,Sarashi,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-148,,195,,乳首クリップ,Nipple clip,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-149,,200,,胸揉み,Chest massage,"male's face,female masturbation,self grabbing",,1,1,1,0,0,,,,Ｂ系拡張コマンド
-150,,201,,乳首責め,Nipple torture,"male's face,penis",,1,1,1,0,0,,,,Ｂ系拡張コマンド
-151,,202,,乳首舐め,Licking nipple,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-152,,203,,乳首吸い,Nipple sucking,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-153,,204,,母乳飲み,Breast milk drinking,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-154,,205,,胸自慰,Masturbation,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-155,,206,,乳スパンキング,Milk spanking,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-156,,207,,乳ファック,Milk fuck,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-157,,208,,縦パイズリ,Vertical fucking,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,とりあえずパイズリそのまま,Ｂ系拡張コマンド
-158,,209,,パイズリフェラ,Paizurifeller,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,"とりあえずパイズリそのまま＋fellatio,licking",Ｂ系拡張コマンド
-159,,210,,乳合わせ,Milk match,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-160,,211,,乳合わせ見せつけ,Show off milk,,,1,1,1,0,0,,,,Ｂ系拡張コマンド
-161,,220,,スパンキング,Spanking,,,1,1,1,1,1,,,Loraの有無はランダム,ＳＭ系、ハードな調教コマンド
-162,,221,,鞭,Whip,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-163,,222,,針,needle,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-164,,223,,蝋燭,candle,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-165,,224,,縄,rope,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-166,,225,,アイマスク,Eye mask,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-167,,226,,ボールギャグ,Ball gag,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-168,,227,,罵倒,Abusing,"fellatio,hand job",,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-169,,228,,鼻フック,Nose hook,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-170,,229,,強制開口器,Compulsory open equipment,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-171,,230,,イラマチオ,Deep throat,"multiple penis,(tongue:1.4),chin","%正方形%,%横長%",1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,,ＳＭ系、ハードな調教コマンド
-172,,231,,フィストファック,Fist fuck,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-173,,232,,アナルフィスト,Anal fist,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-174,,233,,両穴フィスト,Both hole fist,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-175,,234,,ヴァギナダイビング,Vagina Diving,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-176,,235,,アナルダイビング,Anal diving,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-177,,236,,ツボを突く,Point a key point,,,0,0,0,0,0,,,,ＳＭ系、ハードな調教コマンド
-178,,237,,鼻クリップ,Nose clip,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-179,,238,,スタンガン,stun gun,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-180,,240,,足で踏む,Step on your feet,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-181,,241,,腹パン,Belly bread,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-182,,242,,三角木馬,Triangular wooden horse,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-183,,243,,杭,Pile,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-184,,244,,ナイフ,knife,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-185,,245,,鉈,Hatchet,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-186,,251,,ビンタを張る,Slap,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-187,,252,,アイアンメイデン,Iron Maiden,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-188,,253,,水を飲ませる,Drink water,,,1,1,1,0,0,,,,拷問系、精神操作系コマンド
-189,,270,,罵ってもらう,Be swearing,,,1,1,1,0,0,,,,マゾ系調教コマンド
-190,,271,,足を舐める,Lick your feet,,,1,1,1,0,0,,,,マゾ系調教コマンド
-191,,272,,叩いてもらう,Be beaten,,,1,1,1,0,0,,,,マゾ系調教コマンド
-192,,273,,鞭で打ってもらう,Have them hit with a whip,,,1,1,1,0,0,,,,マゾ系調教コマンド
-193,,274,,血を吸われる,Blood sucked,,,1,1,1,0,0,,,,マゾ系調教コマンド
-194,,290,,コンドーム,condom,,,1,1,1,0,0,,,,妊娠パッチのコマンド
-195,,291,,コンドーム精飲(奴),Condome drinking (guy),,,1,1,1,0,0,,,,妊娠パッチのコマンド
-196,,292,,コンドーム精飲(助),Condome drinking (help),,,1,1,1,0,0,,,,妊娠パッチのコマンド
-197,,293,,ザーメンキス,Zemenkiss,,,1,1,1,0,0,,,,
-198,,300,,クンニ強制,Cunnilingians,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-199,,301,,貝あわせ,Shellfish,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-200,,302,,足コキする,Jumble,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-201,,303,,二人フェラチオ,Two blowjob,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-202,,304,,二本フェラチオ,Two blowjob,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-203,,305,,二人でパイズリ,Two fucking,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-204,,306,,二人で素股,Two people,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-205,,307,,助手を犯させる,Make the assistant commit,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-206,,308,,助手のＡを犯させる,Make the assistant A commit,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-207,,309,,助手とキスする,Kiss with the assistant,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-208,,310,,二人の尻を叩く,Hit the two ass,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-209,,311,,尻を二人で叩く,Hit the ass together,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-210,,312,,二人のＶをフィスト,Fist the two V,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-211,,313,,二人のＡをフィスト,Fist of two people,,,1,1,1,0,0,,,,助手によるコマンド、及びレズ(ＢＬ)プレイ
-212,,320,,優しくする,to treat gently,"(arms up),armpit,pov crotch,pov legs,penis,(troubled eyebrows:1.4)",,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-213,,321,,手淫する,Indemnify,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-214,,322,,パイズリする,Fuck,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-215,,323,,正常位させる,Mission,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-216,,324,,後背位させる,Paddle,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-217,,325,,騎乗位する,Cowgirl,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-218,,326,,ペニバン挿入,Peniban insertion,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-219,,327,,指チュパ,Finger chupa,"pov crotch,pov legs,penis",,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,逆奉仕、ウフフ系コマンド
-220,,328,,首筋耳裏責め,Neck muscle back blame,"(lower body:1.4),(lower back,ass,buttocks,butt,thigh:1.4",,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-221,,329,,玉愛撫,Gallery,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-222,,330,,玉を舐める,Lick the ball,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-223,,331,,二人でフェラする,Blow together,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-224,,332,,Ａ正常位させる,A Make it normal,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-225,,333,,Ａ後背位させる,A,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-226,,334,,Ａ騎乗位する,A Cowgirl,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-227,,335,,パイズリフェラする,Paizurifero,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-228,,336,,ヴァギナを拭く,Wipe Vagina,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-229,,337,,二人で首筋耳裏責め,Both of the neck of the back of the neck,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-230,,338,,二人に犯させる,Make them commit,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-231,,339,,膣内洗浄,In the vagina,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-232,,340,,ぱふぱふ,Plow,(lower body),,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-233,,341,,胸枕,Chest pillow,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-234,,342,,乳繰り合う,Dedicate,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-235,,343,,乳ビンタ,Milk vinta,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-236,,344,,乳の揉み合い,Malm of milk,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-237,,345,,お風呂を楽しむ,Enjoy a bath,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-238,,346,,お外を楽しむ,Enjoy the outside,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-239,,347,,お嫁さんで楽しむ,Enjoy with your bride,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-240,,348,,お酒を飲ませる,Give me alcohol,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-241,,349,,ふぉーゆーっ！,Wow!,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-242,,350,,お風呂場プレイ,Bathroom play,,,1,1,1,0,0,,,,風呂系コマンド
-243,,351,,シャワー,shower,,,1,1,1,0,0,,,,風呂系コマンド
-244,,352,,泡踊り,Bubble dance,,,1,1,1,0,0,,,,風呂系コマンド
-245,,353,,泡踊りする,Foam dancing,,,1,1,1,0,0,,,,風呂系コマンド
-246,,354,,たわし洗い,Scraping,,,1,1,1,0,0,,,,風呂系コマンド
-247,,360,,蟲風呂,Bug bath,,,1,1,1,0,0,,,,風呂系コマンド
-248,,361,,鰻風呂,Eel bath,,,1,1,1,0,0,,,,風呂系コマンド
-249,,362,,ローション風呂,Lotion bath,,,1,1,1,0,0,,,,風呂系コマンド
-250,,363,,スライム風呂,Slime bath,,,1,1,1,0,0,,,,風呂系コマンド
-251,,364,,媚薬風呂,Aphrodisiac bath,,,1,1,1,0,0,,,,風呂系コマンド
-252,,365,,水牢,Prison,,,1,1,1,0,0,,,,風呂系コマンド
-253,,366,,精液風呂,Semen bath,,,1,1,1,0,0,,,,風呂系コマンド
-254,,367,,酒風呂,Drink bath,,,1,1,1,0,0,,,,風呂系コマンド
-255,,368,,トロロ風呂,Torolo bath,,,1,1,1,0,0,,,,風呂系コマンド
-256,,369,,毛玉風呂,Pill bath,,,1,1,1,0,0,,,,風呂系コマンド
-257,,370,,蒸し風呂,Steamed bath,,,1,1,1,0,0,,,,風呂系コマンド
-258,,371,,国士無双の薬風呂,Kokushi Musou's Drug bath,,,1,1,1,0,0,,,,風呂系コマンド
-259,,372,,厄毒風呂,Bad bath,,,1,1,1,0,0,,,,風呂系コマンド
-260,,373,,岩盤浴,Bedrock bath,,,1,1,1,0,0,,,,風呂系コマンド
-261,,374,,札束風呂,Wandering bath,,,1,1,1,0,0,,,,風呂系コマンド
-262,,380,,バター犬プレイ,Butter dog play,,,1,1,1,0,0,,,,獣姦系コマンド
-263,,381,,犬に犯させる,Let the dog commit,,,1,1,1,0,0,,,,獣姦系コマンド
-264,,382,,犬を犯させる,Follow the dog,,,1,1,1,0,0,,,,獣姦系コマンド
-265,,383,,豚に犯させる,Make the pig commit,,,1,1,1,0,0,,,,獣姦系コマンド
-266,,384,,豚を犯させる,Follow the pig,,,1,1,1,0,0,,,,獣姦系コマンド
-267,,385,,馬のをフェラさせる,Blow the horse,,,1,1,1,0,0,,,,獣姦系コマンド
-268,,386,,馬に犯させる,Make the horse commit,,,1,1,1,0,0,,,,獣姦系コマンド
-269,,387,,犬とキスさせる,Kiss with the dog,,,1,1,1,0,0,,,,獣姦系コマンド
-270,,388,,豚とキスさせる,Kiss with the pig,,,1,1,1,0,0,,,,獣姦系コマンド
-271,,389,,犬にＡ犯させる,Make the dog commit A,,,1,1,1,0,0,,,,獣姦系コマンド
-272,,390,,豚にＡ犯させる,Make the pig commits A,,,1,1,1,0,0,,,,獣姦系コマンド
-273,,391,,馬にＡ犯させる,Make the horse commit A,,,1,1,1,0,0,,,,獣姦系コマンド
-274,,395,,髪を染める,Dye hair,,,1,1,1,0,0,,,,髮型系コマンド
-275,,396,,髪型を弄る,Fall from the hairstyle,(wide shot),,1,1,0,0,0,,,,髮型系コマンド
-276,,400,,吸血,Sucking blood,,,1,1,1,0,0,,,,固有コマンド
-277,,401,,暗闇,darkness,,,1,1,1,0,0,,,,固有コマンド
-278,,402,,尻子玉抜き,Children,,,1,1,1,0,0,,,,固有コマンド
-279,,403,,焼芋責め,Potato blame,,,1,1,1,0,0,,,,固有コマンド
-280,,404,,巨峰責め,Kyoho blame,,,1,1,1,0,0,,,,固有コマンド
-281,,405,,石勺柏責め,Ishikashi Kashiwa blame,,,1,1,1,0,0,,,,固有コマンド
-282,,406,,荊で緊縛,Bondage with a thorns,,,1,1,1,0,0,,,,固有コマンド
-283,,407,,荊の鞭,Whip of the thorns,,,1,1,1,0,0,,,,固有コマンド
-284,,408,,蜘蛛の糸,Spider thread,,,1,1,1,0,0,,,,固有コマンド
-285,,409,,独楽回し,Monopolism,,,1,1,1,0,0,,,,固有コマンド
-286,,410,,蜘蛛脚愛撫,Spider leg caress,,,1,1,1,0,0,,,,固有コマンド
-287,,411,,人形愛撫,Puppet caress,,,1,1,1,0,0,,,,固有コマンド
-288,,412,,操りの糸,Manipulated thread,,,1,1,1,0,0,,,,固有コマンド
-289,,413,,豆炙り,Roasted beans,,,1,1,1,0,0,,,,固有コマンド
-290,,414,,乳豆炙り,Roasted soybeans,,,1,1,1,0,0,,,,固有コマンド
-291,,415,,読心,Reading spirit,,,1,1,1,0,0,,,,固有コマンド
-292,,416,,思姦,Rape,,,1,1,1,0,0,,,,固有コマンド
-293,,417,,筆責め,Brush blame,,,1,1,1,0,0,,,,固有コマンド
-294,,418,,時間停止,Time Stop,,,1,1,1,0,0,,,,固有コマンド
-295,,419,,狂気の目,Crazy eyes,,,1,1,1,0,0,,,,固有コマンド
-296,,420,,鈴蘭の毒,Suzuran poison,,,1,1,1,0,0,,,,固有コマンド
-297,,421,,昆虫採集セットの薬,Insect collection set medicine,,,1,1,1,0,0,,,,固有コマンド
-298,,422,,媚薬漬け,Aphrodisiac,,,1,1,1,0,0,,,,固有コマンド
-299,,423,,酒漬け,Pickled in sake,,,1,1,1,0,0,,,,固有コマンド
-300,,424,,わかめ酒,Wakame sake,,,1,1,1,0,0,,,,固有コマンド
-301,,425,,かりちゅまがーど,Karichimaga,,,1,1,1,0,0,,,,固有コマンド
-302,,427,,陰毛炙り,Grilled pubic hair,,,1,1,1,0,0,,,,固有コマンド
-303,,430,,御所車,Imperial carrier,,,1,1,1,0,0,,,,固有コマンド
-304,,431,,フォーオブアカインド,Four of Akind,,,1,1,1,0,0,,,,固有コマンド
-305,,432,,氷柱責め,Glacial blame,,,1,1,1,0,0,,,,固有コマンド
-306,,433,,アナル卒塔婆,Anal graduation pagoda,,,1,1,1,0,0,,,,固有コマンド
-307,,434,,角愛撫,Square caress,,,1,1,1,0,0,,,,固有コマンド
-308,,435,,角挿入,Horn insertion,,,1,1,1,0,0,,,,固有コマンド
-309,,436,,角アナル挿入,Horn anal insertion,,,1,1,1,0,0,,,,固有コマンド
-310,,437,,ヴァギナ要石,Vagina's keystone,,,1,1,1,0,0,,,,固有コマンド
-311,,438,,アナル要石,Analogy of anal,,,1,1,1,0,0,,,,固有コマンド
-312,,439,,両穴要石,Two holes,,,1,1,1,0,0,,,,固有コマンド
-313,,440,,半霊を犯す,Commit a semi -spirit,,,1,1,1,0,0,,,,固有コマンド
-314,,441,,半霊を挿入(前),Insert a semi -spirit (before),,,1,1,1,0,0,,,,固有コマンド
-315,,442,,半霊を挿入(後),Insert a semi -spirit (later),,,1,1,1,0,0,,,,固有コマンド
-316,,443,,幽明の苦輪,Yomei no Kazuku,,,1,1,1,0,0,,,,固有コマンド
-317,,444,,半霊再構成,Semi -spirit reconstruction,,,1,1,1,0,0,,,,固有コマンド
-318,,445,,薀蓄語り,Speaking,,,1,1,1,0,0,,,,固有コマンド
-319,,446,,説教を受ける,Be preached,,,1,1,1,0,0,,,,固有コマンド
-320,,447,,傘を愛撫する,Caress the umbrella,,,1,1,1,0,0,,,,固有コマンド
-321,,448,,房中術,Bunch of bunch,,,1,1,1,0,0,,,,固有コマンド
-322,,449,,フィーバー！,Fever!,,,1,1,1,0,0,,,,固有コマンド
-323,,450,,ピッチャー二つ,Two pitchers,,,1,1,1,0,0,,,儀式「とりあえずピッチャー二つで」,固有コマンド
-324,,451,,酔生夢死,Drunken dream death,,,1,1,1,0,0,,,酔生夢死「空飛ぶ呑んべぇのレムリア」,固有コマンド
-325,,452,,超凝視,Super -gaze,,,1,1,1,0,0,,,,固有コマンド
-326,,453,,傘に舐めさせる,Let the umbrella lick,,,1,1,1,0,0,,,,固有コマンド
-327,,490,,ローション練成,Lotion training,,,1,1,1,0,0,,,,固有コマンド
-328,,491,,野菜式体液媚薬変換,Vegetable fluid aphrodisiac conversion,,,1,1,1,0,0,,,,固有コマンド
-,eraTW,495,,空を眺める,"distant sky, looking at sky, pov,  scener",ground,,,,,0,0,,,,
-329,,500,,触手召喚,Tentacle summoning,,,1,1,1,0,0,,,,触手系コマンド
-330,,501,,触手挿入,Tentacle insertion,,,1,1,1,0,0,,,,触手系コマンド
-331,,502,,触手アナル挿入,Tentacle anal insertion,,,1,1,1,0,0,,,,触手系コマンド
-332,,503,,触手クリ責め,Tentacle chestnut blame,,,1,1,1,0,0,,,,触手系コマンド
-333,,504,,触手乳首責め,Tentacle nipple torture,,,1,1,1,0,0,,,,触手系コマンド
-334,,505,,触手ペニス責め,Tentacle penis blame,,,1,1,1,0,0,,,,触手系コマンド
-335,,506,,触手口辱,Tentacle humiliation,,,1,1,1,0,0,,,,触手系コマンド
-336,,507,,触手緊縛,Tentacle bondage,,,1,1,1,0,0,,,,触手系コマンド
-337,,508,,触手鼻穴挿入,Insert tentacle nostrils,,,1,1,1,0,0,,,,触手系コマンド
-338,,509,,触手メイデン,Tentacle Maiden,,,1,1,1,0,0,,,,触手系コマンド
-339,,510,,触手寄生,Tentacle parasitic,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-340,,511,,触手くすぐり,Tentacles tickle,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-341,,512,,触手秘貝開き,Tentacle hidden opening,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-342,,513,,触手パイズリ,Tentacle fucking,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-343,,514,,触手素股,Tactile crotch,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-344,,515,,触手放電ペニス責め,Tentacle discharge penis blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-345,,520,,触手Ｇスポ責め,Tentacle G spo blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-346,,521,,触手子宮責め,Tentacle uterine blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-347,,522,,触手浣腸,Tentacle enema,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-348,,523,,触手小腸責め,Tentacle small intestine blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-349,,524,,触手貫通,Tentacle penetration,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-350,,525,,触手搾乳,Tentacle milking,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-351,,526,,触手乳腺挿入,Tentacle mammary gland insert,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-352,,527,,触手カテーテル,Tentacle catheter,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-353,,528,,触手採尿,Tentacle urination,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-354,,529,,触手耳穴挿入,Tentacle ear hole insertion,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-355,,530,,触手ヴァギナ拡張,Tentacle Vagina Expansion,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-356,,531,,触手アナル拡張,Tentacle anal expansion,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-357,,532,,触手両穴拡張,Tentacles both holes,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-358,,533,,触手産卵,Tentacle spawning,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-359,,534,,触手アナル産卵,Tentacle anal spawning,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-360,,535,,触手愛液採集,Tentacle joy solution collection,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-361,,540,,触手口内洗浄,Inside tentacles,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-362,,541,,触手膣内洗浄,Tentacle vagina washing,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-363,,542,,触手腸内洗浄,Tentacle intestinal cleaning,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-364,,543,,触手膀胱洗浄,Tentacle bladder cleaning,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-365,,544,,触手鼻腔洗浄,Tentacle nasal cleaning,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-366,,545,,触手耳穴洗浄,Tentacle ear hole washing,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-367,,546,,触手全穴洗浄,All tentacles all holes,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-368,,550,,触手催眠,Tentacle hypnosis,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-369,,551,,触手鞭打ち,Tentacles whipping,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-370,,552,,触手針責め,Tentacle needle blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-371,,553,,触手放電,Tentacle discharge,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-372,,554,,触手吸血,Tentacle sucking,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-373,,555,,触手丸呑み,Tentacle swallow,,,1,1,1,0,0,,,(構想中),紳士的な触手系コマンド
-374,,556,,触手チキチキ,Tentacle Chikichiki,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-375,,560,,触手強制回復,Forced tentacle recovery,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-376,,561,,触手排卵誘発,Tentacle ovulation induction,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-377,,562,,触手避妊膜塗布,Tentacle contraceptive application,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-378,,563,,触手発毛剤,Tentacle hair growth agent,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-379,,564,,触手脱毛剤,Tentacle hair removal agent,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-380,,580,,触手読心責め,Tentacle reading heart blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-381,,581,,触手潮干狩り,Tentacle tide clam,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-382,,582,,触手幽霊膣鏡,Tentacle ghost vaginal mirror,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-383,,583,,触手強制飲酒,Tentacle forced drinking,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-384,,584,,触手精神制御,Tentacle spirit control,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-385,,585,,触手厄落とし,Tentacles dropped,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-386,,586,,触手腸内撮影,Tentacle intestine shooting,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-387,,587,,触手言葉責め,Tentacles blame,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-388,,588,,触手鈴蘭媚薬,Tentacle Suzuran aphrodisiac,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-389,,589,,触手官能図書,Tonparer ability book,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-390,,590,,触手妖精按摩,Tentacle fairy,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-391,,591,,触手氷精手淫,Tentacle ice volunteer,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-392,,592,,触手淫脈探査,Tentacle neceness exploration,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-393,,593,,触手最終審判,Tentacle final referee,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-394,,594,,触手百裂紅葉,Tentacles pertropis leaves,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-395,,595,,触手豊穣淫香,Tentacle fertile incense,,,1,1,1,0,0,,,,紳士的な触手系コマンド
-396,,600,,Ｇスポット刺激,G spot stimulus,,,1,1,1,0,0,,,,派生コマンド
-397,,601,,潜望鏡,periscope,multiple penis,,1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,bathtubで浴槽内の構図になったらいいな,派生コマンド
-398,,602,,シックスナイン,Six Nine,multiple penis,"%縦長%,%正方形%,%横長%",1,1,0,0,0,,,暫定でフェラ,派生コマンド
-399,,603,,６９パイズリ,69 fucking,,,1,1,1,0,0,,,,派生コマンド
-400,,604,,雁が首,The goose is the neck,multiple penis,"%縦長%,%正方形%,%横長%",1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,フェラと同じにした,派生コマンド
-401,,605,,指でＶを撫でる,Stroke V with your finger,,,1,1,1,0,0,,,,派生コマンド
-402,,606,,ペッティング,Petting,,,1,1,1,0,0,,,,派生コマンド
-403,,610,,二人で犯す,Commit together,,,1,1,1,0,0,,,,派生コマンド
-404,,611,,岩清水,Iwashimizu,,,1,1,1,0,0,,,,派生コマンド
-405,,612,,乱れ牡丹,Disturbed peony,,,1,1,1,0,0,,,,派生コマンド
-406,,613,,騎乗乳房自慰,Masturbation masturbation,,,1,1,1,0,0,,,,派生コマンド
-407,,614,,挿入Ｇスポ責め,Insert G spo blame,,%縦長%,1,1,1,0,0,,,対面からの派生で呼ばれる,派生コマンド
-408,,615,,挿入子宮口責め,Inserted cervix,,%横長%,1,1,1,0,0,,,背面からの派生で呼ばれる,派生コマンド
-409,,616,,後背位愛撫,Dorsal caress,"males face,female masturbation,self grabbing",,1,1,1,0,0,,,表示されるテキストは「後背位胸愛撫」である,派生コマンド
-410,,617,,対面愛撫,Face -to -face caress,,,1,1,1,0,0,,,,派生コマンド
-411,,618,,後背位アナル胸愛撫,Dogging anal chest caress,,,1,1,1,0,0,,,,派生コマンド
-412,,619,,対面アナル胸愛撫,Face -to -face anal breast caress,,,1,1,1,0,0,,,,派生コマンド
-413,,620,,強制放尿,Forced urination,,,1,1,1,0,0,,,,派生コマンド
-414,,621,,口移し,Mouth -to -mouth,,,1,1,1,0,0,,,,派生コマンド
-415,,622,,四肢緊縛,Limb bondage,,,1,1,1,0,0,,,,派生コマンド
-416,,623,,亀甲縛り,Tortoise tie -up,,,1,1,1,0,0,,,,派生コマンド
-417,,624,,吊り下げ,Hanging,,,1,1,1,0,0,,,,派生コマンド
-418,,625,,ローションプレイ,Lotion play,,,1,1,1,0,0,,,,派生コマンド
-419,,626,,搾乳,milking,,,1,1,1,0,0,,,,派生コマンド
-420,,627,,乳首甘噛み,Nipple sweet bite,,,1,1,1,0,0,,,,派生コマンド
-421,,628,,相互自慰,Mutual masturbation,,,1,1,1,0,0,,,,派生コマンド
-422,,629,,サンドイッチ,sandwich,,,1,1,1,0,0,,,,派生コマンド
-423,,630,,後背位手淫,Daggnivorous,,,1,1,1,0,0,,,,派生コマンド
-424,,631,,相互秘貝開帳,Mutual shellfish opening book,,,1,1,1,0,0,,,,派生コマンド
-425,,632,,背面座位胸愛撫,Back sitting position breast caress,,,1,1,1,0,0,,,,派生コマンド
-426,,633,,背面座位アナル胸愛撫,Back sitting anal chest caress,,,1,1,1,0,0,,,,派生コマンド
-427,,649,,イきつけ三杯,I have three cups of Kitsuki,,,1,1,1,0,0,,,,派生コマンド
-428,,650,,浄玻璃の鏡,Pure glass mirror,,,1,1,1,0,0,,,,派生コマンド
-429,,651,,御所車ＴＹＰＥ－Ｒ,Imperial car Type -R,,,1,1,1,0,0,,,,派生コマンド
-430,,652,,フォーオブアカインド(ふたなり),Four of Akind (Futanari),,,1,1,1,0,0,,,,派生コマンド
-431,,653,,蜘蛛の巣,spiderweb,,,1,1,1,0,0,,,,派生コマンド
-432,,654,,蜘蛛脚六点責め,Spider leg six -point blame,,,1,1,1,0,0,,,,派生コマンド
-433,,655,,蜘蛛の巣姦,Spider's west,,,1,1,1,0,0,,,,派生コマンド
-434,,656,,蜘蛛の巣肛門姦,Spider's Nest Anus,,,1,1,1,0,0,,,,派生コマンド
-435,,657,,蓑虫プレイ,Mino Insects Play,,,1,1,1,0,0,,,,派生コマンド
-436,,658,,拘束∇,Restraint,,,1,1,1,0,0,,,,派生コマンド
-437,,659,,暗黒潮干狩り,Dark clamming,,,1,1,1,0,0,,,(未実装),派生コマンド
-438,,660,,性感槍ぐんぐにる,Sexual spear,,,1,1,1,0,0,,,,派生コマンド
-439,,680,,触手撫で回し,Tentacles stroked,,,1,1,1,0,0,,,,派生コマンド
-440,,682,,触手アナル愛撫,Tentacle anal caress,,,1,1,1,0,0,,,,派生コマンド
-441,,683,,触手胸愛撫,Tentacle chest caress,,,1,1,1,0,0,,,,派生コマンド
-442,,699,,頼む,ask,,,1,1,1,0,0,,,,派生コマンド
-443,,700,,*近寄る,*come close,,,1,1,1,0,0,,,,戦闘コマンド
-444,,701,,*距離をとる,*Take a distance,,,1,1,1,0,0,,,,戦闘コマンド
-445,,702,,*背後に回る,*Turn behind,,,1,1,1,0,0,,,,戦闘コマンド
-446,,703,,*見切り,*Clearing,,,1,1,1,0,0,,,,戦闘コマンド
-447,,704,,*防御,*defense,,,1,1,1,0,0,,,,戦闘コマンド
-448,,710,,近寄る,come close,,,1,1,1,0,0,,,,奴隷用
-449,,711,,距離をとる,Take a distance,,,1,1,1,0,0,,,,奴隷用
-450,,712,,背後に回る,Be behind,,,1,1,1,0,0,,,,奴隷用
-451,,713,,見切り,Giving up,,,1,1,1,0,0,,,,奴隷用
-452,,714,,防御,defense,,,1,1,1,0,0,,,,奴隷用
-453,,715,,何もしない,do nothing,,,1,1,1,0,0,,,,奴隷用
-454,,720,,近距離攻撃,Near range attack,,,1,1,1,0,0,,,,奴隷用
-455,,721,,中距離攻撃,Mid -range attack,,,1,1,1,0,0,,,,奴隷用
-456,,722,,遠距離攻撃,Long -range attack,,,1,1,1,0,0,,,,奴隷用
-457,,723,,チャージ,charge,,,1,1,1,0,0,,,,奴隷用
-458,,730,,●脱衣,● Dressing,,,1,1,1,0,0,,,,戦闘コマンド
-459,,740,,振り解く,Shake,,,1,1,1,0,0,,,,奴隷用
-460,,741,,暴れる,Be rampant,,,1,1,1,0,0,,,,奴隷用
-461,,742,,耐える,Endure,,,1,1,1,0,0,,,,奴隷用
-462,,743,,なすがまま,As it is,,,1,1,1,0,0,,,,奴隷用
-463,,744,,受け入れる,accept,,,1,1,1,0,0,,,,奴隷用
-464,,745,,奉仕する,serve,,,1,1,1,0,0,,,,奴隷用
-465,,746,,Ｖ挿入防御,V insertion defense,,,1,1,1,0,0,,,,奴隷用
-466,,750,,睨みつける,Glare,,,1,1,1,0,0,,,,奴隷用
-467,,751,,罵倒する,Abuse,"fellatio,hand job",,1,1,1,0,0,,,,奴隷用
-468,,752,,反抗する,Rebel,,,1,1,1,0,0,,,,奴隷用
-469,,753,,説得する,Persuade,,,1,1,1,0,0,,,,奴隷用
-470,,760,,★拘束,★ restraint,,,1,1,1,0,0,,,,戦闘コマンド
-471,,770,,手淫攻撃,Tolerance,,,1,1,1,0,0,,,,奴隷用
-472,,771,,フェラ攻撃,Blowjob attack,,,1,1,1,0,0,,,,奴隷用
-473,,772,,足コキ攻撃,Footjob attack,,,1,1,1,0,0,,,,奴隷用
-474,,773,,素股焦らし,Crotch,,,1,1,1,0,0,,,,奴隷用
-475,,774,,搾り取る,Squeeze out,,,1,1,1,0,0,,,,奴隷用
-476,eraTW,1000,,愛撫,caress,,,1,1,1,0,0,,,,０．愛撫系コマンド
-477,eraTW,1001,,クンニ,Cunnilingus,,,1,1,1,0,0,,,,０．愛撫系コマンド
-478,eraTW,1002,,フェラする,Blow,,,1,1,1,0,0,,,,０．愛撫系コマンド
-479,eraTW,1003,,指挿れ,Finger insertion,,,2,2,2,1,1,,,,０．愛撫系コマンド
-480,eraTW,1004,,アナル舐め,Anal licking,(penis),,1,1,1,1,1,,,,０．愛撫系コマンド
-481,eraTW,1005,,アナル愛撫,Anal caress,(penis),,1,1,1,1,1,,,,０．愛撫系コマンド
-482,eraTW,1006,,胸愛撫,Chest caress,"male's face,female masturbation,self grabbing",,1,1,1,0,0,,,,０．愛撫系コマンド
-483,eraTW,1007,,乳首責め,Nipple torture,"male's face,penis",,1,1,1,0,0,,,,０．愛撫系コマンド
-484,eraTW,1008,,秘貝開帳,Secret portrait book,,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,０．愛撫系コマンド
-485,eraTW,1009,,自慰,masturbation,,,1,1,1,1,1,%汎用拒否%,%汎用拒否ネガ%,,０．愛撫系コマンド
-486,eraTW,1013,,アナル開帳,Anal opening book,,,1,1,1,1,1,,,,０．愛撫系コマンド
-487,eraTW,1015,,クリ愛撫,Chestnut caress,,,1,1,1,1,1,,,,０．愛撫系コマンド
-488,eraTW,1020,,キスする,Kiss,,,1,1,1,1,1,,,,１．コミュニケーション系コマンド
-489,eraTW,1021,,何もしない,do nothing,,,1,1,1,0,0,,,,１．コミュニケーション系コマンド
-490,eraTW,1022,,誘い受ける,Be invited,,,1,1,1,1,1,,,,１．コミュニケーション系コマンド
-491,eraTW,1040,,ローター,rotor,"(penis),open pussy",,1,1,1,0,0,,,実際insert率は低め,２．道具使用コマンド
-492,eraTW,1041,,Ｅマッサージャ,E massager,(penis),,1,1,1,0,0,,,下半身はすぐ挿入したがるので写らないように誤魔化す,道具使用コマンド
-493,eraTW,1042,,クリキャップ,Clickap,,,1,1,1,0,0,,,,２．道具使用コマンド
-494,eraTW,1043,,オナホール,Masturbation,,,1,1,1,0,0,,,,２．道具使用コマンド
-495,eraTW,1044,,バイブ,Vibe,"(penis),open pussy",,1,1,1,1,1,,,,２．道具使用コマンド
-496,eraTW,1045,,アナルバイブ,Anal vibe,,,1,1,1,1,1,,,,２．道具使用コマンド
-497,eraTW,1046,,アナルビーズ,Anal beads,,%横長%,1,1,1,0,0,,,,２．道具使用コマンド
-498,eraTW,1047,,ニプルキャップ,Nipple cap,,,1,1,1,0,0,,,,２．道具使用コマンド
-499,eraTW,1048,,搾乳機,Milking machine,,,1,1,1,0,0,,,,２．道具使用コマンド
-500,eraTW,1049,,乳首ローター,Nipple rotor,,,1,1,1,0,0,,,,２．道具使用コマンド
-501,eraTW,1060,,正常位,Missionary position,,%縦長%,1,1,1,1,0,,,,
-502,eraTW,1061,,後背位,Doggy Style,,,1,1,1,1,1,,,,
-503,eraTW,1062,,正常位アナル,Missionary anal,,,1,1,1,1,1,,,,
-504,eraTW,1063,,後背位アナル,Dogging anal,,%縦長%,1,1,1,1,1,,,,
-505,eraTW,1064,,逆レイプ,Reverse rape,,,1,1,1,0,0,,,,
-506,eraTW,1065,,騎乗位,Cowgirl,,,1,1,1,1,0,%汎用拒否%,%汎用拒否ネガ%,,
-507,eraTW,1066,,騎乗位アナル,Cowgirl anal,,,1,1,1,1,0,%汎用拒否%,%汎用拒否ネガ%,暫定で正常位,
-508,eraTW,1067,,対面座位,Face -to -face,,%縦長%,1,1,1,1,0,,,暫定で騎乗位,
-509,eraTW,1068,,背面座位,Back sitting position,,,1,1,1,1,1,,,暫定で後背位,
-510,eraTW,1069,,対面座位アナル,Face -to -face sitting anal,,,1,1,1,1,1,,,暫定で正常位,
-511,eraTW,1070,,背面座位アナル,Back sitting anal,,,1,1,1,1,1,,,暫定で後背位,
-512,eraTW,1071,,二穴挿し,Two holes insert,,,1,1,1,1,1,,,,
-513,eraTW,1080,,手淫,Inderminence,multiple penis,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-514,eraTW,1081,,フェラチオ,Blowjob,multiple penis,"%縦長%,%正方形%,%横長%",1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-515,eraTW,1082,,パイズリ,Fucking,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-516,eraTW,1083,,素股,Intercrural sex,"penis in pussy,inseration,(futanari,futa)",,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-517,eraTW,1084,,泡踊り,Bubble dance,,,1,1,1,0,0,,,,
-518,eraTW,1085,,足コキ,Footjob,,,1,1,1,0,0,,,,
-519,eraTW,1088,,バキュームフェラ,Vacuum blowjob,,,1,1,1,0,0,,,,
-520,eraTW,1090,,アナル愛撫される,Anal caress,,,1,1,1,0,0,,,,
-521,eraTW,1091,,アナル舐めされる,Anal licked,,,1,1,1,0,0,,,,
-522,eraTW,1092,,Ａ正常位される,A Missionary position,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-523,eraTW,1093,,Ａ後背位される,A Bearing,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-524,eraTW,1094,,Ａ騎乗位する,A Cowgirl,,,1,1,1,0,0,,,,逆奉仕、ウフフ系コマンド
-525,eraTW,1100,,スパンキング,Spanking,,,1,1,1,1,1,,,Loraの有無はランダム,
-526,eraTW,1101,,鞭,Whip,,,1,1,1,0,0,,,,
-527,eraTW,1102,,蝋燭,candle,,,1,1,1,1,1,,,,
-528,eraTW,1103,,針,needle,,,1,1,1,0,0,,,,
-529,eraTW,1104,,アイマスク,Eye mask,,,1,1,1,0,0,,,,ＳＭ系、ハードな調教コマンド
-530,eraTW,1105,,縄,rope,,,1,1,1,0,0,,,,
-531,eraTW,1106,,ボールギャグ,Ball gag,,,1,1,1,0,0,,,,
-532,eraTW,1107,,拘束プレイ,Restraint play,,,1,1,1,0,0,,,,
-533,eraTW,1120,,クンニ強制,Cunnilingians,,,1,1,1,0,0,,,,
-534,eraTW,1121,,貝合わせ,Shellfish match,,,1,1,1,0,0,,,,
-535,eraTW,1122,,助手を犯させる,Make the assistant commit,,,1,1,1,0,0,,,,
-536,eraTW,1123,,足コキする,Jumble,,,1,1,1,0,0,,,,
-537,eraTW,1124,,手淫する,Indemnify,,,1,1,1,0,0,,,,
-538,eraTW,1125,,愛撫させる,Caress,,,1,1,1,0,0,,,,
-539,eraTW,1126,,乳の揉み合い,Malm of milk,,,1,1,1,0,0,,,,
-540,eraTW,1130,,正常位される,Be missionary,,,1,1,1,0,0,,,,
-541,eraTW,1131,,後背位される,Be d backed,,,1,1,1,0,0,,,,
-542,eraTW,1132,,対面座位される,Face -to -face,,,1,1,1,0,0,,,,
-543,eraTW,1133,,背面座位される,The back is sitting,,,1,1,1,0,0,,,,
-544,eraTW,1140,,イラマチオ,Deep throat,"multiple penis,(tongue:1.4),chin","%正方形%,%横長%",1,1,0,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-545,eraTW,1141,,フィストファック,Fist fuck,,,1,1,1,0,0,,,,
-546,eraTW,1142,,アナルフィスト,Anal fist,,,1,1,1,0,0,,,,
-547,eraTW,1143,,両アナフィスト,Both anafist,,,1,1,1,0,0,,,,
-548,eraTW,1144,,放尿,Urination,,,1,1,1,0,0,,,,
-549,eraTW,1145,,アナル奉仕,Anal service,,,1,1,1,0,0,,,,
-550,eraTW,1146,,浣腸,enema,,,1,1,1,0,0,,,,
-551,eraTW,1147,,拡張バルーン,Expansion balloon,,,1,1,1,0,0,,,,
-552,eraTW,1148,,アナル電極,Anal electrode,,,1,1,1,0,0,,,,
-553,eraTW,1149,,,#VALUE!,,,1,1,1,0,0,,,,
-554,eraTW,1150,,胸の谷間を犯す,Commit the valley of the chest,,,1,1,1,0,0,,,,
-555,eraTW,1180,,ローション,lotion,,,1,1,1,0,0,,,,
-556,eraTW,1181,,媚薬,aphrodisiac,,,1,1,1,0,0,,,,
-557,eraTW,1182,,利尿剤,Diuretics,,,1,1,1,0,0,,,,
-558,eraTW,1183,,ビデオ撮影,Video shooting,"camera,lens,Photography Equipment,recording studio",,1,1,1,0,0,,,,
-559,eraTW,1184,,野外プレイ,Outdoor play,,,1,1,1,0,0,,,,
-560,eraTW,1185,,助手を犯す,Commit an assistant,,,1,1,1,0,0,,,,
-561,eraTW,1186,,羞恥プレイ,Shame play,,,1,1,1,0,0,,,,
-562,eraTW,1187,,お風呂場プレイ,Bathroom play,,,1,1,1,0,0,,,,
-563,eraTW,1188,,シャワー,shower,,,1,1,1,0,0,,,,
-564,eraTW,1189,,新妻プレイ,New wife play,,,1,1,1,0,0,,,,
-565,eraTW,1190,,エプロンを着ける,Wear an apron,,,1,1,1,0,0,,,,
-566,eraTW,1191,,睡眠薬,Sleeping pill,,,1,1,1,0,0,,,,
-567,eraTW,1300,,会話,conversation,"looking at another ",,1,1,1,0,0,,,,
-568,eraTW,1301,,お茶を淹れる,Brew tea,,,1,1,1,0,0,,,,
-569,eraTW,1302,,スキンシップ,Physical contact,,,1,1,1,0,0,,,,
-570,eraTW,1303,,謝る,apologize,,,1,1,1,0,0,,,,
-571,eraTW,1304,,仕事を手伝う,Help work,,,1,1,1,0,0,,,,
-572,eraTW,1305,,膝枕してもらう,Have a knee pillow,,,1,1,1,0,0,,,,
-573,eraTW,1307,,頬をつまむ,Pick your cheeks,,,1,1,1,0,0,,,,
-574,eraTW,1308,,頬をつつく,Pierced his cheeks,,,1,1,1,0,0,,,,
-575,eraTW,1309,,頭を撫でる,Stroke his head,,,1,1,1,0,0,,,,
-576,eraTW,1310,,尻を撫でる,Stroke the buttocks,,,1,1,1,0,0,,,,
-577,eraTW,1311,,抱き付く,Hug,,,1,1,1,0,0,,,,
-578,eraTW,1312,,キスする,Kiss,,,1,1,1,0,0,,,,
-579,eraTW,1313,,胸愛撫,Chest caress,"male's face,female masturbation,self grabbing",,1,1,1,0,0,,,,
-580,eraTW,1314,,アナル愛撫,Anal caress,(penis),,1,1,1,1,1,,,,
-581,eraTW,1315,,クリ愛撫,Chestnut caress,,,,,,,,,,,
-582,eraTW,1316,,指挿れ,Finger insertion,,,,,,,,,,,
-583,eraTW,1330,,スカートめくり,Skirt turning,,,,,,,,,,,
-584,eraTW,1350,,押し倒す,Push down,,,,,,,,,,,
-585,eraTW,1351,,連れ出す,Take out,,,,,,,,,,,
-586,eraTW,1352,,告白する,confess,,,,,,,,,,,
-587,eraTW,1353,,イタズラする,Mischief,,,,,,,,,,,
-588,eraTW,1354,,添い寝する,Sleep with,,,,,,,,,,,
-589,eraTW,1360,,身を任せる,Leave,,,,,,,,,,,
-590,eraTW,1361,,抵抗する,resist,,,,,,,,,,,
-591,eraTW,1362,,逃げる,run away,,,,,,,,,,,
-592,eraTW,1400,,移動,Migration,excessive noise,,1,1,0,0,0,,,,
-593,eraTW,1401,,コレクション,collection,,,,,,,,,,,
-594,eraTW,1402,,就寝,Going to bed,,,,,,,,,,,
-595,eraTW,1403,,休憩,break,,,,,,,,,,,
-596,eraTW,1405,,出掛ける,go out,,,,,,,,,,,
-597,eraTW,1410,,掃除,cleaning,,,,,,,,,,,
-598,eraTW,1411,,戦闘訓練,Combat training,,,,,,,,,,,
-599,eraTW,1412,,勉強,study,,,,,,,,,,,
-600,eraTW,1413,,料理,cooking,,,,,,,,,,,
-601,eraTW,1414,,食事,meal,,,,,,,,,,,
-602,eraTW,1415,,食事をふるまう,Eat a meal,,,,,,,,,,,
-603,eraTW,1416,,演奏する,play,,,,,,,,,,,
-604,eraTW,1420,,る～ことと話す,Talk to,,,,,,,,,,,
-605,eraTW,1427,,天候操作,Weather operation,,,,,,,,,,,
-606,eraTW,1428,,小槌を使う,Use a gavel,,,,,,,,,,,
-607,eraTW,1460,,妄想オナニー,Delusion masturbation,,,,,,,,,,,
-608,eraTW,1461,,我に返る,Return to me,,,,,,,,,,,
-609,eraTW,1501,,シックスナイン,Six Nine,multiple penis,"%縦長%,%正方形%,%横長%",1,1,0,0,0,,,暫定でフェラ,
-610,eraTW,1502,,岩清水,Iwashimizu,,,1,1,1,0,0,,,,
-611,eraTW,1503,,Ｇスポット刺激,G spot stimulus,,,,,,,,,,,
-612,eraTW,1504,,乱れ牡丹,Disturbed peony,,,,,,,,,,,
-613,eraTW,1505,,手淫フェラ,Outponfro,,,,,,,,,,,
-614,eraTW,1506,,挿入Ｇスポット責め,Insert G spot blame,,%縦長%,1,1,1,0,0,,,,
-615,eraTW,1507,,挿入子宮口責め,Inserted cervix,,%横長%,1,1,1,0,0,,,,
-616,eraTW,1508,,６９パイズリ,69 fucking,,,1,1,1,0,0,,,,派生コマンド
-617,eraTW,1509,,ダブルフェラ,Double blowjob,,,,,,,,,,,
-618,eraTW,1510,,ダブル素股,Double intercrural sex,,,,,,,,,,,
-619,eraTW,1511,,ダブルパイズリ,Double fucking,,,,,,,,,,,
-620,eraTW,1512,,パイズリフェラ,Paizurifeller,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-621,eraTW,1513,,交互挿入,Alternate insertion,,,,,,,,,,,
-622,eraTW,1514,,Ｓ状結腸責め,S -form intestinal blame,,,,,,,,,,,
-623,eraTW,1515,,膣裏責め,Back of the vagina,,,,,,,,,,,
-624,eraTW,1560,,耳かき,Earpick,,,,,,,,,,,
-625,eraTW,1561,,抱きまくら,hugging pillow,,,,,,,,,,,
-626,eraTW,1562,,デコちゅー,Deco -chu,,,,,,,,,,,
-627,eraTW,1563,,もっとキスする,Kiss more,,,,,,,,,,,
-628,eraTW,1580,,手を引く,Pull out,,,,,,,,,,,
-629,eraTW,1603,,手を繋ぐ,Hold hands,,,,,,,,,,,
-630,eraTW,1604,,散策する,Stroll,,,,,,,,,,,
-631,eraTW,1605,,寄り道する,I'll drop by on the way,,,,,,,,,,,
-632,eraTW,1610,,食事に誘う（\2000消費）,Invite to a meal (\ 2000 consumption),,,,,,,,,,,
-633,eraTW,1611,,買い物する,Shop,,,,,,,,,,,
-634,eraTW,1612,,プレゼント,present,,,,,,,,,,,
-635,eraTW,1613,,お金稼ぎする,Make money,,,,,,,,,,,
-636,eraTW,1619,,酒屋,Liquor store,,,,,,,,,,,
-637,eraTW,1700,,愛撫(慰),Caress (comfort),,,,,,,,,,,
-638,eraTW,1701,,クンニ(慰),Cunnilingus (comfort),,,,,,,,,,,
-639,eraTW,1702,,セルフフェラ(慰),Self -blow (comfort),,,,,,,,,,,
-640,eraTW,1703,,指挿れ(慰),Finger insertion (comfort),,,,,,,,,,,
-641,eraTW,1704,,アナル舐め(慰),Anal lick (comfort),,,,,,,,,,,
-642,eraTW,1705,,アナル愛撫(慰),Anal caress (comfort),,,,,,,,,,,
-643,eraTW,1706,,胸愛撫(慰),Chest caress (comfort),,,,,,,,,,,
-644,eraTW,1707,,乳首責め(慰),Nipple torture (comfort),,,,,,,,,,,
-645,eraTW,1708,,秘貝開帳(慰),Secret Kai Kaiko (comfort),,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,
-646,eraTW,1709,,手淫(慰),Polish (comfort),,,,,,,,,,,
-647,eraTW,1712,,胸揉み(慰),Chest massage (comfort),,,,,,,,,,,
-648,eraTW,1713,,アナル開帳(慰),Anal opening book (comfort),,,,,,,,,,,
-649,eraTW,1740,,ローター,rotor,"(penis),open pussy",,1,1,1,0,0,,,実際insert率は低め,
-650,eraTW,1741,,Ｅマッサージャ,E massager,(penis),,1,1,1,0,0,,,下半身はすぐ挿入したがるので写らないように誤魔化す,
-651,eraTW,1742,,クリキャップ,Clickap,,,,,,,,,,,
-652,eraTW,1743,,オナホール,Masturbation,,,,,,,,,,,
-653,eraTW,1744,,バイブ,Vibe,"(penis),open pussy",,1,1,1,1,1,,,,
-654,eraTW,1745,,アナルバイブ,Anal vibe,,,1,1,1,1,1,,,,
-655,eraTW,1746,,アナルビーズ,Anal beads,,%横長%,1,1,1,0,0,,,,
-656,eraTW,1747,,ニプルキャップ,Nipple cap,,,1,1,1,0,0,,,,
-657,eraTW,1748,,搾乳機,Milking machine,,,,,,,,,,,
-658,eraTW,4001,,距離が近い,the distance is close,,,,,,,,,,,カウンター行動
-659,eraTW,4002,,チラ見,Seeing a flicker,,,,,,,,,,,カウンター行動
-660,eraTW,4003,,おはなし,Story,,,,,,,,,,,カウンター行動
-661,eraTW,4004,,いい匂い,Sweet smell,,,,,,,,,,,カウンター行動
-662,eraTW,4009,,中出し後,After the vaginal cum shot,,,,,,,,,,,カウンター行動
-663,eraTW,4011,,近寄ってくる,Approach,,,,,,,,,,,カウンター行動
-664,eraTW,4012,,笑顔を浮かべる,Smile,,,,,,,,,,,カウンター行動
-665,eraTW,4013,,構って欲しがる,I want you to take care,,,,,,,,,,,カウンター行動
-666,eraTW,4014,,身をすり寄せる,Trim,,,,,,,,,,,カウンター行動
-667,eraTW,4015,,見つめてくる,Stare at,,,,,,,,,,,カウンター行動
-668,eraTW,4016,,肩にあご乗せ,Put on your shoulder,,,,,,,,,,,カウンター行動
-669,eraTW,4017,,差し入れ,Interruption,,,,,,,,,,,カウンター行動
-670,eraTW,4020,,色っぽい仕草,Sicky gestures,,,,,,,,,,,カウンター行動
-671,eraTW,4021,,見つめる,stare,,,,,,,,,,,カウンター行動
-672,eraTW,4022,,体を摺り寄せる,Slide the body,,,,,,,,,,,カウンター行動
-673,eraTW,4023,,スカートを捲る,Turn up the skirt,,,,,,,,,,,カウンター行動
-674,eraTW,4024,,耳元に息を吹きかける,Bring your breath on your ears,,,,,,,,,,,カウンター行動
-675,eraTW,4025,,尻を撫でる,Stroke the buttocks,,,,,,,,,,,カウンター行動
-676,eraTW,4026,,腕に抱き付き,Hugging on your arm,,,,,,,,,,,カウンター行動
-677,eraTW,4027,,谷間を見せる,Show the valley,,,,,,,,,,,カウンター行動
-678,eraTW,4028,,尻ズリ,Ass,,,,,,,,,,,カウンター行動
-679,eraTW,4030,,キス,kiss,,,,,,,,,,,カウンター行動
-680,eraTW,4031,,後ろから抱きつく,Hug from behind,,,,,,,,,,,カウンター行動
-681,eraTW,4032,,前から抱きつく,Hugging from before,,,,,,,,,,,カウンター行動
-682,eraTW,4033,,胸を揉ませる,Rub your chest,,,,,,,,,,,カウンター行動
-683,eraTW,4034,,股間をまさぐる,Wrap the crotch,,,,,,,,,,,カウンター行動
-684,eraTW,4035,,スカートの中を見せる,Show the inside of the skirt,,,,,,,,,,,カウンター行動
-685,eraTW,4036,,後ろから胸もみもみ,Chest from behind,,,,,,,,,,,カウンター行動
-686,eraTW,4039,,飴強奪,Robbery,,,,,,,,,,,カウンター行動
-687,eraTW,4041,,正常位Ｖおねだり,Missionary position v -begging,,,,,,,,,,,カウンター行動
-688,eraTW,4043,,後背位Ｖおねだり,Dagui position v begging,,,,,,,,,,,カウンター行動
-689,eraTW,4044,,後背位Ａおねだり,Bearing A Bee,,,,,,,,,,,カウンター行動
-690,eraTW,4050,,手淫,Inderminence,multiple penis,,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,カウンター行動
-691,eraTW,4051,,フェラチオ、クンニ,"Fellatio, cunnilingus",,,,,,,,,,,カウンター行動
-692,eraTW,4052,,素股、貝合わせ,"Corr substitute, shellfish matching",,,,,,,,,,,カウンター行動
-693,eraTW,4053,,パイズリ,Fucking,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,%汎用拒否%,%汎用拒否ネガ%,,カウンター行動
-694,eraTW,4054,,足コキ,Footjob,,,,,,,,,,,カウンター行動
-695,eraTW,4055,,アナル愛撫,Anal caress,(penis),,1,1,1,1,1,,,,カウンター行動
-696,eraTW,4056,,アナル舐め,Anal licking,(penis),,1,1,1,1,1,,,,カウンター行動
-697,eraTW,4057,,指挿入,Finger insertion,,,,,,,,,,,カウンター行動
-698,eraTW,4058,,胸愛撫,Chest caress,"male's face,female masturbation,self grabbing",,1,1,1,0,0,,,,カウンター行動
-699,eraTW,4059,,乳首吸い,Nipple sucking,,,,,,,,,,,カウンター行動
-700,eraTW,4060,,ディープキス,Deep kiss,,,,,,,,,,,カウンター行動
-701,eraTW,4070,,クンニ強制,Cunnilingians,,,,,,,,,,,カウンター行動
-702,eraTW,4071,,フェラチオ強制,Fellatio forced,,,,,,,,,,,カウンター行動
-703,eraTW,4072,,アナル奉仕,Anal service,,,,,,,,,,,カウンター行動
-704,eraTW,4073,,ぱふぱふ,Plow,(lower body),,1,1,1,0,0,,,,カウンター行動
-705,eraTW,4074,,乳合わせ,Milk match,,,,,,,,,,,カウンター行動
-706,eraTW,4075,,タワシ洗い,Tawashi washing,,,1,1,1,0,0,,,,カウンター行動
-707,eraTW,4076,,強制アソコ愛撫,Forced dick caress,,,,,,,,,,,カウンター行動
-708,eraTW,4077,,乳を吸わせる,Suck the milk,,,,,,,,,,,カウンター行動
-709,eraTW,4078,,尻ズリ,Ass,,,,,,,,,,,カウンター行動
-710,eraTW,4080,,正常位される,Be missionary,,,,,,,,,,,カウンター行動
-711,eraTW,4083,,後背位される,Be d backed,,,,,,,,,,,カウンター行動
-712,eraTW,4084,,腰振りＶ受け,Swinging V,,,,,,,,,,,カウンター行動
-713,eraTW,4085,,騎乗位,Cowgirl,,,1,1,1,1,0,%汎用拒否%,%汎用拒否ネガ%,,カウンター行動
-714,eraTW,4086,,だいしゅきホールド,Daishiki Hold,,,,,,,,,,,カウンター行動
-715,eraTW,4087,,騎乗位Ａ,Cowgirl A,,,1,1,1,1,0,%汎用拒否%,%汎用拒否ネガ%,暫定で正常位,カウンター行動
-716,eraTW,4088,,腰振りＶ,Swinging v,,,,,,,,,,,カウンター行動
-717,eraTW,4089,,腰振りＡ,Swing A,,,,,,,,,,,カウンター行動
-718,eraTW,4090,,後背位Ａ挿入される,Bearing position A inserted,,,,,,,,,,,カウンター行動
-719,eraTW,4091,,イラマチオされる,Iramatio,,,,,,,,,,,カウンター行動
-720,eraTW,4093,,腰振り逆Ａ,Swinging reverse A,,,,,,,,,,,カウンター行動
-721,eraTW,4094,,正常位Ａ挿入される,Missionary A is inserted,,,,,,,,,,,カウンター行動
-722,eraTW,4120,,頭撫で,Stroking his head,,,,,,,,,,,カウンター行動
-723,eraTW,4121,,髪梳き,Hair comb,,,,,,,,,,,カウンター行動
-724,eraTW,4122,,抱きつき,Hug,,,,,,,,,,,カウンター行動
-725,eraTW,4123,,抱きしめ,Hugging,,,,,,,,,,,カウンター行動
-726,eraTW,4124,,頬撫で,Stroking cheeks,,,,,,,,,,,カウンター行動
-727,eraTW,4125,,くすぐり,Tickling,,,,,,,,,,,カウンター行動
-728,eraTW,4126,,膝枕させる,Make a knee pillow,,,,,,,,,,,カウンター行動
-729,eraTW,4127,,匂いを嗅ぐ,Smell,,,,,,,,,,,カウンター行動
-730,eraTW,4128,,話しかける,talk,,,,,,,,,,,カウンター行動
-731,eraTW,4129,,首筋舐め,Licking the neck,"(lower body:1.4),(lower back,ass,buttocks,butt,thigh:1.4",,1,1,1,0,0,,,,カウンター行動
-732,eraTW,4141,,キャラ固有1,Character cleaning 1,,,,,,,,,,,カウンター行動
-733,eraTW,4142,,キャラ固有2,Character -up 2,,,,,,,,,,,カウンター行動
-734,eraTW,4143,,キャラ固有3,Character -up 3,,,,,,,,,,,カウンター行動
-735,eraTW,4144,,キャラ固有4,Character cleaning 4,,,,,,,,,,,カウンター行動
-736,eraTW,4145,,キャラ固有5,Character -up 5,,,,,,,,,,,カウンター行動
-,,55X,,触手服,Tactic clothing,,,1,1,1,0,0,,,(構想中/触手エプロンって名前もあり？),紳士的な触手系コマンド
+﻿e2wNo,バリアント,STR,,コマンド名,プロンプト,ネガティブ,解像度,キャラ描画,顔描画,胸描画,ヴァギナ描画,アナル描画,下衣描画,足元描画,背景描画,拒否プロンプト,拒否ネガティブ,備考,系統
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+476,eraTW,1000,,愛撫,"fingering ,1girl,faceless male,spread legs,perfect hands, five fingers, pussy, uncensored<lora:pov_fingering_v2_b-5:1>",,,1,1,1,1,0,1,0,1,,,,０．愛撫系コマンド
+477,eraTW,1001,,クンニ,"nsfw,(close-up of girl's crotch:0.9),(pussy),spread legs,botomless",,,1,1,1,1,0,1,0,1,,,,０．愛撫系コマンド
+478,eraTW,1002,,フェラする,%上半身だけで誤魔化し%,,,1,1,1,0,0,0,0,1,,,,０．愛撫系コマンド
+479,eraTW,1003,,指挿れ,"fingering ,1girl,faceless male,spread legs,perfect hands, five fingers, pussy, uncensored<lora:pov_fingering_v2_b-5:1>",,,2,2,2,1,1,1,0,1,,,,０．愛撫系コマンド
+480,eraTW,1004,,アナル舐め,%アナル系誤魔化し%,(penis),,1,1,1,1,1,1,0,1,,,,０．愛撫系コマンド
+481,eraTW,1005,,アナル愛撫,%アナル系誤魔化し%,(penis),,1,1,1,1,1,1,0,1,,,,０．愛撫系コマンド
+482,eraTW,1006,,胸愛撫,"nsfw,hetero,breast grab, 1boy, 1girl arms at side,hands,arms,bust shot,nipples,POVBREASTGRAB,POV HANDS,BREAST GRAB,<lora:povBreastGrab_v2:0.8:1:lbw=CT>","male's face,female masturbation,self grabbing",,1,1,1,0,0,0,0,1,,,,０．愛撫系コマンド
+483,eraTW,1007,,乳首責め,Nipple torture,"male's face,penis",,1,1,1,0,0,0,0,1,,,,０．愛撫系コマンド
+484,eraTW,1008,,秘貝開帳,Secret portrait book,,,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,０．愛撫系コマンド
+485,eraTW,1009,,自慰,masturbation,,,1,1,1,1,1,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,０．愛撫系コマンド
+486,eraTW,1013,,アナル開帳,Anal opening book,,,1,1,1,1,1,1,0,1,,,,０．愛撫系コマンド
+487,eraTW,1015,,クリ愛撫,Chestnut caress,,,1,1,1,1,1,1,0,1,,,,０．愛撫系コマンド
+488,eraTW,1020,,キスする,Kiss,,,1,1,1,0,0,0,0,1,,,,１．コミュニケーション系コマンド
+489,eraTW,1021,,何もしない,do nothing,,,1,1,1,0,0,1,0,1,,,,１．コミュニケーション系コマンド
+490,eraTW,1022,,誘い受ける,Be invited,,,1,1,1,1,1,1,0,1,,,,１．コミュニケーション系コマンド
+491,eraTW,1040,,ローター,rotor,"(penis),open pussy",,1,1,1,0,0,1,0,1,,,実際insert率は低め,２．道具使用コマンド
+492,eraTW,1041,,Ｅマッサージャ,E massager,(penis),,1,1,1,0,0,1,0,1,,,下半身はすぐ挿入したがるので写らないように誤魔化す,道具使用コマンド
+493,eraTW,1042,,クリキャップ,Clickap,,,1,1,1,0,0,1,0,1,,,,２．道具使用コマンド
+494,eraTW,1043,,オナホール,Masturbation,,,1,1,1,0,0,1,0,1,,,,２．道具使用コマンド
+495,eraTW,1044,,バイブ,Vibe,"(penis),open pussy",,1,1,1,1,1,1,0,1,,,,２．道具使用コマンド
+496,eraTW,1045,,アナルバイブ,Anal vibe,,,1,1,1,1,1,1,0,1,,,,２．道具使用コマンド
+497,eraTW,1046,,アナルビーズ,Anal beads,,%横長%,1,1,1,0,0,1,0,1,,,,２．道具使用コマンド
+498,eraTW,1047,,ニプルキャップ,Nipple cap,,,1,1,1,0,0,1,0,1,,,,２．道具使用コマンド
+499,eraTW,1048,,搾乳機,Milking machine,,,1,1,1,0,0,1,0,1,,,,２．道具使用コマンド
+500,eraTW,1049,,乳首ローター,Nipple rotor,,,1,1,1,0,0,1,0,1,,,,２．道具使用コマンド
+501,eraTW,1060,,正常位,"nsfw,solo focus,nsfw,(deep penetration missionary:0.8),(lying,spread legs, vaginal sex,missionary:1.1)",,%縦長%,1,1,1,1,0,1,0,1,,,,
+502,eraTW,1061,,後背位,"nsfw,{<lora:povWaistGrabConcept_v09:0.2>,doggyGrab,vaginal sex,from behind,ass,doggystyle,pov|<lora:doggystyleSideView_ekunesidedoggstyle:0.7>,sidedoggystyle, 1boy, ass, doggystyle, sex,all fours,torso grab,penis,vaginal}",,,1,1,1,1,1,1,0,1,,,,
+503,eraTW,1062,,正常位アナル,Missionary anal,,,1,1,1,1,1,1,0,1,,,,
+504,eraTW,1063,,後背位アナル,Dogging anal,,%縦長%,1,1,1,1,1,1,0,1,,,,
+505,eraTW,1064,,逆レイプ,Reverse rape,,,1,1,1,0,0,1,0,1,,,,
+506,eraTW,1065,,騎乗位,Cowgirl,,,1,1,1,1,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+507,eraTW,1066,,騎乗位アナル,Cowgirl anal,,,1,1,1,1,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,暫定で正常位,
+508,eraTW,1067,,対面座位,"nsfw,face focus,hetero,chest,straddling,vaginal sex,sitting,cowgirl position,pov,pov crotch,1boy,penetration,(leaning forward:1.1),outstretched arms, out of frame,close-up,hug",,%正方形%,1,1,1,1,0,1,0,1,,,,
+509,eraTW,1068,,背面座位,Back sitting position,,,1,1,1,1,1,1,0,1,,,,
+510,eraTW,1069,,対面座位アナル,Face -to -face sitting anal,,,1,1,1,1,1,1,0,1,,,,
+511,eraTW,1070,,背面座位アナル,Back sitting anal,,,1,1,1,1,1,1,0,1,,,,
+512,eraTW,1071,,二穴挿し,Two holes insert,,,1,1,1,1,1,1,0,1,,,,
+513,eraTW,1080,,手淫,"nsfw, 1girl,hand,(handjob:1.1),pov clotch,closed mouth,penis ,glans,erection","multiple penis,(fellatio,breast squeezed together:1.3),close-up,face focus",,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+514,eraTW,1081,,フェラチオ,"nsfw,(fellatio,penis) ,pov crotch ,blow job,face focus",multiple penis,%正方形%,1,1,0,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+515,eraTW,1082,,パイズリ,"nsfw,1girl, 1boy,titsjob,(paizuri),penis on breasts,nipples,pov,pov crotch ,<lora:realisticTitfuck_titfuckRealisticEpoch:1>,titfuck","multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+516,eraTW,1083,,素股,"nsfw,botomless,navel,nude,<lora:povImminentPenetration_ipv1:1:lbw=CT>,1girl,1boy,  (pov crotch,penis), (imminent penetration:1.3), spread legs.(Cowgirl)","penis in pussy,inseration,(futanari,futa)",,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+517,eraTW,1084,,泡踊り,Bubble dance,,,1,1,1,0,0,1,0,1,,,,
+518,eraTW,1085,,足コキ,Footjob,,,1,1,1,0,0,1,0,1,,,,
+519,eraTW,1088,,バキュームフェラ,Vacuum blowjob,,,1,1,1,0,0,1,0,1,,,,
+520,eraTW,1090,,アナル愛撫される,Anal caress,,,1,1,1,0,0,1,0,1,,,,
+521,eraTW,1091,,アナル舐めされる,Anal licked,,,1,1,1,0,0,1,0,1,,,,
+522,eraTW,1092,,Ａ正常位される,A Missionary position,,,1,1,1,0,0,1,0,1,,,,逆奉仕、ウフフ系コマンド
+523,eraTW,1093,,Ａ後背位される,A Bearing,,,1,1,1,0,0,1,0,1,,,,逆奉仕、ウフフ系コマンド
+524,eraTW,1094,,Ａ騎乗位する,A Cowgirl,,,1,1,1,0,0,1,0,1,,,,逆奉仕、ウフフ系コマンド
+525,eraTW,1100,,スパンキング,Spanking,,,1,1,1,1,1,1,0,1,,,,
+526,eraTW,1101,,鞭,Whip,,,1,1,1,0,0,1,0,1,,,,
+527,eraTW,1102,,蝋燭,candle,,,1,1,1,1,1,1,0,1,,,,
+528,eraTW,1103,,針,needle,,,1,1,1,0,0,1,0,1,,,,
+529,eraTW,1104,,アイマスク,Eye mask,,,1,1,1,0,0,1,0,1,,,,ＳＭ系、ハードな調教コマンド
+530,eraTW,1105,,縄,rope,,,1,1,1,0,0,1,0,1,,,,
+531,eraTW,1106,,ボールギャグ,Ball gag,,,1,1,1,0,0,1,0,1,,,,
+532,eraTW,1107,,拘束プレイ,Restraint play,,,1,1,1,0,0,1,0,1,,,,
+533,eraTW,1120,,クンニ強制,Cunnilingians,,,1,1,1,0,0,1,0,1,,,,
+534,eraTW,1121,,貝合わせ,Shellfish match,,,1,1,1,0,0,1,0,1,,,,
+535,eraTW,1122,,助手を犯させる,Make the assistant commit,,,1,1,1,0,0,1,0,1,,,,
+536,eraTW,1123,,足コキする,Jumble,,,1,1,1,0,0,1,0,1,,,,
+537,eraTW,1124,,手淫する,Indemnify,,,1,1,1,0,0,1,0,1,,,,
+538,eraTW,1125,,愛撫させる,Caress,,,1,1,1,0,0,1,0,1,,,,
+539,eraTW,1126,,乳の揉み合い,Malm of milk,,,1,1,1,0,0,1,0,1,,,,
+540,eraTW,1130,,正常位される,Be missionary,,,1,1,1,0,0,1,0,1,,,,
+541,eraTW,1131,,後背位される,Be d backed,,,1,1,1,0,0,1,0,1,,,,
+542,eraTW,1132,,対面座位される,Face -to -face,,,1,1,1,0,0,1,0,1,,,,
+543,eraTW,1133,,背面座位される,The back is sitting,,,1,1,1,0,0,1,0,1,,,,
+544,eraTW,1140,,イラマチオ,Deep throat,"multiple penis,(tongue:1.4),chin","%正方形%,%横長%",1,1,0,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+545,eraTW,1141,,フィストファック,Fist fuck,,,1,1,1,0,0,1,0,1,,,,
+546,eraTW,1142,,アナルフィスト,Anal fist,,,1,1,1,0,0,1,0,1,,,,
+547,eraTW,1143,,両アナフィスト,Both anafist,,,1,1,1,0,0,1,0,1,,,,
+548,eraTW,1144,,放尿,Urination,,,1,1,1,0,0,1,0,1,,,,
+549,eraTW,1145,,アナル奉仕,Anal service,,,1,1,1,0,0,1,0,1,,,,
+550,eraTW,1146,,浣腸,enema,,,1,1,1,0,0,1,0,1,,,,
+551,eraTW,1147,,拡張バルーン,Expansion balloon,,,1,1,1,0,0,1,0,1,,,,
+552,eraTW,1148,,アナル電極,Anal electrode,,,1,1,1,0,0,1,0,1,,,,
+553,eraTW,1149,,,#VALUE!,,,1,1,1,0,0,1,0,1,,,,
+554,eraTW,1150,,胸の谷間を犯す,Commit the valley of the chest,,,1,1,1,0,0,1,0,1,,,,
+555,eraTW,1180,,ローション,lotion,,,1,1,1,0,0,1,0,1,,,,
+556,eraTW,1181,,媚薬,aphrodisiac,,,1,1,1,0,0,1,0,1,,,,
+557,eraTW,1182,,利尿剤,Diuretics,,,1,1,1,0,0,1,0,1,,,,
+558,eraTW,1183,,ビデオ撮影,Video shooting,"camera,lens,Photography Equipment,recording studio",,1,1,1,0,0,1,0,1,,,,
+559,eraTW,1184,,野外プレイ,Outdoor play,,,1,1,1,0,0,1,0,1,,,,
+560,eraTW,1185,,助手を犯す,Commit an assistant,,,1,1,1,0,0,1,0,1,,,,
+561,eraTW,1186,,羞恥プレイ,Shame play,,,1,1,1,0,0,1,0,1,,,,
+562,eraTW,1187,,お風呂場プレイ,Bathroom play,,,1,1,1,0,0,1,0,1,,,,
+563,eraTW,1188,,シャワー,shower,,,1,1,1,0,0,1,0,1,,,,
+564,eraTW,1189,,新妻プレイ,New wife play,,,1,1,1,0,0,1,0,1,,,,
+565,eraTW,1190,,エプロンを着ける,Wear an apron,,,1,1,1,0,0,1,0,1,,,,
+566,eraTW,1191,,睡眠薬,Sleeping pill,,,1,1,1,0,0,1,0,1,,,,
+567,eraTW,1300,,会話,"1girl, facing viewer,talking,(open mouth:0.8),face focus",,,1,1,1,0,0,1,0,1,"1girl, facing viewer,face focus,indifferent,<lora:hotarueye_jitome17_v100:0.4>,spoken ellipsis",,,
+568,eraTW,1301,,お茶を淹れる,"1girl,teacup,holding saucer,steam",,,1,1,1,0,0,1,0,1,,,,
+569,eraTW,1302,,スキンシップ,"1girl, 1boy,(pov hand,out of frame:1.1), physical contact,(hand on another's body)",,,1,1,1,0,0,1,0,1,"1girl, facing viewer,face focus,indifferent,<lora:hotarueye_jitome17_v100:0.4>,spoken ellipsis",,,
+570,eraTW,1303,,謝る,apologize,,,1,1,1,0,0,1,0,1,,,,
+571,eraTW,1304,,仕事を手伝う,Help work,,,1,1,1,0,0,1,0,1,,,,
+572,eraTW,1305,,膝枕してもらう,Have a knee pillow,,,1,1,1,0,0,1,0,1,,,,
+573,eraTW,1307,,頬をつまむ,"1girl, 1other,face focus,(pinching,cheek pinching), (pov hand,out of frame),hand on another's face,hand on another's cheek",,,1,1,1,0,0,1,0,1,,,,
+574,eraTW,1308,,頬をつつく,"1girl, 1other,face focus,(index finger),(poking,cheek poking), (pov hand,out of frame),hand on another's face,hand on another's cheek",,,1,1,1,0,0,1,0,1,,,,
+575,eraTW,1309,,頭を撫でる,"1girl, 1other,face focus,(headpat), (pov hand,out of frame),hand on another's head",,,1,1,1,0,0,1,0,1,,,,
+576,eraTW,1310,,尻を撫でる,"Stroke the buttocks,1 girl,from behind",,,1,1,1,0,0,1,0,1,,,,
+577,eraTW,1311,,抱き付く,Hug,,,1,1,1,0,0,1,0,1,,,,
+578,eraTW,1312,,キスする,Kiss,,,1,1,1,0,0,1,0,1,,,,
+579,eraTW,1313,,胸愛撫,"Chest caress,1girl, 1boy,(pov hand,out of frame:1.1),(hand on another's chest)","male's face,female masturbation,self grabbing",,1,1,1,0,0,1,0,1,,,,
+580,eraTW,1314,,アナル愛撫,Anal caress,(penis),,1,1,1,1,1,1,0,1,,,,
+581,eraTW,1315,,クリ愛撫,Chestnut caress,,,1,1,1,0,0,1,0,1,,,,
+582,eraTW,1316,,指挿れ,Finger insertion,,,1,1,1,0,0,1,0,1,,,,
+583,eraTW,1330,,スカートをめくる,"1girl, <lora:1651297874134676961:0.6>,windy, windy upskirt,panties",(lifted by self:1.3) ,,1,1,1,0,0,1,0,1,,,,
+584,eraTW,1350,,押し倒す,Push down,,,1,1,1,0,0,1,0,1,,,,
+585,eraTW,1351,,連れ出す,Take out,,,1,1,1,0,0,1,0,1,,,,
+586,eraTW,1352,,告白する,confess,,,1,1,1,0,0,1,0,1,,,,
+587,eraTW,1353,,イタズラする,Mischief,,,,,,0,0,1,0,1,,,,
+588,eraTW,1354,,添い寝する,Sleep with,,,,,,0,0,1,0,1,,,,
+589,eraTW,1360,,身を任せる,Leave,,,,,,0,0,1,0,1,,,,
+590,eraTW,1361,,抵抗する,resist,,,,,,0,0,1,0,1,,,,
+591,eraTW,1362,,逃げる,run away,,,,,,0,0,1,0,1,,,,
+592,eraTW,1400,,移動,Migration,excessive noise,,1,1,0,0,0,1,0,1,,,,
+593,eraTW,1401,,コレクション,collection,,,,,,0,0,1,0,1,,,,
+594,eraTW,1402,,就寝,Going to bed,,,,,,0,0,1,0,1,,,,
+595,eraTW,1403,,休憩,break,,,,,,0,0,1,0,1,,,,
+596,eraTW,1405,,出掛ける,go out,,,,,,0,0,1,0,1,,,,
+597,eraTW,1410,,掃除,"1girl, sweeping,(holding broom:1.1) ,fighting stance",,,,,,0,0,1,0,1,,,,
+598,eraTW,1411,,戦闘訓練,"(fighting stance:0.7),(motion lines:1.1),(Trajectory of light bullets,light bullets, bullets leaveing luminous trails:1.2),(danmaku:1.2),magic circle",,,,,,0,0,1,0,1,,,,
+599,eraTW,1412,,勉強,"studying,writing,book,book stack",,,,,,0,0,1,0,1,,,,
+600,eraTW,1413,,料理,cooking,,,,,,0,0,1,0,1,,,,
+601,eraTW,1414,,食事,meal,,,,,,0,0,1,0,1,,,,
+602,eraTW,1415,,食事をふるまう,Eat a meal,,,1,1,1,0,0,1,0,1,Eat a meal,,,
+603,eraTW,1416,,演奏する,play,,,,,,0,0,1,0,1,,,,
+604,eraTW,1420,,る～ことと話す,Talk to,,,,,,0,0,1,0,1,,,,
+605,eraTW,1427,,天候操作,Weather operation,,,,,,0,0,1,0,1,,,,
+606,eraTW,1428,,小槌を使う,Use a gavel,,,,,,0,0,1,0,1,,,,
+607,eraTW,1460,,妄想オナニー,Delusion masturbation,,,,,,0,0,1,0,1,,,,
+608,eraTW,1461,,我に返る,Return to me,,,,,,0,0,1,0,1,,,,
+609,eraTW,1501,,シックスナイン,Six Nine,multiple penis,"%縦長%,%正方形%,%横長%",1,1,0,0,0,1,0,1,,,暫定でフェラ,
+610,eraTW,1502,,岩清水,Iwashimizu,,,1,1,1,0,0,1,0,1,,,,
+611,eraTW,1503,,Ｇスポット刺激,G spot stimulus,,,,,,0,0,1,0,1,,,,
+612,eraTW,1504,,乱れ牡丹,Disturbed peony,,,,,,0,0,1,0,1,,,,
+613,eraTW,1505,,手淫フェラ,Outponfro,,,,,,0,0,1,0,1,,,,
+614,eraTW,1506,,挿入Ｇスポット責め,Insert G spot blame,,%縦長%,1,1,1,0,0,1,0,1,,,,
+615,eraTW,1507,,挿入子宮口責め,Inserted cervix,,%横長%,1,1,1,0,0,1,0,1,,,,
+616,eraTW,1508,,６９パイズリ,69 fucking,,,1,1,1,0,0,1,0,1,,,,派生コマンド
+617,eraTW,1509,,ダブルフェラ,Double blowjob,,,,,,0,0,1,0,1,,,,
+618,eraTW,1510,,ダブル素股,Double intercrural sex,,,,,,0,0,1,0,1,,,,
+619,eraTW,1511,,ダブルパイズリ,Double fucking,,,,,,0,0,1,0,1,,,,
+620,eraTW,1512,,パイズリフェラ,Paizurifeller,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+621,eraTW,1513,,交互挿入,Alternate insertion,,,,,,0,0,1,0,1,,,,
+622,eraTW,1514,,Ｓ状結腸責め,S -form intestinal blame,,,,,,0,0,1,0,1,,,,
+623,eraTW,1515,,膣裏責め,Back of the vagina,,,,,,0,0,1,0,1,,,,
+624,eraTW,1560,,耳かき,Earpick,,,,,,0,0,1,0,1,,,,
+625,eraTW,1561,,抱きまくら,hugging pillow,,,,,,0,0,1,0,1,,,,
+626,eraTW,1562,,デコちゅー,Deco -chu,,,,,,0,0,1,0,1,,,,
+627,eraTW,1563,,もっとキスする,Kiss more,,,,,,0,0,1,0,1,,,,
+628,eraTW,1580,,手を引く,Pull out,,,,,,0,0,1,0,1,,,,
+629,eraTW,1603,,手を繋ぐ,Hold hands,,,,,,0,0,1,0,1,,,,
+630,eraTW,1604,,散策する,Stroll,,,,,,0,0,1,0,1,,,,
+631,eraTW,1605,,寄り道する,I'll drop by on the way,,,,,,0,0,1,0,1,,,,
+632,eraTW,1610,,食事に誘う（\2000消費）,Invite to a meal (\ 2000 consumption),,,,,,0,0,1,0,1,,,,
+633,eraTW,1611,,買い物する,Shop,,,,,,0,0,1,0,1,,,,
+634,eraTW,1612,,プレゼント,present,,,,,,0,0,1,0,1,,,,
+635,eraTW,1613,,お金稼ぎする,Make money,,,,,,0,0,1,0,1,,,,
+636,eraTW,1619,,酒屋,Liquor store,,,,,,0,0,1,0,1,,,,
+637,eraTW,1700,,愛撫(慰),Caress (comfort),,,,,,0,0,1,0,1,,,,
+638,eraTW,1701,,クンニ(慰),Cunnilingus (comfort),,,,,,0,0,1,0,1,,,,
+639,eraTW,1702,,セルフフェラ(慰),Self -blow (comfort),,,,,,0,0,1,0,1,,,,
+640,eraTW,1703,,指挿れ(慰),Finger insertion (comfort),,,,,,0,0,1,0,1,,,,
+641,eraTW,1704,,アナル舐め(慰),Anal lick (comfort),,,,,,0,0,1,0,1,,,,
+642,eraTW,1705,,アナル愛撫(慰),Anal caress (comfort),,,,,,0,0,1,0,1,,,,
+643,eraTW,1706,,胸愛撫(慰),Chest caress (comfort),,,,,,0,0,1,0,1,,,,
+644,eraTW,1707,,乳首責め(慰),Nipple torture (comfort),,,,,,0,0,1,0,1,,,,
+645,eraTW,1708,,秘貝開帳(慰),Secret Kai Kaiko (comfort),,,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,
+646,eraTW,1709,,手淫(慰),Polish (comfort),,,,,,0,0,1,0,1,,,,
+647,eraTW,1712,,胸揉み(慰),Chest massage (comfort),,,,,,0,0,1,0,1,,,,
+648,eraTW,1713,,アナル開帳(慰),Anal opening book (comfort),,,,,,0,0,1,0,1,,,,
+649,eraTW,1740,,ローター,rotor,"(penis),open pussy",,1,1,1,0,0,1,0,1,,,実際insert率は低め,
+650,eraTW,1741,,Ｅマッサージャ,E massager,(penis),,1,1,1,0,0,1,0,1,,,下半身はすぐ挿入したがるので写らないように誤魔化す,
+651,eraTW,1742,,クリキャップ,Clickap,,,,,,0,0,1,0,1,,,,
+652,eraTW,1743,,オナホール,Masturbation,,,,,,0,0,1,0,1,,,,
+653,eraTW,1744,,バイブ,Vibe,"(penis),open pussy",,1,1,1,0,0,1,0,1,,,,
+654,eraTW,1745,,アナルバイブ,Anal vibe,,,1,1,1,0,0,1,0,1,,,,
+655,eraTW,1746,,アナルビーズ,Anal beads,,%横長%,1,1,1,0,0,1,0,1,,,,
+656,eraTW,1747,,ニプルキャップ,Nipple cap,,,1,1,1,0,0,1,0,1,,,,
+657,eraTW,1748,,搾乳機,Milking machine,,,,,,0,0,1,0,1,,,,
+658,eraTW,4001,,距離が近い,the distance is close,,,,,,0,0,1,0,1,,,,カウンター行動
+659,eraTW,4002,,チラ見,Seeing a flicker,,,,,,0,0,1,0,1,,,,カウンター行動
+660,eraTW,4003,,おはなし,Story,,,,,,0,0,1,0,1,,,,カウンター行動
+661,eraTW,4004,,いい匂い,Sweet smell,,,,,,0,0,1,0,1,,,,カウンター行動
+662,eraTW,4009,,中出し後,After the vaginal cum shot,,,,,,0,0,1,0,1,,,,カウンター行動
+663,eraTW,4011,,近寄ってくる,Approach,,,,,,0,0,1,0,1,,,,カウンター行動
+664,eraTW,4012,,笑顔を浮かべる,Smile,,,,,,0,0,1,0,1,,,,カウンター行動
+665,eraTW,4013,,構って欲しがる,I want you to take care,,,,,,0,0,1,0,1,,,,カウンター行動
+666,eraTW,4014,,身をすり寄せる,Trim,,,,,,0,0,1,0,1,,,,カウンター行動
+667,eraTW,4015,,見つめてくる,Stare at,,,,,,0,0,1,0,1,,,,カウンター行動
+668,eraTW,4016,,肩にあご乗せ,Put on your shoulder,,,,,,0,0,1,0,1,,,,カウンター行動
+669,eraTW,4017,,差し入れ,Interruption,,,,,,0,0,1,0,1,,,,カウンター行動
+670,eraTW,4020,,色っぽい仕草,Sicky gestures,,,,,,0,0,1,0,1,,,,カウンター行動
+671,eraTW,4021,,見つめる,stare,,,,,,0,0,1,0,1,,,,カウンター行動
+672,eraTW,4022,,体を摺り寄せる,Slide the body,,,,,,0,0,1,0,1,,,,カウンター行動
+673,eraTW,4023,,スカートを捲る,Turn up the skirt,,,,,,0,0,1,0,1,,,,カウンター行動
+674,eraTW,4024,,耳元に息を吹きかける,Bring your breath on your ears,,,,,,0,0,1,0,1,,,,カウンター行動
+675,eraTW,4025,,尻を撫でる,Stroke the buttocks,,,,,,0,0,1,0,1,,,,カウンター行動
+676,eraTW,4026,,腕に抱き付き,Hugging on your arm,,,,,,0,0,1,0,1,,,,カウンター行動
+677,eraTW,4027,,谷間を見せる,Show the valley,,,,,,0,0,1,0,1,,,,カウンター行動
+678,eraTW,4028,,尻ズリ,Ass,,,,,,0,0,1,0,1,,,,カウンター行動
+679,eraTW,4030,,キス,kiss,,,,,,0,0,1,0,1,,,,カウンター行動
+680,eraTW,4031,,後ろから抱きつく,Hug from behind,,,,,,0,0,1,0,1,,,,カウンター行動
+681,eraTW,4032,,前から抱きつく,Hugging from before,,,,,,0,0,1,0,1,,,,カウンター行動
+682,eraTW,4033,,胸を揉ませる,Rub your chest,,,,,,0,0,1,0,1,,,,カウンター行動
+683,eraTW,4034,,股間をまさぐる,Wrap the crotch,,,,,,0,0,1,0,1,,,,カウンター行動
+684,eraTW,4035,,スカートの中を見せる,Show the inside of the skirt,,,,,,0,0,1,0,1,,,,カウンター行動
+685,eraTW,4036,,後ろから胸もみもみ,Chest from behind,,,,,,0,0,1,0,1,,,,カウンター行動
+686,eraTW,4039,,飴強奪,Robbery,,,,,,0,0,1,0,1,,,,カウンター行動
+687,eraTW,4041,,正常位Ｖおねだり,Missionary position v -begging,,,,,,0,0,1,0,1,,,,カウンター行動
+688,eraTW,4043,,後背位Ｖおねだり,Dagui position v begging,,,,,,0,0,1,0,1,,,,カウンター行動
+689,eraTW,4044,,後背位Ａおねだり,Bearing A Bee,,,,,,0,0,1,0,1,,,,カウンター行動
+690,eraTW,4050,,手淫,Inderminence,multiple penis,,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,カウンター行動
+691,eraTW,4051,,フェラチオ、クンニ,"Fellatio, cunnilingus",,,,,,0,0,1,0,1,,,,カウンター行動
+692,eraTW,4052,,素股、貝合わせ,"Corr substitute, shellfish matching",,,,,,0,0,1,0,1,,,,カウンター行動
+693,eraTW,4053,,パイズリ,Fucking,"multiple nipples,multiple penis,pussy,wide shot",%正方形%,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,カウンター行動
+694,eraTW,4054,,足コキ,Footjob,,,,,,0,0,1,0,1,,,,カウンター行動
+695,eraTW,4055,,アナル愛撫,Anal caress,(penis),,1,1,1,1,1,1,0,1,,,,カウンター行動
+696,eraTW,4056,,アナル舐め,Anal licking,(penis),,1,1,1,1,1,1,0,1,,,,カウンター行動
+697,eraTW,4057,,指挿入,Finger insertion,,,,,,0,0,1,0,1,,,,カウンター行動
+698,eraTW,4058,,胸愛撫,Chest caress,"male's face,female masturbation,self grabbing",,1,1,1,0,0,1,0,1,,,,カウンター行動
+699,eraTW,4059,,乳首吸い,Nipple sucking,,,,,,0,0,1,0,1,,,,カウンター行動
+700,eraTW,4060,,ディープキス,Deep kiss,,,,,,0,0,1,0,1,,,,カウンター行動
+701,eraTW,4070,,クンニ強制,Cunnilingians,,,,,,0,0,1,0,1,,,,カウンター行動
+702,eraTW,4071,,フェラチオ強制,Fellatio forced,,,,,,0,0,1,0,1,,,,カウンター行動
+703,eraTW,4072,,アナル奉仕,Anal service,,,,,,0,0,1,0,1,,,,カウンター行動
+704,eraTW,4073,,ぱふぱふ,Plow,(lower body),,1,1,1,0,0,1,0,1,,,,カウンター行動
+705,eraTW,4074,,乳合わせ,Milk match,,,,,,0,0,1,0,1,,,,カウンター行動
+706,eraTW,4075,,タワシ洗い,Tawashi washing,,,1,1,1,0,0,1,0,1,,,,カウンター行動
+707,eraTW,4076,,強制アソコ愛撫,Forced dick caress,,,,,,0,0,1,0,1,,,,カウンター行動
+708,eraTW,4077,,乳を吸わせる,Suck the milk,,,,,,0,0,1,0,1,,,,カウンター行動
+709,eraTW,4078,,尻ズリ,Ass,,,,,,0,0,1,0,1,,,,カウンター行動
+710,eraTW,4080,,正常位される,Be missionary,,,,,,0,0,1,0,1,,,,カウンター行動
+711,eraTW,4083,,後背位される,Be d backed,,,,,,0,0,1,0,1,,,,カウンター行動
+712,eraTW,4084,,腰振りＶ受け,Swinging V,,,,,,0,0,1,0,1,,,,カウンター行動
+713,eraTW,4085,,騎乗位,Cowgirl,,,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,,カウンター行動
+714,eraTW,4086,,だいしゅきホールド,Daishiki Hold,,,,,,0,0,1,0,1,,,,カウンター行動
+715,eraTW,4087,,騎乗位Ａ,Cowgirl A,,,1,1,1,0,0,1,0,1,%汎用拒否%,%汎用拒否ネガ%,暫定で正常位,カウンター行動
+716,eraTW,4088,,腰振りＶ,Swinging v,,,,,,0,0,1,0,1,,,,カウンター行動
+717,eraTW,4089,,腰振りＡ,Swing A,,,,,,0,0,1,0,1,,,,カウンター行動
+718,eraTW,4090,,後背位Ａ挿入される,Bearing position A inserted,,,,,,0,0,1,0,1,,,,カウンター行動
+719,eraTW,4091,,イラマチオされる,Iramatio,,,,,,0,0,1,0,1,,,,カウンター行動
+720,eraTW,4093,,腰振り逆Ａ,Swinging reverse A,,,,,,0,0,1,0,1,,,,カウンター行動
+721,eraTW,4094,,正常位Ａ挿入される,Missionary A is inserted,,,,,,0,0,1,0,1,,,,カウンター行動
+722,eraTW,4120,,頭撫で,Stroking his head,,,,,,0,0,1,0,1,,,,カウンター行動
+723,eraTW,4121,,髪梳き,Hair comb,,,,,,0,0,1,0,1,,,,カウンター行動
+724,eraTW,4122,,抱きつき,Hug,,,,,,0,0,1,0,1,,,,カウンター行動
+725,eraTW,4123,,抱きしめ,Hugging,,,,,,0,0,1,0,1,,,,カウンター行動
+726,eraTW,4124,,頬撫で,Stroking cheeks,,,,,,0,0,1,0,1,,,,カウンター行動
+727,eraTW,4125,,くすぐり,Tickling,,,,,,0,0,1,0,1,,,,カウンター行動
+728,eraTW,4126,,膝枕させる,Make a knee pillow,,,,,,0,0,1,0,1,,,,カウンター行動
+729,eraTW,4127,,匂いを嗅ぐ,Smell,,,,,,0,0,1,0,1,,,,カウンター行動
+730,eraTW,4128,,話しかける,talk,,,,,,0,0,1,0,1,,,,カウンター行動
+731,eraTW,4129,,首筋舐め,Licking the neck,"(lower body:1.4),(lower back,ass,buttocks,butt,thigh:1.4",,1,1,1,0,0,1,0,1,,,,カウンター行動
+732,eraTW,4141,,キャラ固有1,Character cleaning 1,,,,,,0,0,1,0,1,,,,カウンター行動
+733,eraTW,4142,,キャラ固有2,Character -up 2,,,,,,0,0,1,0,1,,,,カウンター行動
+734,eraTW,4143,,キャラ固有3,Character -up 3,,,,,,0,0,1,0,1,,,,カウンター行動
+735,eraTW,4144,,キャラ固有4,Character cleaning 4,,,,,,0,0,1,0,1,,,,カウンター行動
+736,eraTW,4145,,キャラ固有5,Character -up 5,,,,,,0,0,1,0,1,,,,カウンター行動
+,,55X,,触手服,Tactic clothing,,,1,1,1,0,0,1,0,1,,,(構想中/触手エプロンって名前もあり？),紳士的な触手系コマンド
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,時間停止,<lora:TurtleLily:1>,,,1,1,1,0,0,1,0,1,,,,
+,,,,着衣胸愛撫,"<lora:clothedBreastGrab_chakumomiV11:1.4:1:lbw=CT>,(CHAKUMOMI:1.2),(POV HAND,BREAST GRAB:1.4),hetero, 1boy, 1girl arms at side,arms,bust shot",nipples,,1,1,1,0,0,1,0,1,,,,
+,,,,着衣胸揉み,"<lora:clothedBreastGrab_chakumomiV11:1.4:1:lbw=CT>,(CHAKUMOMI:1.2),(POV HAND,BREAST GRAB:1.4),hetero, 1boy, 1girl arms at side,arms,bust shot",nipples,,1,1,1,0,0,1,0,1,,,,
+,,,派生,お掃除フェラ,,,,1,1,1,0,0,1,0,1,,,,
+,,,派生,ナイズリ,"nsfw,(NAIZURI),1girl, 1boy, pov,(penis:1.2), flat chest,looking at viewer, from above,<lora:naizuriConcept_v1:0.8:1:lbw=CT>",,,1,1,1,0,0,1,0,1,,,,
+,,,派生,対面立位,,,,,,,0,0,1,0,1,,,,
+,,,派生,背面立位,,,,,,,0,0,1,0,1,,,,
+,,,派生,対面立位アナル,,,,,,,0,0,1,0,1,,,,
+,,,派生,背面立位アナル,,,,,,,0,0,1,0,1,,,,
+,,,,オナニー,"Power plant, Power generation facility, (Electricity:1.4) ,Electricity spark",,,0,0,0,0,0,1,0,0,,,,
+,,,,お酒をふるまう,"1girl having a sake party,sake cup,drinking alcohol",,,1,1,1,0,0,1,0,1,,,,
+,,,,食事を取る,Eat a meal,,,0,0,0,0,0,0,0,1,Eat a meal,,,
+,,,,食事を取る_一緒に,Eating a meal,,,1,1,1,0,0,1,0,1,Eat a meal,,,
+,,,,料理を作る,"food focus,",,,0,0,0,0,0,,0,0,,,,
+,,,,料理を作る_一緒に,"1girl,cooking",,,1,1,1,0,0,1,0,1,,,,
+,,,,釣りをする,"fishing,fishing rod",,,0,0,0,0,0,1,0,1,,,,
+,,,,釣りをする_一緒に,"1girl,looking back,fishing,fishing rod,bust shot",,,1,1,1,0,0,1,0,1,,,,
+,,,,採集する,,,,0,0,0,0,0,0,0,0,,,,
+,,,,採集する_一緒に,,,,1,1,1,0,0,1,0,1,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,なに考えてるの,自由行動に付き合う_0,"1girl,talking,open mouth,facing viewer,face focus",,,1,1,1,0,0,1,0,1,,,,
+,,,一緒に遊ぶ,自由行動に付き合う_1,"1girl ,frolic ,playing,facing viewer,bust shot",,,1,1,1,0,0,1,0,1,,,,
+,,,一緒に食事する,自由行動に付き合う_2,"1girl,eating a meal,facing viewer,face focus",,,1,1,1,0,0,1,0,1,,,,
+,,,一緒につまみ食い,自由行動に付き合う_3,"1girl,Sneaking a bite,bust shot",,,1,1,1,0,0,1,0,1,,,,
+,,,掃除を手伝う,自由行動に付き合う_4,"1girl,cleaning,looking back",,,1,1,1,0,0,1,0,1,,,,
+,,,一緒に運動する,自由行動に付き合う_5,"1girl ,(exercising ,action scene),facing viewer,bust shot ",,,1,1,1,0,0,1,0,1,,,,
+,,,本の感想を聞く,自由行動に付き合う_6,"1girl ,reading a book,facing viewer,face focus",,,1,1,1,0,0,1,0,1,,,,
+,,,料理を手伝う,自由行動に付き合う_7,"1girl,cooking,looking back,face focus",,,1,1,1,0,0,1,0,1,,,,
+,,,セッションする,自由行動に付き合う_8,"1girl,playing instrument ,facing viewer,bust shot",,,1,1,1,0,0,1,0,1,,,,
+,,,採集を手伝う,自由行動に付き合う_9,"1girl,harvesting,carrying a basket on back",,,1,1,1,0,0,1,0,1,,,,
+,,,一緒に釣りをする,自由行動に付き合う_10,"1girl,looking back,fishing,fishing rod,bust shot",,,1,1,1,0,0,1,0,1,,,,
+,,,実験を手伝う,自由行動に付き合う_11,"(conduct an experiment,laboratory:1.2)",,,1,1,1,0,0,1,0,0,,,,
+,,,一緒にのんびりする,自由行動に付き合う_12,"1girl,relax,looking viewer",,,1,1,1,0,0,1,0,1,,,,
+,,,晩酌に付き合う,自由行動に付き合う_13,"1girl having a sake party,sake cup,drinking alcohol,facing viewer,bust shot",,,1,1,1,0,0,0,0,1,,,,
+,,,買い物を手伝う,自由行動に付き合う_14,"1girl ,shopping,facing viewer,face focus",,,1,1,1,0,0,1,0,1,,,,
+,,,様子をうかがう,自由行動に付き合う_15,"1girl ,sermon,preaching",,,1,1,1,0,0,1,0,1,,,,
+,,,いたずらに付き合う,自由行動に付き合う_16,"1girl ,dig a hole,shovel",,,1,1,1,0,0,1,0,1,,,,
+,,,一緒に雪作り,自由行動に付き合う_17,"1girl ,making a snowman,looking at viewer",,,1,1,1,0,0,1,0,1,,,,
+,,,炬燵でくつろぐ,自由行動に付き合う_18,"1girl ,relax at the kotatsu together,facing viewer",,,1,1,1,0,0,1,0,1,,,,
+,,,考え事,自由行動_0,"1girl ,thinking,deep thinker, hand on own chin",,,1,1,1,0,0,1,0,1,,,,
+,,,遊ぶ,自由行動_1,"1girl ,frolic ,playing",,,1,1,1,0,0,1,0,1,,,,
+,,,食事,自由行動_2,"1girl,eating a meal",,,1,1,1,0,0,1,0,1,,,,
+,,,つまみ食い,自由行動_3,"1girl,Sneaking a bite,bust shot",,,1,1,1,0,0,1,0,1,,,,
+,,,掃除,自由行動_4,"1girl,cleaning",,,1,1,1,0,0,1,0,1,,,,
+,,,運動,自由行動_5,"1girl ,(exercising girl),training,sweat",,,1,1,1,0,0,1,0,1,,,,
+,,,読書,自由行動_6,"1girl ,reading a book",,,1,1,1,0,0,1,0,1,,,,
+,,,料理,自由行動_7,"1girl,cooking",,,1,1,1,0,0,1,0,1,,,,
+,,,演奏,自由行動_8,"1girl,playing instrument",,,1,1,1,0,0,1,0,1,,,,
+,,,採集,自由行動_9,"1girl,harvesting,carrying a basket on back",,,1,1,1,0,0,1,0,1,,,,
+,,,釣り,自由行動_10,"1girl,looking back,fishing,fishing rod",,,1,1,1,0,0,1,0,1,,,,
+,,,実験,自由行動_11,"(conduct an experiment,laboratory:1.2)",,,1,1,1,0,0,1,0,0,,,,
+,,,のんびり,自由行動_12,"1girl,relax",,,1,1,1,0,0,1,0,1,,,,
+,,,晩酌,自由行動_13,"1girl having a sake party,sake cup,drinking alcohol",,,1,1,1,0,0,1,0,1,,,,
+,,,買い物,自由行動_14,"1girl ,shopping",,,1,1,1,0,0,1,0,1,,,,
+,,,説教,自由行動_15,"1girl ,sermon,preaching",,,1,1,1,0,0,1,0,1,,,,
+,,,落とし穴,自由行動_16,"1girl ,dig a hole,shovel",,,1,1,1,0,0,1,0,1,,,,
+,,,雪だるま作り,自由行動_17,"1girl ,making a snowman",,,1,1,1,0,0,1,0,1,,,,
+,,,炬燵でのんびり,自由行動_18,"1girl ,relax at the kotatsu",,,1,1,1,0,0,1,0,1,,,,
+,,,清掃,仕事_40,"1girl,cleaning",,,1,1,1,0,0,1,0,1,,,,
+,,,会話,仕事_41,"1girl,giving a speech",,,1,1,1,0,0,1,0,1,,,,
+,,,戦闘,仕事_42,"1girl,(fighting stance:0.7),(motion lines:1.1),(Trajectory of light bullets,light bullets, bullets leaveing luminous trails:1.2),(danmaku:1.2),magic circle",,,1,1,1,0,0,1,0,1,,,,
+,,,教養,仕事_43,"1girl ,reading a book",,,1,1,1,0,0,1,0,1,,,,
+,,,料理,仕事_44,"1girl,cooking",,,1,1,1,0,0,1,0,1,,,,
+,,,音楽,仕事_45,"1girl,playing instrument",,,1,1,1,0,0,1,0,1,,,,
+,,,遊び,仕事_46,"1girl ,frolic ,playing",,,1,1,1,0,0,1,0,1,,,,
+,,,商売中,仕事_47,"1girl,Business",,,1,1,1,0,0,1,0,1,,,,
+,,,宴会の準備,仕事_48,"1girl,Preparation for banquets",,,1,1,1,0,0,1,0,1,,,,
+,,,宴会に参加,仕事_49,"1girl,Participate in banquets",,,1,1,1,0,0,1,0,1,,,,
+,,,片づけ,仕事_50,"1girl,Cleaning up",,,1,1,1,0,0,1,0,1,,,,
+,,,宴会後の酔い,仕事_51,"1girl,Drunk after banquet",,,1,1,1,0,0,1,0,1,,,,
+,,,女子会,仕事_52,"1girl,Women's Association",,,1,1,1,0,0,1,0,1,,,,
+,,,調合,仕事_53,"1girl,Formation",,,1,1,1,0,0,1,0,1,,,,
+,,,"霊夢,夢子,一輪",仕事_掃除,"1girl,cleaning",,,1,1,1,0,0,1,0,1,,,,
+,,,"る～こと,アリス",仕事_家事,"1girl,housework",,,1,1,1,0,0,1,0,1,,,,
+,,,"魅魔,萃香,魔理沙,",仕事_トレーニング,"1girl,training",,,1,1,1,0,0,1,0,1,,,,
+,,,"魅魔、紫、神奈子,白蓮,永琳,幽々子,隠岐奈,神綺",仕事_定例女子会,"1girl,Regular girls' association",,,1,1,1,0,0,1,0,1,,,,
+,,,"ちゆり,夢美",仕事_研究,"1girl,the study",,,1,1,1,0,0,1,0,1,,,,
+,,,魔理沙,仕事_発掘作業,"1girl,Excavation work",,,1,1,1,0,0,1,0,1,,,,
+,,,"萃香,勇儀",仕事_酒飲み,"1girl,drunkard",,,1,1,1,0,0,1,0,1,,,,
+,,,ルーミア,仕事_食料の確保,"1girl,Ensuring food",,,1,1,1,0,0,1,0,1,,,,
+,,,チルノ,仕事_アイス屋,"1girl,Ice cream",,,1,1,1,0,0,1,0,1,,,,
+,,,レミリア,仕事_日曜日の日課,"1girl,Sunday daily routine",,,1,1,1,0,0,1,0,1,,,,
+,,,アリス,仕事_人形劇,"1girl,puppet show",,,1,1,1,0,0,1,0,1,,,,
+,,,"アリス,慧音",仕事_後片付け,"1girl,Cleaning up",,,1,1,1,0,0,1,0,1,,,,
+,,,"ルナサ,メルラン,リリカ,弁々,八橋,雷鼓",仕事_コンサート,"1girl,concert",,,1,1,1,0,0,1,0,1,,,,
+,,,妖夢,仕事_買い出し,"1girl,Purchase",,,1,1,1,0,0,1,0,1,,,,
+,,,"藍,紫",仕事_結界管理,"1girl,Barrier management",,,1,1,1,0,0,1,0,1,,,,
+,,,ミスティア,仕事_仕込み,"1girl,Preparation",,,1,1,1,0,0,1,0,1,,,,
+,,,ミスティア,仕事_屋台の仕事,"1girl,Stall work",,,1,1,1,0,0,1,0,1,,,,
+,,,文,仕事_記事執筆,"1girl,Article writing",,,1,1,1,0,0,1,0,1,,,,
+,,,映姫,仕事_裁判,"1girl,hold a court,rod of remorse",,,1,1,1,0,0,1,0,1,,,,
+,,,"映姫,慧音",仕事_お昼休み,"1girl,lunch break",,,1,1,1,0,0,1,0,1,,,,
+,,,映姫,仕事_事務仕事,"1girl,Clerical work",,,1,1,1,0,0,1,0,1,,,,
+,,,映姫,仕事_書類整理,"1girl,Organizing documents",,,1,1,1,0,0,1,0,1,,,,
+,,,"早苗,白蓮,布都",仕事_勧誘,"1girl,Solicitation",,,1,1,1,0,0,1,0,1,,,,
+,,,神奈子,仕事_身体測定,"1girl,physical measurement",,,1,1,1,0,0,1,0,1,,,,
+,,,"諏訪子,ぬえ,",仕事_料理,"1girl,cooking",,,1,1,1,0,0,1,0,1,,,,
+,,,天子,仕事_願掛け,"1girl,Desire",,,1,1,1,0,0,1,0,1,,,,
+,,,"衣玖,雷鼓",仕事_会話,"1girl,giving a speech",,,1,1,1,0,0,1,0,1,,,,
+,,,お燐,仕事_怨霊の管理,"1girl,Ghost management,hitodama,blue fire,skull",,,1,1,1,0,0,1,0,1,,,,
+,,,お空,仕事_出力管理,"1girl,Output management",,,1,1,1,0,0,1,0,1,,,,
+,,,小傘,仕事_ベビーシッター,"1girl,babysitter",,,1,1,1,0,0,1,0,1,,,,
+,,,華扇,仕事_食べ歩き,"1girl,Eating and walking",,,1,1,1,0,0,1,0,1,,,,
+,,,"華扇,神子",仕事_修行,"1girl,Training",,,1,1,1,0,0,1,0,1,,,,
+,,,エレン,仕事_魔法屋の出張,"1girl,Magical shop business trip",,,1,1,1,0,0,1,0,1,,,,
+,,,エレン,仕事_採集,"1girl,Gathering",,,1,1,1,0,0,1,0,1,,,,
+,,,鈴仙,仕事_薬売り,"1girl,Drug sales",,,1,1,1,0,0,1,0,1,,,,
+,,,鈴仙,仕事_調剤,"1girl,Dispensing",,,1,1,1,0,0,1,0,1,,,,
+,,,パチュリー,仕事_読書,"1girl,reading",,,1,1,1,0,0,1,0,1,,,,
+,,,こころ,仕事_能楽,"1girl,Noh music",,,1,1,1,0,0,1,0,1,,,,
+,,,こころ,仕事_能楽の練習,"1girl,Noh practice",,,1,1,1,0,0,1,0,1,,,,
+,,,パルスィ,仕事_橋の見張り,"1girl,Viewing of the bridge",,,1,1,1,0,0,1,0,1,,,,
+,,,輝夜,仕事_月都万象展の司会,"1girl,Moderat of Tsukitomin Elephant Exhibition",,,1,1,1,0,0,1,0,1,,,,
+,,,輝夜,仕事_盆栽の世話,"1girl,Bonsai care",,,1,1,1,0,0,1,0,1,,,,
+,,,椛,仕事_警備,"1girl,on patrol duty",,,1,1,1,0,0,1,0,1,,,,
+,,,慧音,仕事_寺子屋の授業,"1girl,Terakoya class, lecture to japanese class,book",,,1,1,1,0,0,1,0,1,,,,
+,,,幽香,仕事_お花の手入れ,"1girl,caring for flowers",,,1,1,1,0,0,1,0,1,,,,
+,,,小鈴,仕事_店番,"1girl,looking after a shop",,,1,1,1,0,0,1,0,1,,,,
+,,,小鈴,仕事_蔵書整理,"1girl,Collection of books",,,1,1,1,0,0,1,0,1,,,,
+,,,永琳,仕事_診察,"1girl, sitting,chair,doctor examining a patient,Stethoscope",,,1,1,1,0,0,1,0,1,,,,
+,,,メディスン,仕事_毒採集,"1girl,Poison collection",,,1,1,1,0,0,1,0,1,,,,
+,,,小町,仕事_船頭,"1girl,boatman,oar",,,1,1,1,0,0,1,0,1,,,,
+,,,雛,仕事_厄集め,"1girl,Gathering",,,1,1,1,0,0,1,0,1,,,,
+,,,阿求,仕事_執筆作業,"1girl,Writing work",,,1,1,1,0,0,1,0,1,,,,
+,,,"蓮子,メリー",仕事_レポート,"1girl,Report",,,1,1,1,0,0,1,0,1,,,,
+,,,星,仕事_説法,"1girl,sitting formally,meditation,palms together,sitting,open mouth",,,1,1,1,0,0,1,0,1,,,,
+,,,星,仕事_勤行,"1girl,sitting formally,meditation,palms together,sitting,closed eyes,closed mouth",,,1,1,1,0,0,1,0,1,,,,
+,,,芳香,仕事_メンテナンス（被）,"1girl,under maintenance",,,1,1,1,0,0,1,0,1,,,,
+,,,青蛾,仕事_メンテナンス,"1girl,maintenance",,,1,1,1,0,0,1,0,1,,,,
+,,,久侘歌,仕事_関所番,"1girl,The gatekeeper is blocking the way",,,1,1,1,0,0,1,0,1,,,,
+,,,美宵,仕事_給仕,"1girl,Serving food on trays",,,1,1,1,0,0,1,0,1,,,,

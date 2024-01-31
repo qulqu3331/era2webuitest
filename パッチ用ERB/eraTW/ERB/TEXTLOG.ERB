@@ -291,8 +291,25 @@ LOCALS = %LOCALS%"success":{TFLAG:193},
 LOCALS = %LOCALS%"target":"%CALLNAME:(TARGET)%",
 
 ;------------------------------------------------------------------------
-;作った料理
-LOCALS = %LOCALS%"作った料理":"%DISH_NAME%",
+;料理名
+LOCALS = %LOCALS%"料理名":"%DISH_NAME%",
+
+;自由行動
+;Durationが1以上なら自由行動中　のはず
+LOCALS = %LOCALS%"自由行動":{Activity_Duration:TARGET},
+LOCALS = %LOCALS%"自由行動内容":{Activity_Type:TARGET},
+
+;仕事
+LOCALS = %LOCALS%"仕事名":"%GET_JOBNAME(TARGET)%",
+LOCALS = %LOCALS%"職種":{CFLAG:350},
+LOCALS = %LOCALS%"職場":"{CFLAG:TARGET:職場}",
+
+;仕事中の判定　職場が現在地と一致する
+IF CFLAG:TARGET:職場 == CFLAG:TARGET:現在位置
+	LOCALS = %LOCALS%"仕事中":1,
+ELSE
+	LOCALS = %LOCALS%"仕事中":0,
+ENDIF
 
 ;現在位置----------------------------------------------------------------
 場所ID = CFLAG:MASTER:現在位置
@@ -420,6 +437,7 @@ LOCALS = %LOCALS%"睡眠深度":{TCVAR:TARGET:睡眠深度},
 LOCALS = %LOCALS%"弾幕勝負結果":{TCVAR:296},
 LOCALS = %LOCALS%"食事":{TCVAR:305},
 LOCALS = %LOCALS%"料理評価値":{TCVAR:306},
+LOCALS = %LOCALS%"仕事の有無":{TCVAR:322},
 
 LOCALS = %LOCALS%"口":{STAIN:0},
 LOCALS = %LOCALS%"手":{STAIN:1},
