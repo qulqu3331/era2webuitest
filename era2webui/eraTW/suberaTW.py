@@ -53,14 +53,14 @@ class PromptMakerTW(PromptMaker):
 
     def initialize_class_variablesTW(self):
         self.loca   = self.sjh.get_save("現在位置Str")#str
-        self.panty = self.sjh.get_save("lower_underwear") #str
-        self.uniquepanty = self.sjh.get_save("固有下着") #int (boole
+        self.panty = self.sjh.get_save("パンツ名称") #str
+        self.uniquepanty = self.sjh.get_save("固有下着") #int (boole　1なら固有下着を着用
         self.dish = self.sjh.get_save("料理名") #str
-        self.activityduration = self.sjh.get_save("自由行動") #int
-        self.activitytype = self.sjh.get_save("自由行動内容") #int
-        self.working = self.sjh.get_save("仕事中") #int (boole
-        self.jobname = self.sjh.get_save("仕事名") #str
-        self.jobno = self.sjh.get_save("職種") #str
+        self.activityduration = self.sjh.get_save("自由行動") #int　1以上で自由行動中。残時間を兼ねている
+        self.activitytype = self.sjh.get_save("自由行動内容") #int　
+        self.working = self.sjh.get_save("仕事中") #int (boole　1で仕事中
+        self.jobname = self.sjh.get_save("仕事名") #str　"寺子屋の授業"など具体的な文字列が入る
+        self.jobno = self.sjh.get_save("職種") #int　固有の仕事名が割り当てられていない”清掃"とか"会話"とかの識別番号
 
     def generate_prompt(self):
         """
@@ -473,9 +473,6 @@ class PromptMakerTW(PromptMaker):
                 prompt = f"({prompt}:{prompt_wait})"
             self.add_element("chara", prompt, None)
 
-            prompt2 = csvm.get_df(cha,"キャラ名",self.name,"プロンプト2")
-            self.add_element("chara", prompt2, None)
-
             chara_lora = csvm.get_df(cha,"キャラ名",self.name,"キャラLora")
             nega = csvm.get_df(cha,"キャラ名",self.name,"ネガティブ")
             self.add_element("chara", chara_lora, nega)
@@ -787,7 +784,7 @@ class PromptMakerTW(PromptMaker):
             self.add_element("cloth", prompt, nega)
 
 
-    #自由行動や仕事 立ち絵表示と、会話などの一部コマンドでも呼ぶ
+    #自由行動や仕事の描写 (移動後やキャラ選択時の立ち絵で描写するほか、片手間でできそうなコマンド（会話など）でも呼ぶ)
     def create_activity_element(self):
         if self.activityduration > 0:
             #自由行動中

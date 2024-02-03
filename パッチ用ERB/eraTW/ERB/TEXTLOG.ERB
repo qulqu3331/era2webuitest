@@ -249,7 +249,15 @@ LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
 	LOCALS = %LOCALS%\},
 
 ;lower_underwear_NAME
-LOCALS = %LOCALS%"lower_underwear":"%PANTSNAME(EQUIP:NO:下半身下着２, NO)%",
+LOCALS = %LOCALS%"lower_underwear":\{
+LOCALS:1 = %PANTSNAME(EQUIP:NO:下半身下着２, NO)%
+LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
+	; 余分なカンマを削除
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+	LOCALS = %LOCALS%\},
+
+;上記辞書になってるやつは一応残す
+LOCALS = %LOCALS%"パンツ名称":"%PANTSNAME(EQUIP:NO:下半身下着２, NO)%",
 
 ;固有下着の判定
 IF EQUIP:NO:下半身下着２ == 18
