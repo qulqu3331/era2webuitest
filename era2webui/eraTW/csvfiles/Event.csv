@@ -1,17 +1,17 @@
-﻿"名称","プロンプト","ネガティブ","解像度","キャラ描画","顔描画","胸描画","ヴァギナ描画","アナル描画","背景描画","主人以外が相手","備考"
-";特殊シーン",";pythonコード中に直接条件分岐などが記入されているイベント",,,,,,,,,,
-"汎用調教",,"(penis),easynegative,(worst quality:1.4),(low quality:1.4),(monochrome:1.3),(multipul angle,split view,panel layout:1.3),large breasts",,1,1,1,0,0,1,,"train.csvでプロンプトが空欄のとき、ここを参照する"
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-";一般シーン",";ERB中に CALL OUTPUT_TXT() を追加し、引数でシーン名称を指定すると描画できる",,,,,,,,,,
-"ENCOUNTER","1girl, (double v:1.2),hands up,emphasis lines,happy smile",,,1,1,1,0,0,0,,
-"パンツをくすねる","<lora:ppfs:1>(panty pull:1.1), panties,pussy,cameltoe,(head out of frame:1.2), thighs","(lifted by self :1.3)","%縦長%",1,1,1,1,0,1,,"https://civitai.com/models/8406/panty-pull-clothes-pull-or-clothing-lora-446"
-"ただならぬ開放感","1girl standing,(covering crotch, skirt tug:1.2),(spoken question mark:1.2),(??:1.2),speech bubble,embarrassed,panicking,flying sweatdrops","nsfw,(panties:1.3),(skirt lift:1.3),(lifted by self :1.3) ","%縦長%",1,1,1,1,0,1,,
+﻿"名称","プロンプト","ネガティブ","解像度","キャラ描画","顔描画","胸描画","ヴァギナ描画","アナル描画","下衣描画","足元描画","背景描画","主人以外が相手","備考"
+";特殊シーン",";pythonコード中に直接条件分岐などが記入されているイベント",,,,,,,,,,,,
+"汎用調教",,"(penis),easynegative,(worst quality:1.4),(low quality:1.4),(monochrome:1.3),(multipul angle,split view,panel layout:1.3),large breasts",,1,1,1,0,0,1,0,1,,"train.csvでプロンプトが空欄のとき、ここを参照する"
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+";一般シーン",";ERB中に CALL OUTPUT_TXT() を追加し、引数でシーン名称を指定すると描画できる",,,,,,,,,,,,
+"ENCOUNTER","1girl, (double v:1.2),hands up,emphasis lines,happy smile",,,1,1,1,0,0,0,0,0,,
+"パンツをくすねる","<lora:ppfs:1>(panty pull:1.1), panties,pussy,cameltoe,(head out of frame:1.2), thighs","(lifted by self :1.3)","%縦長%",1,1,1,1,0,1,0,1,,"https://civitai.com/models/8406/panty-pull-clothes-pull-or-clothing-lora-446"
+"ただならぬ開放感","1girl standing,(covering crotch, skirt tug:1.2),(spoken question mark:1.2),(??:1.2),speech bubble,embarrassed,panicking,flying sweatdrops","nsfw,(panties:1.3),(skirt lift:1.3),(lifted by self :1.3),(pantyshot,ass visible through thighs,thighs :1.2)","%縦長%",1,1,1,0,0,1,0,1,,

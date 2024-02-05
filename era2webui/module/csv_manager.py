@@ -219,7 +219,7 @@ class CSVManager:
         return None, None
 
 
-    def get_df(self, csvname, key, value, column):
+    def get_df(self, csvname, key, value, column, error_return="ERROR"):
         """
         気になる辞書データの要素を拾い出すにはこのメソッドを使うんだぜ｡。
         指定されたキーと値を元に辞書の中から目当ての情報を引きずり出す作業だ。
@@ -233,6 +233,7 @@ class CSVManager:
             key (str): 辿り着きたい情報のあるキー名だ。これがあるおかげで手がかりになる。
             value (str): 目指す値。この値と一致する行を特定する。
             column (str): このキーからデータをひっぱり出す。
+            error_return (str): エラーのときに返す文字列。省略時"ERROR"
         Returns:
             str: 発掘されたデータ。もしなにもなかったら空の文字列、何か不具合があれば'Error'とする。
         Examples:
@@ -257,23 +258,23 @@ class CSVManager:
                 if prompt == '':
                     # promptが空文字の場合の処理
                     print(f"get_df: {csvname}: '{key}' の項目が '{value}' の行は'{column}' 列は空文字でした。") #プロンプト埋め用
-                    return "ERROR"
+                    return error_return
             else:
                 print(f"get_df: {csvname}: '{key}' の項目が '{value}' のデータがありません")
-                return "ERROR"
+                return error_return
 
         except KeyError as e:
             print(f"get_df: {csvname}: 指定したキー '{key}' または列 '{column}' で '{value}' が無いぞ。{e}")
-            return "ERROR"
+            return error_return
         except IndexError as e:
             print(f"get_df: {csvname}: 指定したインデックスが範囲外。{e}")
-            return "ERROR"
+            return error_return
         except pd.errors.DataError as e:
             print(f"get_df: {csvname}: データ処理に関するエラー。{e}")
-            return "ERROR"
+            return error_return
         except Exception as e:
             print(f"get_df: {csvname}: 不明な他のエラー: {e}")
-            return "ERROR"
+            return error_return
         return prompt
 
 

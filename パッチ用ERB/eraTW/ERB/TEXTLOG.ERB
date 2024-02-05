@@ -255,15 +255,26 @@ LOCALS = %LOCALS%"{LOCAL}":"%LOCALS:1%",
 	; 余分なカンマを削除
 	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
 	LOCALS = %LOCALS%\},
+	
 
-;上記辞書になってるやつは一応残す
+
+;上記、辞書形式になってる方も一応残すが普通のSTRで取得しなおす
+
+LOCALS = %LOCALS%"ブラ名称":"%BRANAME(EQUIP:NO:上半身下着１, NO)%",
 LOCALS = %LOCALS%"パンツ名称":"%PANTSNAME(EQUIP:NO:下半身下着２, NO)%",
 
 ;固有下着の判定
 IF EQUIP:NO:下半身下着２ == 18
-	LOCALS = %LOCALS%"固有下着":1,
+	LOCALS = %LOCALS%"固有下着着用中":1,
 ELSE
-	LOCALS = %LOCALS%"固有下着":0,
+	LOCALS = %LOCALS%"固有下着着用中":0,
+ENDIF
+
+;全裸の判定
+IF CHECK_CHARA(TARGET, "全裸")
+	LOCALS = %LOCALS%"全裸":1,
+ELSE
+	LOCALS = %LOCALS%"全裸":0,
 ENDIF
 
 
