@@ -626,29 +626,28 @@ class PromptMakerTW(PromptMaker):
         tal = "Talent.csv"
 
         # 乳サイズ
-        # この辺の素質はtxt取得に失敗している。あとで直す
         if self.flags["drawbreasts"]:
             talents = ["絶壁","貧乳","巨乳","爆乳"]
             for tals in talents:
                 if tals in self.talent:
-                    prompt = csvm.get_df(tal,"名称",tals,"プロンプト")
-                    nega = csvm.get_df(tal,"名称",tals,"ネガティブ")
+                    prompt = csvm.get_df(tal,"名称",tals,"プロンプト") + ","
+                    nega = csvm.get_df(tal,"名称",tals,"ネガティブ",error_return="") + ","
                     self.add_element("body", prompt, nega)
         else:
             talents = ["絶壁","貧乳","巨乳","爆乳"]
             for tals in talents:
                 if tals in self.talent:
-                    prompt = csvm.get_df(tal,"名称",tals,"プロンプト")
-                    nega = csvm.get_df(tal,"名称",tals,"ネガティブ")
-                    nega += "areolae, nipple" #negaが空白だった時用対策 #あとで nega空白ならERROR
+                    prompt = csvm.get_df(tal,"名称",tals,"プロンプト") + ","
+                    nega = csvm.get_df(tal,"名称",tals,"ネガティブ",error_return="") + ","
+                    nega += ",areolae, nipple" #negaが空白だった時用対策 #あとで nega空白ならERROR
                     self.add_element("body", prompt, nega)
 
         # 体格、体型
         talents = ["小人体型","巨躯","小柄体型","ぽっちゃり","ムチムチ","スレンダー","がりがり"]
         for tals in talents:
-            if tals == self.talent:
-                prompt = csvm.get_df(tal,"名称",tals,"プロンプト")
-                nega = csvm.get_df(tal,"名称",tals,"ネガティブ")
+            if tals in self.talent:
+                prompt = csvm.get_df(tal,"名称",tals,"プロンプト") + ","
+                nega = csvm.get_df(tal,"名称",tals,"ネガティブ",error_return="") + ","
                 self.add_element("body", prompt, nega)
 
         # 胸愛撫など、普通乳なのに巨乳に描かれがちなコマンドのときプロンプトにsmall breastsを付加する
