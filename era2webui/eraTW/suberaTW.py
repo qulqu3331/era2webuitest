@@ -812,7 +812,7 @@ class PromptMakerTW(PromptMaker):
         prompt += csvm.get_df(cha,"キャラ名",self.name,"デフォルト帽子",error_return="") + ","
 
         # 服着てるならデフォルト衣装を描画
-        if self.undress == 0 and self.fullnude == 0 and 0:
+        if self.undress == 0 and self.fullnude == 0:
             prompt += csvm.get_df(cha,"キャラ名",self.name,"デフォルト上衣",error_return="") + ","
             # ボトムスがフレームアウトする構図を考慮
             if self.flags["drawbottoms"] != 0:
