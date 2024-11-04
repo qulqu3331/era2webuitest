@@ -101,7 +101,7 @@ class ExpressionTW(Expression):
         self.create_resist_element() #反発
         self.create_boredom_element() #退屈
         self.create_love_emotion_element() #トキメキ
-        self.create_talent_based_element() #顔つき
+        #self.create_talent_based_element() #顔つき
         #調教に対する反応 TRAIN中のみ反映
         if self.sjh.get_save("scene") == "TRAIN":
             self.create_ahe_element() #絶頂

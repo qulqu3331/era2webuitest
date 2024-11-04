@@ -161,6 +161,13 @@ class PromptMakerTW(PromptMaker):
             self.prompt["timezone"] = ""
             self.negative["timezone"] = ""
 
+        # trainのプロンプトが後のほうにあるせいで反応が悪かったので要素の並べ替えをする
+        # モデルによってクオリティタグが最初か最後か等、作法が違うので順序は簡単に変えれるようにした方がいいんだろうね
+    
+        # 先頭に持ってくるキー
+        keys_to_move = ['train', 'activity', 'event', 'chara']
+        #self.promptを並べ替えたもので上書き
+        self.prompt = {k: self.prompt[k] for k in keys_to_move if k in self.prompt} | {k: v for k, v in self.prompt.items() if k not in keys_to_move}
 
         #辞書のvalueが空の要素を消す
         prompt_values = [value for value in self.prompt.values() if value.strip()]
@@ -255,12 +262,12 @@ class PromptMakerTW(PromptMaker):
         efc = "Effect.csv"
         prompt = csvm.get_df(efc,"名称","基礎プロンプト","プロンプト")
         nega = csvm.get_df(efc,"名称","基礎プロンプト","ネガティブ")
-        self.add_element("situation", None, nega)
+        self.add_element("situation", prompt, nega)
         if self.scene == "ターゲット切替" or self.scene == "マスター移動" or self.scene == "真名看破":
             self.flags["drawlocation"] = True
             if self.charno == 0:
                 # targetがいないとき #この条件はTWではうまく動かない
-                self.add_element("situation", "(empty scene)", "(1girl:1.7)")
+                self.add_element("situation", "scenery,(empty scene:1.4)", "(1girl:1.7)")
             else:
                 # targetがいるとき 自由行動や仕事中の描写
                 self.create_activity_element()
@@ -282,7 +289,7 @@ class PromptMakerTW(PromptMaker):
         # 700箇所
         #IDとの整合はあとで確かめる
         loc = "Location.csv"
-        prompt = csvm.get_df(loc,"Str", self.loca,"プロンプト")
+        prompt = "(" + csvm.get_df(loc,"Str", self.loca,"プロンプト") + ":0.7)"
         nega = csvm.get_df(loc,"Str", self.loca,"ネガティブ")
         self.add_element("location", prompt, nega)
         #室内外かはCSVに書いて

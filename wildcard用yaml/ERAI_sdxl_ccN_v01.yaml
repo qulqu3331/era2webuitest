@@ -1,0 +1,371 @@
+#\stable-diffusion-webui\extensions\sd-dynamic-prompts\wildcardsフォルダに入れて使う
+#ワイルドカードというより置換リストとして使用
+#ネガティブプロンプトを別で指定するのが面倒なため、negpipの拡張を使用
+
+
+#時間停止（継続）
+timestop:
+  time stop,expressionless,emotionless sex,looking forward,(looking at viewer:-1),(closed eyes:-1)
+
+
+ERAI:
+  #愛撫
+  caress:
+    1girl,sitting,fingering ,(gropping breast:0.6),faceless male, pussy
+  #クンニ
+  cunnilingus:
+    __ERAI/cunnilingusEX/3pp__
+  cunnilingusEX:
+    # povバージョンは "disembodied tongue" が安定しないので消した結果、ただの局部接写になってしまった
+    #pov:
+    #  (close-up of girl's crotch:0.9),(pussy),spread legs,botomless,pussy juice
+    3pp:
+      1girl,spread legscunnilingus,faceless male,bald man licking pussy,{sitting|lying,folded}
+  #指挿れ
+  fingering:
+    1girl,spread legs,hard fingering,pov hand,motion lines, pussy juice,female ejaculation 
+  #アナル舐め
+  anilingus:
+    __ERAI/anilingusEX/front__
+  anilingusEX:
+    front:
+      1girl,lying,(legs up:0.5),(ass focus:0.7),spread legs,rimjob,[cunnilingus:licking anus:0.5],faceless male,bald man licking crotch,from front,(cleft of venus:0.6),wet anus,(penis:-1)
+    #behind 打率低、要改善
+    #- (ass focus:0.5),from behind,all fours,(rimjob),faceless male,(bald man),(bald man tasting anus),(cleft of venus:0.6),wet anus,(penis:-1)
+  #アナル愛撫
+  anal caress:
+    1girl,all fours,(from behind:0.5),anal fingering,pov hand, (cleft of venus:0.6)
+  #胸愛撫
+  breast grab:
+    __ERAI/breast grabEX/{pov|3pp}__
+  breast grabEX:  
+    pov:
+      1girl,breast grab, arms at side,pov hand{|s}
+    3pp:
+      1girl,sitting,breast grab, arms at side,faceless male
+    clothing:
+      __ERAI/breast grabEX/{clothing pov|clothing 3pp}__
+    clothing pov:
+      1girl,breast grab,gropping over cloth, arms at side,pov hand{|s}
+    clothing 3pp:
+      1girl,sitting,breast grab,gropping over cloth, arms at side,faceless male
+  #乳首責め
+  nipple tweak:
+    __ERAI/nipple tweakEX/{pov|3pp}__
+  nipple tweakEX:
+    pov:
+      1girl,nipple tweak, arms at side,pov hand
+    3pp:
+      1girl,sitting,nipple tweak, arms at side,faceless male
+  #秘貝開帳
+  spread pussy:
+    1girl,spread legs,spread pussy,pov hand
+  #自慰
+  masturbation:
+    1girl,female masturbation
+  #アナル開帳
+  spread anus:
+    __ERAI/spread anusEX/{front|behind}__
+  spread anusEX:    
+    front:
+      1girl,lying,(legs up:0.5),spread legs,spread anus,pov hand, (cleft of venus:0.6)
+    behind:
+      1girl,all fours,(from behind:0.5),spread anus,pov hand, (cleft of venus:0.6)
+  #クリ愛撫
+  clitoris caress:
+    1girl,sitting,[fingering::0.5] ,caressing clitoris,clitoris,pussy focus,faceless male
+  #キスする
+  kiss:
+    __ERAI/kissEX/{pov|3pp}__
+  kissEX:
+    pov:
+      1girl,(sfw:0.8),(incoming kiss:1.1),steam,half closed eyes,saliva,(close-up:0.7),(outstretched arms:0.6),{|dutch angle},{|hands on another's cheeks}
+    3pp:
+      1girl,hetero,{kiss|french kiss},faceless male,portrait,saliva trail,steam,{|hands on another's cheeks}
+  #何もしない
+  do nothing:
+    1girl,do noting
+  #ローター
+  rotor:
+    1girl,spread legs,{|legs up},(pov hand:1.1) ,(pink egg vibrator on pussy:1.1),clitoral stimulation,trembling,motion lines,motion blur
+  #Ｅマッサージャ
+  E massager:
+    1girl,spread legs,{|legs up},(pov hand:1.1) ,(vibrator on pussy:1.1),hitachi magic wand,clitoral stimulation,trembling,motion lines,motion blur
+  #オナホール
+  onahole:
+    1girl,futanari,crotch,sitting,{|spread legs},holding artificial vagina,motion lines
+  #バイブ
+  dildo:
+    #dildoは地面固定型のが出やすくて打率低め
+    1girl,spread legs,trembling,motion lines,motion blur,object insertion,pussy object insertion,pov hand,dildo,penetration 
+  #アナルバイブ
+  anal dildo:
+    1girl,anal object insertion,{legs up|all fours},dildo in anus,trembling,motion lines,motion blur,pov hand
+  #アナルビーズ
+  anal beads:
+    1girl,anal object insertion,{legs up|all fours},anal beads,trembling,motion lines,motion blur,pov hand
+  #搾乳機
+  milking machine:
+    1girl,milking machine,lactation,pov hands,(breast lift:0.8)
+  #乳首ローター
+  nipple rotor:
+    1girl,breasts,vibrator on nipple,vibrator cord,pov hands,nipple stimulation,motion lines,motion blur,trembling,upper body
+  #正常位
+  missionary:
+    __ERAI/missionaryEX/def__
+  missionaryEX:
+    def:
+      1girl,vaginal sex,missionary,{|pov hands holding {waist|arms|thighs|legs}},{||pov|dutch angle|dynamic angle},{|||legs up}
+    breast grab:
+      1girl,vaginal sex,missionary,breast grab
+    kiss:
+      1girl,lying,boy on top,vaginal sex,missionary,penis,(kiss,french kiss:0.8),faceless male,dutch angle
+  #後背位
+  doggystyle:
+    __ERAI/doggystyleEX/def__
+  doggystyleEX:
+    def:
+      1girl,vaginal sex,doggystyle,{||from side|looking back}
+    breast grab:
+      1girl,vaginal sex,doggystyle,grabbing breast
+    kiss:
+      #打率低い。上体をひねるのは難しい
+      1girl,vaginal sex,sex from behind,doggystyle,(arched back),face to face,kiss,french kiss,steam,saliva trail,faceless male,(front view:1.1),(from side:-1)
+  #正常位アナル
+  anal missionary:
+    1girl,anal sex,spread legs,{|legs up},missionary
+  #後背位アナル
+  anal doggystyle:
+    1girl,anal sex,(ass:0.7),from behind,doggystyle, looking back
+  #逆レイプ
+  amazon:
+    1girl,amazon position,squatting,motion lines
+  #騎乗位
+  cowgirl:
+    1girl,vaginal sex,cowgirl position,{||straddling|squatting}
+  #騎乗位アナル
+  anal cowgirl:
+    1girl,anal sex,penis in anus,cowgirl position,squatting,front view,{|from below}
+  #対面座位
+  upright straddle:
+    __ERAI/upright straddleEX/{pov|3pp}__
+  upright straddleEX:
+    pov:
+      1girl,pov,vaginal sex,sitting,upright straddle,from above, {|gropping {waist|upper body}|{grabbing|caressing} breast|nipple tweak}
+    3pp:
+      1girl,hetero,faceless male,vaginal sex,sitting,upright straddle, {|hug|grabbing breast|gropping ass}
+    povkiss:
+      1girl,pov,vaginal sex,sitting,upright straddle,from above,(incoming kiss:1.1),steam,half closed eyes,saliva,hands on another's cheeks,(close-up:0.7),(outstretched arms:0.6)
+    3ppkiss:
+      1girl,hetero,faceless male,vaginal sex,sitting,upright straddle, hug ,kiss,hands on another's cheeks
+  #背面座位
+  reverse upright straddle:
+    1girl,hetero,faceless male,vaginal sex,sex from behind,sitting,spread legs,reverse upright straddle, grabbing {breast|waist}, {||from below,pussy focus}
+  #対面座位アナル
+  anal upright straddle:
+    1girl,hetero,faceless male,anal sex,sitting,anal upright straddle, penis in anus,from behind,squatting
+  #背面座位アナル
+  anal reverse upright straddle:
+    1girl,hetero,faceless male,anal sex,penis in anus,sex from behind,sitting,spread legs,reverse upright straddle, grabbing {breast|waist}, {||from below,pussy focus}
+  #二穴挿し
+  double penetration:
+    1girl,double penetration,disembodied penis,penis in pussy,penisin anus
+  #手淫
+  handjob:
+    1girl,handjob,(penis:1.1),veiny penis,erection,(fellatio:-0.7),{|||two-handed handjob},{||glansjob}
+  #フェラチオ
+  fellatio:
+    __ERAI/fellatioEX/{licking|sucking|3pp}__
+  fellatioEX:
+    licking:
+      #先端舐め
+      - 1girl,fellatio,licking penis,saliva,saliva trail
+      #先端舐め接写
+      - 1girl,fellatio,penis,licking penis,saliva,saliva trail,open mouth,(close-up),head out of frame,(around the neck:0.9),steam
+      #裏筋舐め
+      - 1girl,fellatio,licking penis,penis over face,looking up,saliva
+    sucking:
+      #suck3視点
+      - 1girl,fellatio,sucking penis,saliva,{|from {side|below|above}}
+      #接写
+      - 1girl,fellatio,penis,sucking penis,saliva,from above,(close-up),(head out of frame:1.2),crotch,pubic hair,steam
+    3pp:
+      1girl,faceless male,fellatio,kneeling,from side,dynamic angle,sucking penis,saliva,penis,{|(wide shot:0.9)}
+    #バキュームフェラ
+    vacuum:
+      1girl,fellatio,sucking penis,(:>=:1.1),sunken cheeks,saliva,{|from {side|below|above}}
+    #イラマチオ
+    irrumatio:
+      1girl,fellatio,sucking penis,irrumatio,hands on head,moving lines,{|from {side|above}}
+  #パイズリ
+  paizuri:
+    1girl,paizuri,penis
+  paizuriEX:
+    #ナイズリ
+    naizuri:
+      1girl,naizuri,big penis
+    #胸の谷間を犯す
+    straddling:
+      1girl,lying,straddling paizuri,pov hands,breasts squeezed together,penis
+  #素股
+  grinding:
+    __ERAI/grindingEX/front__
+  grindingEX:
+    front:
+      - 1girl,imminent sex,penis on pussy,spread legs ,cleft of venus,missionary
+      - 1girl,thigh sex,penis between thighs,legs up,cleft of venus,anus,missionary,from side,faceless male
+    cowgirl:
+      1girl,grinding,imminent sex,penis,pussy,crotch,straddling,pov
+    behind:
+      1girl,hetero,1boy,faceless male,thigh sex,penis between thighs,pussy,crotch,hug from behind,all fours
+  #泡踊り
+  awaodori:
+    1girl,nude,girl on top,soapland,bathing,lying,leaning on chest,soap bubbles,bubbling,wet hair,shiny skin,faceless male,play mat
+  #足コキ
+  footjob:
+    1girl,footjob
+  #アナル舐めされる
+  female anilingus:
+    1girl,anilingus,(girl licking anus:1.2),rusty trombone,tongue,faceless male
+  #スパンキング
+  spanking:
+    1girl,all fours,spanking,pov hand,from behind,(looking back:0.8),motion lines,^^^
+  #鞭
+  whip:
+    1girl,bdsm,ryona,{kneeling|holding own arm|crouching,cowering|looking back},slapping,(beating:1.1),(whipping:1.1),whip marks,attacked,(attack effect:1.1),afterimage,trail of whip,motion lines,motion blur,wince,(^^^:1.1),shock effect,swinging weapon,torn clothes,tearing clothing
+  #蝋燭
+  wax:
+    1girl,(wax play:1.1),bdsm, pov hand,red candle,(dripping wax on skin:1.1),squatting,humiliation,from above
+  #針
+  #ダメっぽい
+  needle:
+    1girl,(bdsm:1.2),(needleplay:1.2),pov hand,holding needle,huge needle,sewing needle, thrust,sting,stab
+  #アイマスク
+  blindfold:
+    1girl,blindfold,forced to wear a blindfold,pov hands,hands on another's face,from above
+  #縄
+  rope:
+    1girl,bdsm,rope,shibari,kneeling
+  #ボールギャグ
+  ball gag:
+    1girl,ball gag,forced to wear a gag,pov hands,hands on another's face,from above
+  #フィストファック
+  fist fuck:
+    1girl,bdsm,ryona,(fist fucking,fisting:1.2),spread legs,arched back,(arm in pussy:1.1),pov arm,veiny arm,large insertion,(stomach bulge:0.9), motion lines,motion blur, afterimage,(missionary,pov crotch,penis:-0.8)
+  #アナルフィスト
+  anal fist:
+    1girl,bdsm,ryona,(fist fucking,anal fisting:1.2),(arm in anus:1.1),pov arm,veiny arm,large insertion, motion lines,motion blur, afterimage,(pov crotch,penis:-0.8)
+  #両穴フィスト
+  double fist:
+    1girl,bdsm,ryona,double penetration,(fist fucking,fisting,anal fisting:1.2),spread legs,arched back,(arm in pussy,arm in anus:1.1),(disembodied limb:0.8),pov arms,veiny arms,large insertion,(stomach bulge:0.9), motion lines,motion blur, afterimage,(pov crotch,penis:-0.8
+  #放尿
+  peeing:
+    1girl,peeing,{squatting|squatting,splead legs},pussy
+  #浣腸
+  enema:
+    1girl,all fours,pussy,enema,anal object insertion ,huge syringe
+  #アナル電極
+  anal electrode:
+    1girl,all fours,pussy,(electrode in anus:1.1),(cable:1.1),(lightning effect:1.1)  
+  #ローション
+  lotion:
+    1girl,sitting,[fingering::0.5] ,caressing pussy,pussy focus,faceless male,lotion,lotion bottle,pouring lotion to pussy,wet pussy,wet pussy,(viscous water:1.2)
+  #媚薬
+  drug:
+    1girl,pov,(hand over another's mouth:1.1),covered mouth,motion lines,{|looking down},{(squinting:0.8)|(surprised,wide-eyed,constricted pupils:0.8)}
+  #ビデオ撮影
+  video shooting:
+    1girl,filming scene,girl {standing|sitting} in front of Photography Equipment,embarrassed
+  #シャワー
+  shower:
+    1girl,shower scene, shower,pouring water
+  #新妻プレイ
+  wear apron:
+    1girl,dressing ,(wear an apron),hands around own chest,embarrassed smile
+  #会話
+  talk:
+    1girl,talking with viewer,speaking,(open mouth:0.8)
+  talkEX:
+    failure:
+      1girl,bustshot,looking at viewer,indifferent,(jitome:0.8),spoken ellipsis
+  #お茶を淹れる
+  tea:
+    1girl,teacup,drinking,holding a cup in one hand and a saucer in the other hand,steam
+  #スキンシップ
+  physical contact:
+    1girl, pov hand, physical contact,(hand on another's body),tickling,molestation,(hand on breast:-0.8)
+  physical contactEX:
+    failure:
+      1girl,bustshot,(x arms:1.2),x,spoken x,looking at viewer, pov hand,(jitome:0.8)
+  #謝る
+  apologize:
+    1girl, standing,looking down,{crossed arms|hands on own hip|hand on own hip},from below
+  #膝枕してもらう
+  lap pillow:
+    1girl, lap pov ,upper body,looking down,from below,dutch angle,tender smile
+  #頬をつまむ
+  pinching:
+    1girl, face focus,(pinching,cheek pinching), pov hand,hand on another's face,hand on another's cheek
+  #頬をつつく
+  poking:
+    1girl, face focus,(index finger),(poking,cheek poking), pov hand,hand on another's face,hand on another's cheek
+  #頭を撫でる
+  headpat:
+    1girl, face focus,(headpat), pov hand,hand on another's head
+  #尻を撫でる
+  stroke the buttocks:
+  # hipがいわゆる尻でないことは承知しているが、buttやassはプリケツを誘発するので
+    1girl,(hand on another's hip:1.1),pov hand,molestation,{from side|looking back}
+  #抱き着く
+  hug:
+    1girl,faceless male,hug
+  #スカートをめくる
+  skirt lift:
+    1girl, wind lift,skirt tug,windy,motion lines,panties,pantyshot
+  skirt liftEX:
+    failure:
+      1girl, facing viewer,(wind lift:0.9),(skirt tug),moving lines,angry,glaring,(panties:-1), from above
+    no panties:
+      1girl, wind lift,skirt tug,windy,motion lines,pussy
+    timestop:
+      1girl, wind lift,lifting another's clothes,arms at sides,panties,pantyshot
+    timestop no panties:
+      1girl, wind lift,lifting another's clothes,arms at sides,pussy
+
+  #押し倒す
+  push down:
+    1girl, lying,pov,pov hands,(from above:1.1) ,wince
+  #告白する
+  confession:
+    1girl, confession
+  #添い寝する
+  soine:
+    on bed,pillow,sleepy eyes,(light smile:0.7),sleep with girl,lying together,dutch angle
+  soineEX:
+    3pp:
+      on bed,pillow,sleepy,sleep with girl,lying together, faceless male,fat man,cuddling
+  #休憩
+  break:
+    #具体的にポーズ指定しないと絵にならないが場所やシチュを考慮すると大変そう
+    do nothing,taking a break, relax
+  
+
+
+
+#時間停止（コマンド実行時）
+  timestop:
+    (simple background,black background,emphasis lines:1.2)
+#初対面
+  encounter:
+    1girl,cowboy shot,zoom layer,blurry background,english text,subtitles,(character name:1.3),letterboxed,information box,character sheet,stats 
+#パンツをくすねる
+  panty pull:
+    (panty pull:1.1), pov hands,panties,pussy,(head out of frame:1.2), thighs
+#ただならぬ解放感
+  panties disappearance:
+    1girl standing,(covering crotch, skirt tug:1.2),(spoken question mark:1.2),(??:1.2),speech bubble,embarrassed,panicking,flying sweatdrops
+
+#耳かき
+  earpick:
+    1girl, lap pov ,looking down,from below,ear cleaning,tender smile
+
