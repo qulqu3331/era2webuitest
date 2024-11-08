@@ -318,7 +318,7 @@ if __name__ == '__main__':
 
     # ファイル監視の開始
     file_handler = FileHandler(order_queue)
-    observer = PollingObserver()
+    observer = PollingObserver(timeout=0.1)
     #各ファイルの監視を設定
     observer.schedule(file_handler, target_dir, recursive=False)
     print("txtファイルの監視を開始しました。target_dir:" + str(target_dir))

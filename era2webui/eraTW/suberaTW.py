@@ -65,6 +65,7 @@ class PromptMakerTW(PromptMaker):
         self.jobno = self.sjh.get_save("職種") #int　固有の仕事名が割り当てられていない”清掃"とか"会話"とかの識別番号
         self.undress = self.sjh.get_save("上着脱衣済み") #int (boole　「下着姿にする」実行で1になる
         self.fullnude = self.sjh.get_save("全裸") #int (boole　1なら全裸
+        self.subchara = self.sjh.get_save("ふたりめ") #str 2人派生コマンドの相手の名称　いなければ "あなた" 
 
 
     def generate_prompt(self):
@@ -503,7 +504,14 @@ class PromptMakerTW(PromptMaker):
             # prompt_waitが"ERROR"でない場合にのみ結合する
             if prompt_wait != "ERROR":
                 prompt = f"({prompt}:{prompt_wait})"
+
+            if self.subchara != "あなた":
+                prompt += ","
+                prompt += csvm.get_df(cha,"キャラ名",self.subchara,"プロンプト")
+
             self.add_element("chara", prompt, None)
+
+
 
             chara_lora = csvm.get_df(cha,"キャラ名",self.name,"キャラLora")
             nega = csvm.get_df(cha,"キャラ名",self.name,"ネガティブ")

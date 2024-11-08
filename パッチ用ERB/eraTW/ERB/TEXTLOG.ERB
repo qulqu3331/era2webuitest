@@ -20,6 +20,8 @@
 #DIMS SCENE
 #DIM LOOP_CHR
 #DIM 場所ID
+#DIMS コマンド名
+#DIM ふたりめ
 
 ;基本的には第1引数だけ指定して呼び出す。
 ;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
@@ -51,6 +53,12 @@ ENDIF
 
 ;引数TRAINで移動コマンドのとき、立ち絵と重複しないようにここで終了する(400移動、405出掛ける、604散策する）
 IF (ARGS == "TRAIN") && ((SELECTCOM == 400)||(SELECTCOM == 405)||(SELECTCOM == 604))
+	RETURN 0
+ENDIF
+
+;絵的に面白くないコマンドは1人のとき描画スキップする
+;休憩(403)
+IF (ARGS == "TRAIN") && (TARGET == 0) && (SELECTCOM == 403)
 	RETURN 0
 ENDIF
 
@@ -350,10 +358,95 @@ LOCALS = %LOCALS%"現在位置":"%NAME_FROM_PLACE(場所ID)%",
 LOCALS = %LOCALS%"MAPID":"{場所ID/100}",
 
 
-;ここから単項目で数値型---------------------------------------------------
+;派生コマンドの処理---
+;派生で変化したコマンド名を保存する変数　下の方でkey"コマンド名"としてjsonに記入する
+コマンド名 = %TRAINNAME:(SELECTCOM)%
+;ダブルフェラ等のときに相方を入れる変数　下の方でkey"ふたりめ"としてjsonに記入する
+ふたりめ = 0
+
+;フェラチオ関係
+;お掃除判定
+IF TCVAR:MASTER:112 == 1
+	;V射精後	
+	SIF SELECTCOM == 81 && MASTER_POSE(SET_V,SET_P,1)
+		コマンド名 = お掃除フェラV
+ELSEIF TCVAR:MASTER:112 == 2
+	;A射精後
+	SIF SELECTCOM == 81 && MASTER_POSE(SET_A,SET_P,1)
+		コマンド名 = お掃除フェラA
+;ダブルフェラ
+ELSEIF SELECTCOM == 81 && TEQUIP:TARGET:口接触部位 == 1 && (MASTER_POSE(SET_M,SET_P,1) && MASTER_POSE(SET_M,SET_P,1) != TARGET )
+	コマンド名 = ダブルフェラ
+	ふたりめ = MASTER_POSE(SET_M,SET_P,1)
+;時止、睡眠判定
+ELSEIF SELECTCOM == 81 && FLAG:70
+	コマンド名 = 時止_フェラチオ
+ELSEIF SELECTCOM == 81 && CFLAG:313
+	コマンド名 = 睡眠_フェラチオ
+ENDIF
+
+
+SIF SELECTCOM == 60 && TFLAG:193
+	コマンド名 = 対面立位
+SIF SELECTCOM == 61 && TFLAG:193
+	コマンド名 = 背面立位
+SIF SELECTCOM == 62 && TFLAG:193
+	コマンド名 = 対面立位アナル
+SIF SELECTCOM == 63 && TFLAG:193
+	コマンド名 = 背面立位アナル
+
+
+;以降、その他特別な描写
+;ベッド無しのとき
+SIF SELECTCOM == 0 && (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+	コマンド名 = 立ち_愛撫
+SIF SELECTCOM == 1 && (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+	コマンド名 = 立ち_クンニ
+SIF SELECTCOM == 3 && (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+	コマンド名 = 立ち_指挿れ
+;SIF SELECTCOM == 6 && (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+;	コマンド名 = 立ち_胸愛撫
+;SIF SELECTCOM == 7 && (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+;	コマンド名 = 立ち_乳首責め
+;ベッドのない場所でえっちなイタズラ開始
+SIF SELECTCOM == 350 && (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+	コマンド名 = イタズラする
+
+;時止め中
+IF SELECTCOM == 330 && FLAG:70
+	IF CFLAG:291 == 1
+		コマンド名 = 時止_スカートをめくる_ノーパン
+	ELSE
+		コマンド名 = 時止_スカートをめくる
+	ENDIF
+ENDIF
+SIF SELECTCOM == 82 && FLAG:70
+	コマンド名 = 時止_パイズリ
+
+
+;協力
+;交互挿入
+;とりあえず立位だけ
+IF (!BEDROOM(CFLAG:PLAYER:現在位置) && !(BATHROOM() && ITEM:20))
+	IF SELECTCOM == 60 && TEQUIP:TARGET:Ｖ接触部位 == 1 && (MASTER_POSE(SET_V,SET_P,1) && MASTER_POSE(SET_V,SET_P,1) != TARGET)
+		コマンド名 = 交互挿入対面
+		ふたりめ = MASTER_POSE(SET_V,SET_P,1)
+	ENDIF
+ENDIF
+;尻並べは出せるけど片方に挿入はできない
+IF SELECTCOM == 61 && TEQUIP:TARGET:Ｖ接触部位 == 1 && (MASTER_POSE(SET_V,SET_P,1) && MASTER_POSE(SET_V,SET_P,1) != TARGET)
+	コマンド名 = 交互挿入背面
+	ふたりめ = MASTER_POSE(SET_V,SET_P,1)
+ENDIF
+
+
+
+LOCALS = %LOCALS%"ふたりめ":"%CALLNAME:(ふたりめ)%",
+
+;ここから単項目で数値型(大嘘)---------------------------------------------------
 LOCALS = %LOCALS%"キャラ固有番号":{NO},
 LOCALS = %LOCALS%"コマンド":{SELECTCOM},
-LOCALS = %LOCALS%"コマンド名":"%TRAINNAME:(SELECTCOM)%",
+LOCALS = %LOCALS%"コマンド名":"%コマンド名%",
 LOCALS = %LOCALS%"前回コマンド":{PREVCOM},
 LOCALS = %LOCALS%"PLAYER":{PLAYER},
 LOCALS = %LOCALS%"時間":{TIME},
@@ -388,6 +481,10 @@ LOCALS = %LOCALS%"浮気バレ":{CFLAG:40},
 LOCALS = %LOCALS%"オナバレ":{CFLAG:41},
 LOCALS = %LOCALS%"夜這い":{CFLAG:42},
 
+LOCALS = %LOCALS%"膣内精液":{EX:ARG:膣内精液},
+LOCALS = %LOCALS%"アナル内精液":{EX:ARG:アナル内精液},
+LOCALS = %LOCALS%"口に精液":{CFLAG:口に精液},
+LOCALS = %LOCALS%"顔に精液":{CFLAG:顔に精液},
 LOCALS = %LOCALS%"睡眠":{CFLAG:313},
 
 LOCALS = %LOCALS%"うふふ":{CFLAG:317},

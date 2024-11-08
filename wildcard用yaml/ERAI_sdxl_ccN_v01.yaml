@@ -2,16 +2,22 @@
 #ワイルドカードというより置換リストとして使用
 #ネガティブプロンプトを別で指定するのが面倒なため、negpipの拡張を使用
 
+#HyperSDXLの低step生成だとcum描写がだいぶ弱いらしい
 
-#時間停止（継続）
-timestop:
-  time stop,expressionless,emotionless sex,looking forward,(looking at viewer:-1),(closed eyes:-1)
-
+ERAIeffect:
+  #時間停止（継続）
+  timestop:
+    time stop,expressionless,emotionless sex,looking forward,gaze into the distance,(looking at viewer:-1),(closed eyes:-1)
+  base:
+    (modare:0.3), (greatmosu:0.5), (sumiyao (amam):0.3), (hirayama kanna:0.3)
 
 ERAI:
   #愛撫
   caress:
     1girl,sitting,fingering ,(gropping breast:0.6),faceless male, pussy
+  caressEX:
+    standing:
+      1girl,1boy,faceless male,standing,fingering ,(gropping breast:0.8),thighs,pussy juice, bust shot,dynamic angle
   #クンニ
   cunnilingus:
     __ERAI/cunnilingusEX/3pp__
@@ -20,10 +26,19 @@ ERAI:
     #pov:
     #  (close-up of girl's crotch:0.9),(pussy),spread legs,botomless,pussy juice
     3pp:
-      1girl,spread legscunnilingus,faceless male,bald man licking pussy,{sitting|lying,folded}
+      1girl,spread legs,cunnilingus,faceless male,bald man licking pussy,{sitting|lying,folded}
+    standing:
+      1girl,standing,bowlegged pose, cunnilingus,faceless male,bald man licking pussy,cowboy shot
   #指挿れ
   fingering:
     1girl,spread legs,hard fingering,pov hand,motion lines, pussy juice,female ejaculation 
+  fingeringEX:
+    standing:
+      __ERAI/fingeringEX/{standing pov|standing 3pp}__
+    standing pov:
+      1girl,standing,bowlegged pose,from below,(fingering),hard fingering,pov hand,motion lines, pussy juice,female ejaculation,cowboy shot
+    standing 3pp:
+      1girl,standing,bowlegged pose,from above,hard (fingering),motion lines,faceless male, pussy juice,female ejaculation,cowboy shot
   #アナル舐め
   anilingus:
     __ERAI/anilingusEX/front__
@@ -120,6 +135,18 @@ ERAI:
       1girl,vaginal sex,missionary,breast grab
     kiss:
       1girl,lying,boy on top,vaginal sex,missionary,penis,(kiss,french kiss:0.8),faceless male,dutch angle
+  #対面立位
+  standing missionary:
+    __ERAI/standing missionaryEX/{pov|3::3pp|zoom}__
+  standing missionaryEX:
+    zoom:
+      1girl,bowlegged pose,arms at sides,pussy focus,(from below:0.7),disembodied penis, large penis,disembodied hands,hands on another's waist,nsfw,vaginal sex,penis in pussy,(standing sex:1.1),(ass:-0.9),bust shot
+    pov:
+      1girl,penis,pov crotch,nsfw,vaginal sex,penis in pussy,(standing straddle:0.8),{|bending  knees},(standing sex:1.1),pov,front view ,(from above:0.7),dutch angle,holding waist,bowlegged pose,bust shot,(mmf threesome:-0.8)
+    3pp:
+      1girl,(fat man,penis),(standing straddle:0.8),nsfw,vaginal sex,penis in pussy,arms at sides,(standing sex:1.1),bending  knees,torso grabbing ass,(sex from behind:-0.9),(mmf threesome:-0.8),{|(from above,from side:0.8)}
+    3pp kiss:
+      1girl,(fat man,penis),(standing straddle:0.8),nsfw,vaginal sex,penis in pussy,arms at sides,(standing sex:1.1),bending  knees,grabbing shoulders,(sex from behind:-0.9),(mmf threesome:-0.8),kiss     
   #後背位
   doggystyle:
     __ERAI/doggystyleEX/def__
@@ -131,12 +158,33 @@ ERAI:
     kiss:
       #打率低い。上体をひねるのは難しい
       1girl,vaginal sex,sex from behind,doggystyle,(arched back),face to face,kiss,french kiss,steam,saliva trail,faceless male,(front view:1.1),(from side:-1)
+  #背面立位
+  standing doggystyle:
+    __ERAI/standing doggystyleEX/{pov|3pp}__
+  standing doggystyleEX:
+    pov:
+      1girl,nsfw,vaginal sex,(standing sex:1.1),sex from behind,pov stomack,penis,grabbing waist,looking back,twisted torso,arched back,from above,(anus:0.8),(dutch angle:0.8),dynamic angle
+    3pp:
+      1girl,(fat man),nsfw,vaginal sex,(standing sex:1.1),grabbing waist,sex from behind
+    breast grab:
+      1girl,(fat man),nsfw,vaginal sex,(standing sex:1.1),grabbing breast,(grabbing from behind:0.8),sex from behind
+    nipple tweak:
+      1girl,(fat man),nsfw,vaginal sex,(standing sex:1.1),(nipple tweak:1.1),(grabbing from behind:0.8),sex from behind
   #正常位アナル
   anal missionary:
     1girl,anal sex,spread legs,{|legs up},missionary
+  #対面立位アナル
+  anal standing missionary:
+    #対面でアナルは難しい
+    #足上げ構図で
+    1girl,(fat man,penis),(standing anal sex:0.8),(leg up:1.2),leaning against wall,nsfw,(anal:1.2),cleft of venus, (anal sex:1.2),penis in anus,arms at sides,(standing sex:1.1),bending  knees,torso grabbing ass,(sex from behind:-0.9),(mmf threesome:-0.8),{|from below}
   #後背位アナル
   anal doggystyle:
     1girl,anal sex,(ass:0.7),from behind,doggystyle, looking back
+  #背面立位アナル
+  anal standing doggystyle:
+    1girl,(fat man),nsfw,anal sex,bent over,(standing anal sex:1.1),penis in anus,grabbing waist,sex from behind
+
   #逆レイプ
   amazon:
     1girl,amazon position,squatting,motion lines
@@ -172,7 +220,7 @@ ERAI:
     1girl,double penetration,disembodied penis,penis in pussy,penisin anus
   #手淫
   handjob:
-    1girl,handjob,(penis:1.1),veiny penis,erection,(fellatio:-0.7),{|||two-handed handjob},{||glansjob}
+    1girl,handjob,(penis:1.1),veiny penis,erection,(fellatio:-0.7),{|||two-handed handjob},{||glansjob}, penis focus,close-up,dynamic angle,faceless male,pubic hair,massive stomach
   #フェラチオ
   fellatio:
     __ERAI/fellatioEX/{licking|sucking|3pp}__
@@ -185,7 +233,7 @@ ERAI:
       #裏筋舐め
       - 1girl,fellatio,licking penis,penis over face,looking up,saliva
     sucking:
-      #suck3視点
+      #suck　上/横/下視点
       - 1girl,fellatio,sucking penis,saliva,{|from {side|below|above}}
       #接写
       - 1girl,fellatio,penis,sucking penis,saliva,from above,(close-up),(head out of frame:1.2),crotch,pubic hair,steam
@@ -197,6 +245,46 @@ ERAI:
     #イラマチオ
     irrumatio:
       1girl,fellatio,sucking penis,irrumatio,hands on head,moving lines,{|from {side|above}}
+    #お掃除フェラ
+    cleanup:
+      - __ERAI/fellatioEX/cleanup zoom__
+      - __ERAI/fellatioEX/cleanup after v__
+    cleanup zoom:
+      "\
+      (drooping penis:1.4),testicles,simple background,1girl,(kneeling:0.6),faceless male,(flaccid penis:1.5),bending penis,kneeling to penis,\
+      (kiss penis:1.1),(face to face:-1),lip on penis,tongue,(licking:0.8),(penis awe:0.6),(cum covered penis,cum:1.2),\
+      (erection:-0.8),(facing side:0.6),face focus,close up,out of frame,steam,half closed eyes\
+      "
+    cleanup after v:
+      "\
+      nipples,lying on back,(fellatio),(man kneeing beside the girl's head and she is sucking his flaccid penis),\
+      (flaccid penis),facing side,out of frame,after sex,heavy breathing,spread legs,(gaping:0.8),\
+      cumdrip from pussy,steam,(cum soaked into sheets),cum ,cum on body,eroge cum,cum on face,\
+      Tiredness,sweat,out of power,mind break,scattered cum ,Both legs thrown out,(pov crotch,vaginal penetration:-0.7)\
+      "
+    cleanup after a:
+    #顔が見えないのがさみしいので分岐してない
+      "\
+      1girl,1boy,M legs,Implied fellatio,(ass focus:0.8),wariza ,(dogeza:0.7),feet,from behind,\
+      head grab,bent over,hairy man,fat man squatting,(indian style:1.5),motion lines,\
+      from above,dutch angle,(from side:0.8),out of frame,facing away,\
+      after anal,anus,gaping,anal gaping,cumdrip from anus,steam,cum ,sweat,out of power,scattered cum ,\
+      (sex from behind:-1),(pov crotch,vaginal penetration:-0.7),(cum in pussy:-1)\
+      "
+    #時止めフェラ
+    timestop:
+      #上/横/下視点
+      - 1girl,fellatio,sucking penis,saliva,{|from {side|below|above}},grabbing head,(handjob:-1)
+      #頬掴み
+      - 1girl,fellatio,irrumatio,sucking penis,saliva,from above,(head tilt:1.2),pov hands,pov crotch,pov legs,pov thighs,hands on another's cheeks,cheek press, (cheek bulge:1.1),looking down,top of head,(cum:0.6), (white bubble from mouth:1.2) ,saliva on penis viscous water,(handjob:-1)
+      #接写
+      - 1girl,fellatio,penis,sucking penis,saliva,from above,(close-up),(head out of frame:1.2),crotch,pubic hair,steam,grabbing head,(handjob:-1)
+      #3人称
+      - 1girl,faceless male,fellatio,kneeling,arms at sides,from side,dynamic angle,sucking penis,saliva,penis,grabbing head,{|(wide shot:0.9)}
+    #睡眠フェラ
+    sleep:
+      1girl,lying,fellatio,sucking penis,saliva,{|from {side|below|above}},(handjob:-1)
+
   #パイズリ
   paizuri:
     1girl,paizuri,penis
@@ -206,7 +294,10 @@ ERAI:
       1girl,naizuri,big penis
     #胸の谷間を犯す
     straddling:
-      1girl,lying,straddling paizuri,pov hands,breasts squeezed together,penis
+      #pov
+      - 1girl,lying,arms at sides,(from above),straddling paizuri,(pov hands,holding another's breasts),breasts squeezed together,penis
+      #3pp
+      - 1girl,lying on back,arms at sides,(from above,from side:0.7),dutch angle,dynamic angle,straddling paizuri,faceless male,boy on top,(holding another's breasts),breasts squeezed together,penis
   #素股
   grinding:
     __ERAI/grindingEX/front__
@@ -334,7 +425,11 @@ ERAI:
 
   #押し倒す
   push down:
-    1girl, lying,pov,pov hands,(from above:1.1) ,wince
+    1girl, lying,pov,pov hands,(from above:1.1)
+  #イタズラする_屋外 TWの時間停止中の屋外での押し倒し
+  push downEX:
+    not push down:
+      1girl,bust shot,standing,arms at sides,stand naturally,relaxed,pov,(pov hands:1.5), (pov claw hands:1.6),from above,motion blur,emphasis lines,close-up,out of frame,(holding hands,interlocked fingers:-1)  
   #告白する
   confession:
     1girl, confession
@@ -345,16 +440,73 @@ ERAI:
     3pp:
       on bed,pillow,sleepy,sleep with girl,lying together, faceless male,fat man,cuddling
   #休憩
+    #この辺の一人行動か相手がいるかで分岐するやつは実装方法が未定
   break:
     #具体的にポーズ指定しないと絵にならないが場所やシチュを考慮すると大変そう
     do nothing,taking a break, relax
-  
+  breakEX:
+    #一人休憩は描写しても面白くないし連打したりするので生成しない方針
+    alone:
+      hoge
+  #掃除
+  sweeping:
+    1girl, sweeping,(holding broom:1.1)
+  sweepingEX:
+    alone:
+      hoge     
+  #戦闘訓練
+  combat training:
+    __ERAI/danmaku__
+  combat trainingEX:
+    alone:
+      faceless male,
+  #弾幕
+  danmaku:
+    "\
+    1girl,{|(fighting stance:0.7)|flying},{outstretched arm|outstretched arms|arm up},\
+    (danmaku:1.5),(motion lines:1.1),(magic circle:0.5),(from behind:-1)\
+    "  
+  #勉強
+  study:
+    studying,writing,book,book stack
+  studyEX:
+    alone:
+      table,open notebook,book,book stack
+  #料理
+  cooking:
+    cooking
+  cookingEX:
+    alone:
+      cooking
+  #食事
+  eating:
+    eating,meal
+  eatingEX:
+    alone:
+      meal
+
+  cooperative:
+    #ダブルフェラ
+    fellatio:
+      #検証モデルでは fouge couple 等を使わなくても案外出せる。3回に1回くらいは。細かい要素は混ざる
+      (2girls:1.1),multiple girls,(solo:-1),2girls kneeling side by side,cooperative fellatio,pubic hair,penis,saliva trail,precum string,(deepthroat:1.2),head grab,stand-by,open mouth,perspective,oral invitation, (close-up:1.1),out of frame,dynamic angle,(steam:1.2),(panel layout:-1)
+    #交互挿入対面立位
+    standing missionary:
+      2girls, standing side-by-side,take your pick ,multiple girls,bust shot,mmf threesome,vaginal,penetration,facing viewer,(legs apart),bowlegged pose,against wall,(from below:0.8),dynamic angle,close-up,(disembodied penis:1.2),large penis,speed lines,(penis:1.1),(leg up:-0.8),(multiple penis:-1),(cum string:0.8),(gaping:0.8),after sex,open clothes,pussy,group sex
+    #交互挿入背面立位
+    standing doggy:
+      2girls,1boy,take your pick ,multiple girls,mmf threesome, side-by-side,doggystyle,ass,vaginal,speed lines,imminent penetration,(penis:1.1),(multiple penis:-1),cum string,(gaping:0.8),after sex,hand on ass,skirt lift,pussy,group sex
+
+# 交互挿入正常位
+# forge couple用
+# ${a=lying on back,vaginal,missionary,torso grab,spread legs,penis in pussy}${b=lying on back,after sex,cum drip,pussy}2girls ,side-by-side,hinanawi tenshi,hat,${a},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
+# 2girls,side-by-side,nagae iku,hat,${b},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
+# 2girls,side-by-side,from above,pov croth,(take your pick:1.2),<lora:Hyper-SDXL-1step-lora:1> ,以下絵柄タグ
 
 
-
-#時間停止（コマンド実行時）
+  #時間停止（コマンド実行時）
   timestop:
-    (simple background,black background,emphasis lines:1.2)
+    1girl,solo,bustshot,(simple background),(sepia,monochrome:1.2),emphasis lines,(purple background:1.2)
 #初対面
   encounter:
     1girl,cowboy shot,zoom layer,blurry background,english text,subtitles,(character name:1.3),letterboxed,information box,character sheet,stats 
