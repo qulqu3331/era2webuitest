@@ -12,6 +12,15 @@ ERAIeffect:
     (modare:0.3), (greatmosu:0.5), (sumiyao (amam):0.3), (hirayama kanna:0.3)
 
 ERAI:
+  #ターゲット変更*
+  change target:
+    1girl,cowboy shot
+  #移動後有人*
+  move and encounter:
+    1girl , detailed scenery in the background,knee shot,{||glance}
+  #移動後無人*
+  move:
+    scenery,(no humans:1.5),(empty scene:1.8),(human,1girl,face,figure:-1),(shot from a wide-angle perspective,openness:1),(vanishing point:-1)
   #愛撫
   caress:
     1girl,sitting,fingering ,(gropping breast:0.6),faceless male, pussy
@@ -375,19 +384,23 @@ ERAI:
     1girl,dressing ,(wear an apron),hands around own chest,embarrassed smile
   #会話
   talk:
-    1girl,talking with viewer,speaking,(open mouth:0.8)
+    1girl, talking with viewer,speaking,(speech bubble,japanese text:1.2),(open mouth:0.8)
   talkEX:
     failure:
-      1girl,bustshot,looking at viewer,indifferent,(jitome:0.8),spoken ellipsis
+      1girl,bustshot,spoken ellipsis
   #お茶を淹れる
   tea:
     1girl,teacup,drinking,holding a cup in one hand and a saucer in the other hand,steam
   #スキンシップ
   physical contact:
-    1girl, pov hand, physical contact,(hand on another's body),tickling,molestation,(hand on breast:-0.8)
+    #肩
+    - 1girl,pov hand, physical contact,(hand on another's shoulder),(back:-1)
+    #つんつん
+    - 1girl,pov hand,poking her stomach,pointing, (from above:0.8),(from side:0.1)
   physical contactEX:
     failure:
-      1girl,bustshot,(x arms:1.2),x,spoken x,looking at viewer, pov hand,(jitome:0.8)
+      #振り払う描写ができないのでバッテンマークで誤魔化す
+      1girl,bustshot,(x arms:1.2),x,spoken x,looking at viewer,pov hand
   #謝る
   apologize:
     1girl, standing,looking down,{crossed arms|hands on own hip|hand on own hip},from below
@@ -419,9 +432,9 @@ ERAI:
     no panties:
       1girl, wind lift,skirt tug,windy,motion lines,pussy
     timestop:
-      1girl, wind lift,lifting another's clothes,arms at sides,panties,pantyshot
+      1girl, wind lift,lifting another's clothes,arms at sides,panties,pantyshot,{|pov hands},{|from below}
     timestop no panties:
-      1girl, wind lift,lifting another's clothes,arms at sides,pussy
+      1girl, wind lift,lifting another's clothes,arms at sides,pussy,{|pov hands},{|from below}
 
   #押し倒す
   push down:
@@ -464,7 +477,7 @@ ERAI:
   danmaku:
     "\
     1girl,{|(fighting stance:0.7)|flying},{outstretched arm|outstretched arms|arm up},\
-    (danmaku:1.5),(motion lines:1.1),(magic circle:0.5),(from behind:-1)\
+    (light trail:1.2),(danmaku:1.5),(motion lines:1.1),(magic circle:0.5),(from behind:-1)\
     "  
   #勉強
   study:
@@ -484,7 +497,14 @@ ERAI:
   eatingEX:
     alone:
       meal
+  #読書
+  reading:
+    reading book
+  #空を眺める
+  sky:
+    sky,(sky view),(sky only),no humans,(building,architecture,utility pole,power lines:-1)
 
+  
   cooperative:
     #ダブルフェラ
     fellatio:
@@ -497,11 +517,11 @@ ERAI:
     standing doggy:
       2girls,1boy,take your pick ,multiple girls,mmf threesome, side-by-side,doggystyle,ass,vaginal,speed lines,imminent penetration,(penis:1.1),(multiple penis:-1),cum string,(gaping:0.8),after sex,hand on ass,skirt lift,pussy,group sex
 
-# 交互挿入正常位
-# forge couple用
-# ${a=lying on back,vaginal,missionary,torso grab,spread legs,penis in pussy}${b=lying on back,after sex,cum drip,pussy}2girls ,side-by-side,hinanawi tenshi,hat,${a},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
-# 2girls,side-by-side,nagae iku,hat,${b},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
-# 2girls,side-by-side,from above,pov croth,(take your pick:1.2),<lora:Hyper-SDXL-1step-lora:1> ,以下絵柄タグ
+  # 交互挿入正常位
+  # forge couple用
+  # ${a=lying on back,vaginal,missionary,torso grab,spread legs,penis in pussy}${b=lying on back,after sex,cum drip,pussy}2girls ,side-by-side,hinanawi tenshi,hat,${a},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
+  # 2girls,side-by-side,nagae iku,hat,${b},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
+  # 2girls,side-by-side,from above,pov croth,(take your pick:1.2),<lora:Hyper-SDXL-1step-lora:1> ,以下絵柄タグ
 
 
   #時間停止（コマンド実行時）
@@ -515,9 +535,87 @@ ERAI:
     (panty pull:1.1), pov hands,panties,pussy,(head out of frame:1.2), thighs
 #ただならぬ解放感
   panties disappearance:
-    1girl standing,(covering crotch, skirt tug:1.2),(spoken question mark:1.2),(??:1.2),speech bubble,embarrassed,panicking,flying sweatdrops
+    #skirt tugに引っ張られてミニスカート化しがち。long skirt指定すると直る。キャラにより異なる処理で面倒だが
+    1girl standing,(covering crotch, skirt tug:1.2),(spoken question mark:1.3),(??:1.3),speech bubble,embarrassed,panicking,flying sweatdrops
 
 #耳かき
   earpick:
     1girl, lap pov ,looking down,from below,ear cleaning,tender smile
+
+
+
+#表情
+#モデルや絵柄タグに依存するところが大きい
+ERAIexpr:
+  #あんまり表情指定しない
+  def_type:
+    #常に
+    always:
+      " "
+    #通常時
+    neutral:
+      " "
+    #ご機嫌、会話成功
+    cheerful:
+      - cheerful,joyful,+++,{|^ ^}
+      - (smile:0.7),cheerful,{|^ ^}
+      - light smile,happy,{|^ ^}
+    #不機嫌
+    grumpy:
+      - (annoyed)
+      - (bad mood)
+      - (glaring:0.7),looking side,sideways glance,bad mood
+    #怒り状態、怒りメーター高めのとき
+    angry:
+      #angerに頼るとギャグっぽくなるので難しい
+      (glaring:0.7),(tsurime),(sanpaku:0.8),disdain,spoken anger vein,Anger vein,(straight-on:-1)
+    #ブチギレ
+    rage:
+      #盛りすぎて破綻する。激しいのはloraないと辛い
+      (glaring:1.2),(shaded face,shade around eyes:1.1),(anger vein:1.3),v-shaped eyebrows ,furious,anger,(turime:1.5),squinting,crazy eyes,gesugao,(straight-on:-1)
+    #感心　技能を見せたり、依頼を達成したり
+    admiring:
+      (respectful:1.2),(grinning:0.8),(wide-eyed:0.2),glance,notice lines
+    #呆れ　コマンド失敗
+    disgusted:
+      #キツくならない程度に留める
+      - (disdain:0.9),(contempt:1.3),(tender:0.8),{||looking side,sideways glance},{|,(sigh)}
+
+
+  #無邪気
+  cirno_type:
+    #常に
+    always:
+      " "
+    #通常時
+    neutral:
+    #grinは歯を見せて笑う、grinningだと口の自由が利く(ただし、口を指定しないと半端な口になる)
+      "\
+      {4::\
+      grinning,{>:)|:d}\
+      |1::\
+      grin,{|(v-shaped eyebrows:{0.2|0.5})}\
+      }\
+      "
+    #ご機嫌、会話成功
+    cheerful:
+      - cheerful,joyful,+++,grinning,:d,^ ^,(v-shaped eyebrows:0.5)
+      - cheerful,joyful,+++,grin,^ ^,(v-shaped eyebrows:0.5)
+    #不機嫌
+    grumpy:
+      - (pout)
+      - (annoyed)
+    #怒り状態、怒りメーター高めのとき
+    angry:
+      (tsurime),angry,spoken anger vein,Anger vein,(straight-on:-1)
+    #ブチギレ
+    rage:
+      (turime:1.4),(angry:1.4),(anger vein:1.3),v-shaped eyebrows ,furious,anger,(straight-on:-1)
+    #感心　技能を見せたり、依頼を達成したり
+    admiring:
+      (respectful:1.2),(grinning:0.8),sparkling eyes,(wide-eyed:0.3),open mouth,happy,notice lines,(+++)
+    #呆れ　コマンド失敗
+    disgusted:
+      #smugだと陰険みがあってしっくり来ないかも
+      (smug),open mouth
 

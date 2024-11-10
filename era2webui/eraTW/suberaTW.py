@@ -66,6 +66,7 @@ class PromptMakerTW(PromptMaker):
         self.undress = self.sjh.get_save("上着脱衣済み") #int (boole　「下着姿にする」実行で1になる
         self.fullnude = self.sjh.get_save("全裸") #int (boole　1なら全裸
         self.subchara = self.sjh.get_save("ふたりめ") #str 2人派生コマンドの相手の名称　いなければ "あなた" 
+        self.expr = self.sjh.get_save("表情") #str ERB側で指定した表情 
 
 
     def generate_prompt(self):
@@ -114,7 +115,7 @@ class PromptMakerTW(PromptMaker):
                 self.create_traineffect_element() #噴乳はここでない気がする
                 self.create_stain_element()#如何わしい汚れ
 
-            if self.com == "スカートをめくる":
+            if self.com == "スカートをめくる" or self.com == "時止_スカートをめくる":
                 self.create_panty_element()
 
             if self.com == "料理を作る":
@@ -153,6 +154,7 @@ class PromptMakerTW(PromptMaker):
             emo = ExpressionTW(pm_var)
             emopro,emonega = emo.generate_emotion() #表情
             self.add_element("emotion", emopro, emonega)
+            self.create_expression_element()#表情
 
         if self.flags["drawlocation"] == False: # 背景オフ指定の場合は場所・天気・時間の影響を削除
             self.prompt["location"] = ""
@@ -166,7 +168,7 @@ class PromptMakerTW(PromptMaker):
         # モデルによってクオリティタグが最初か最後か等、作法が違うので順序は簡単に変えれるようにした方がいいんだろうね
     
         # 先頭に持ってくるキー
-        keys_to_move = ['train', 'activity', 'event', 'chara']
+        keys_to_move = ['train', 'activity', 'event', 'chara','emotion']
         #self.promptを並べ替えたもので上書き
         self.prompt = {k: self.prompt[k] for k in keys_to_move if k in self.prompt} | {k: v for k, v in self.prompt.items() if k not in keys_to_move}
 
@@ -268,13 +270,16 @@ class PromptMakerTW(PromptMaker):
             self.flags["drawlocation"] = True
             if self.charno == 0:
                 # targetがいないとき #この条件はTWではうまく動かない
-                self.add_element("situation", "scenery,(empty scene:1.4)", "(1girl:1.7)")
+                self.add_element("situation", ",__ERAI/move__", "")
             else:
                 # targetがいるとき 自由行動や仕事中の描写
                 self.create_activity_element()
                 #何もしてなければ通常の立ち絵
                 if self.prompt["activity"] == "":
-                    self.add_element("situation", "1girl standing, detailed scenery in the background", None)
+                    if self.scene == "ターゲット切替":
+                        self.add_element("situation", ",__ERAI/change target__", None)
+                    else:
+                        self.add_element("situation", ",__ERAI/move and encounter__", None)
                     #ターゲットが居るならキャラ｡顔表示ONにしないと誰かが居ても空っぽの場所になるよ
                     self.flags["drawchara"] = True
                     self.flags["drawface"] = True
@@ -883,13 +888,13 @@ class PromptMakerTW(PromptMaker):
     def create_panty_element(self):
         if not self.uniquepanty:
             #ふつうのパンツ（固有パンツ以外）
-            prompt = csvm.get_df("Cloth.csv","衣類名", self.pantyname,"プロンプト")
-            nega = csvm.get_df("Cloth.csv","衣類名", self.pantyname,"ネガティブ")
+            prompt = csvm.get_df("Cloth.csv","衣類名", self.pantyname,"プロンプト")+ ","
+            nega = csvm.get_df("Cloth.csv","衣類名", self.pantyname,"ネガティブ")+ ","
             self.add_element("cloth", prompt, nega)
         else:
             #固有パンツの場合
-            prompt = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着プロンプト")
-            nega = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着ネガティブ")
+            prompt = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着プロンプト")+ ","
+            nega = csvm.get_df("Uniquecloth.csv","キャラ名", self.name,"下半身下着ネガティブ")+ ","
             self.add_element("cloth", prompt, nega)
 
 
@@ -977,7 +982,12 @@ class PromptMakerTW(PromptMaker):
 
                 self.add_element("item", prompt, nega)
 
-
+    def create_expression_element(self):
+        personality_type = csvm.get_df("Character.csv","キャラ名",self.name,"性格タイプ")
+        if personality_type == "ERROR":
+            personality_type = "def_type"
+        prompt = f",__ERAIexpr/{personality_type}/{self.expr}__"
+        self.add_element("emotion", prompt, "")
 
     def prompt_debug(self):
         """

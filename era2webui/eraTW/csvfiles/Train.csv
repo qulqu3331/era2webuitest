@@ -262,6 +262,8 @@
 736,eraTW,4145,,キャラ固有5,Character -up 5,,,,,,0,0,1,0,1,,,,カウンター行動
 ,,55X,,触手服,Tactic clothing,,,1,1,1,0,0,1,0,1,,,(構想中/触手エプロンって名前もあり？),紳士的な触手系コマンド
 ,,,,時間停止,__ERAI/timestop__,,,1,1,1,0,0,1,0,0,,,,
+,,436,,読書,__ERAI/reading__,,,1,1,1,0,0,1,0,1,,,,
+,,495,,空を眺める,__ERAI/sky__,,,0,0,0,0,0,0,0,0,,,,
 ,,,,着衣胸愛撫,__ERAI/breast grabEX/clothing__,nipples,,1,1,1,0,0,1,0,1,,,,
 ,,,,着衣胸揉み,__ERAI/breast grabEX/clothing__,nipples,,1,1,1,0,0,1,0,1,,,,
 ,,,,愚痴を聞く,__ERAI/talk__,,,,,,,,,,,,,,
@@ -335,7 +337,7 @@
 ,,,炬燵でのんびり,自由行動_18,"1girl ,relax at the kotatsu",,,1,1,1,0,0,1,0,1,,,,
 ,,,清掃,仕事_40,"1girl,cleaning",,,1,1,1,0,0,1,0,1,,,,
 ,,,会話,仕事_41,"1girl,giving a speech",,,1,1,1,0,0,1,0,1,,,,
-,,,戦闘,仕事_42,"1girl,(fighting stance:0.7),(motion lines:1.1),(Trajectory of light bullets,light bullets, bullets leaveing luminous trails:1.2),(danmaku:1.2),magic circle",,,1,1,1,0,0,1,0,1,,,,
+,,,戦闘,仕事_42,__ERAI/danmaku__,,,1,1,1,0,0,1,0,1,,,,
 ,,,教養,仕事_43,"1girl ,reading a book",,,1,1,1,0,0,1,0,1,,,,
 ,,,料理,仕事_44,"1girl,cooking",,,1,1,1,0,0,1,0,1,,,,
 ,,,音楽,仕事_45,"1girl,playing instrument",,,1,1,1,0,0,1,0,1,,,,
