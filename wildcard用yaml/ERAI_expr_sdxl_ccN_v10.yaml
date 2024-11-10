@@ -1,0 +1,76 @@
+
+#表情
+#モデルや絵柄タグに依存するところが大きい
+ERAIexpr:
+  #あんまり表情指定しない
+  def_type:
+    #常に
+    always:
+      " "
+    #通常時
+    neutral:
+      " "
+    #ご機嫌、会話成功
+    cheerful:
+      - cheerful,joyful,+++,{|^ ^}
+      - (smile:0.7),cheerful,{|^ ^}
+      - light smile,happy,{|^ ^}
+    #不機嫌
+    grumpy:
+      - (annoyed)
+      - (bad mood)
+      - (glaring:0.7),looking side,sideways glance,bad mood
+    #怒り状態、怒りメーター高めのとき
+    angry:
+      #angerに頼るとギャグっぽくなるので難しい
+      (glaring:0.7),(tsurime),(sanpaku:0.8),disdain,spoken anger vein,Anger vein,(straight-on:-1)
+    #ブチギレ
+    rage:
+      #盛りすぎて破綻する。激しいのはloraないと辛い
+      (glaring:1.2),(shaded face,shade around eyes:1.1),(anger vein:1.3),v-shaped eyebrows ,furious,anger,(turime:1.5),squinting,crazy eyes,gesugao,(straight-on:-1)
+    #感心　技能を見せたり、依頼を達成したり
+    admiring:
+      (respectful:1.2),(grinning:0.8),(wide-eyed:0.2),glance,notice lines
+    #呆れ　コマンド失敗
+    disgusted:
+      #キツくならない程度に留める
+      - (disdain:0.9),(contempt:1.3),(tender:0.8),{||looking side,sideways glance},{|,(sigh)}
+
+
+  #無邪気
+  cirno_type:
+    #常に
+    always:
+      " "
+    #通常時
+    neutral:
+    #grinは歯を見せて笑う、grinningだと口の自由が利く(ただし、口を指定しないと半端な口になる)
+      "\
+      {4::\
+      grinning,{>:)|:d}\
+      |1::\
+      grin,{|(v-shaped eyebrows:{0.2|0.5})}\
+      }\
+      "
+    #ご機嫌、会話成功
+    cheerful:
+      - cheerful,joyful,+++,grinning,:d,^ ^,(v-shaped eyebrows:0.5)
+      - cheerful,joyful,+++,grin,^ ^,(v-shaped eyebrows:0.5)
+    #不機嫌
+    grumpy:
+      - (pout)
+      - (annoyed)
+    #怒り状態、怒りメーター高めのとき
+    angry:
+      (tsurime),angry,spoken anger vein,Anger vein,(straight-on:-1)
+    #ブチギレ
+    rage:
+      (turime:1.4),(angry:1.4),(anger vein:1.3),v-shaped eyebrows ,furious,anger,(straight-on:-1)
+    #感心　技能を見せたり、依頼を達成したり
+    admiring:
+      (respectful:1.2),(grinning:0.8),sparkling eyes,(wide-eyed:0.3),open mouth,happy,notice lines,(+++)
+    #呆れ　コマンド失敗
+    disgusted:
+      #smugだと陰険みがあってしっくり来ないかも
+      (smug),open mouth
+
