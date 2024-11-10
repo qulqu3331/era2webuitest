@@ -531,19 +531,7 @@ class ExpressionTW(Expression):
         drunk_value = self.sjh.get_save("酔い") \
                 if self.sjh.get_save("酔い") is not None else 0
 
-        if drunk_value < 1000:
-            self.emolevel["酩酊Lv"] = 0
-        elif drunk_value < 2000:
-            self.emolevel["酩酊Lv"] = 1
-        elif drunk_value < 3000:
-            self.emolevel["酩酊Lv"] = 2
-        elif drunk_value < 6000:
-            self.emolevel["酩酊Lv"] = 3
-        elif drunk_value < 10000:
-            self.emolevel["酩酊Lv"] = 4
-        else:
-            self.emolevel["酩酊Lv"] = 5
-
+        self.emolevel["酩酊Lv"] = drunk_value
 
     def check_pain_level(self):
         pain_value = self.sjh.get_save("palam_up")["苦痛"]

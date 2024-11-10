@@ -369,12 +369,25 @@ LOCALS = %LOCALS%"MAPID":"{場所ID/100}",
 ;お掃除判定
 IF TCVAR:MASTER:112 == 1
 	;V射精後	
-	SIF SELECTCOM == 81 && MASTER_POSE(SET_V,SET_P,1)
-		コマンド名 = お掃除フェラV
+	IF SELECTCOM == 81 && MASTER_POSE(SET_V,SET_P,1)
+	;本人の穴か
+		IF MASTER_POSE(SET_V,SET_P,1) == TARGET
+			コマンド名 = お掃除フェラV
+		ELSE
+			コマンド名 = お掃除フェラ他人
+		ENDIF
+ENDIF
 ELSEIF TCVAR:MASTER:112 == 2
 	;A射精後
-	SIF SELECTCOM == 81 && MASTER_POSE(SET_A,SET_P,1)
-		コマンド名 = お掃除フェラA
+	IF SELECTCOM == 81 && MASTER_POSE(SET_A,SET_P,1)
+	;本人の穴か
+		IF MASTER_POSE(SET_V,SET_P,1) == TARGET
+			コマンド名 = お掃除フェラA
+		ELSE
+			コマンド名 = お掃除フェラ他人
+		ENDIF
+ENDIF
+			
 ;ダブルフェラ
 ELSEIF SELECTCOM == 81 && TEQUIP:TARGET:口接触部位 == 1 && (MASTER_POSE(SET_M,SET_P,1) && MASTER_POSE(SET_M,SET_P,1) != TARGET )
 	コマンド名 = ダブルフェラ
@@ -480,6 +493,24 @@ ENDIF
 
 LOCALS = %LOCALS%"表情":"%表情%",
 
+
+;酔い------------------------------------------
+
+IF BASE:ARG:酒気 <= 2
+	LOCALS = %LOCALS%"酔い":0,
+ELSE
+	SELECTCASE BASE:ARG:酒気
+		CASE IS > (MAXBASE:ARG:酒気 / 10) * 8
+			;"ぐでぐで"
+			LOCALS = %LOCALS%"酔い":4,
+		CASE IS > (MAXBASE:ARG:酒気 / 10) * 5
+			;"酔いどれ"
+			LOCALS = %LOCALS%"酔い":2,
+		CASE IS <= (MAXBASE:ARG:酒気 / 10) * 5
+			;"ほろ酔い"
+			LOCALS = %LOCALS%"酔い":1,
+	ENDSELECT
+ENDIF
 
 ;ここから単項目で数値型(大嘘)---------------------------------------------------
 LOCALS = %LOCALS%"キャラ固有番号":{NO},

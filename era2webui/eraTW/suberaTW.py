@@ -94,7 +94,7 @@ class PromptMakerTW(PromptMaker):
         #屋内なら天気は無し
         if not self.flags.get("indoor"):
             self.create_weather_element() #天候
-        self.create_timezone_element() #時間帯
+            self.create_timezone_element() #時間帯
 
         # 一般EVENT
         if not self.scene in ["TRAIN","ターゲット切替","マスター移動"]:#例外シーンを作るたびにここに列挙しないといけない
