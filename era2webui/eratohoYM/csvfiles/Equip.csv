@@ -1,12 +1,12 @@
 ﻿"TEQUIP","値","名称","プロンプト","ネガティブ","備考"
-40,1,"緊縛 縄","<lora:shibari_V20:0.8>,nude,shibari, Japanese Bondage, rope",,
-40,2,"緊縛 四肢緊縛","<lora:shibari_V20:0.8>,nude,shibari, Japanese Bondage, rope",,
-40,3,"緊縛 亀甲縛り","<lora:shibari_V20:0.8>,nude,shibari, Japanese Bondage, rope",,
-40,4,"緊縛 吊り下げ","<lora:shibari_V20:0.8>,nude,shibari, Japanese Bondage, rope",,
+40,1,"緊縛 縄","nude,shibari, Japanese Bondage, rope",,
+40,2,"緊縛 四肢緊縛","nude,shibari, Japanese Bondage, rope",,
+40,3,"緊縛 亀甲縛り","nude,shibari, Japanese Bondage, rope",,
+40,4,"緊縛 吊り下げ","nude,shibari, Japanese Bondage, rope",,
 41,1,"眼隠し アイマスク","((blindfold))",,
-42,1,"猿轡 ボールギャグ","<lora:ballGag_v1:1>,ball gagged , gag , ball gag",,"このままだとLoraによる画質荒れが強め"
-42,3,"猿轡 強制開口器","<lora:openGagMouth_v10:1>,circle gag mouth",,"このままだとLoraによる画質荒れが強め"
-44,1,"鼻フック","<lora:conceptNoseHook_v10:1>,(NOSE HOOK)",,
+42,1,"猿轡 ボールギャグ","ball gagged , gag , ball gag",,
+42,3,"猿轡 強制開口器","circle gag mouth",,
+44,1,"鼻フック","(NOSE HOOK)",,
 ,,,,,
 ,,,,,
 ,,,,,
