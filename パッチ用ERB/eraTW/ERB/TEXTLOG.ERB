@@ -2,8 +2,8 @@
 ;調教中のパラメータをテキスト出力
 ;JSON形式
 ;時刻,キャラ名,素質,好感度,刻印,行為,絶頂,PALAM増減,PALAM累積値,ほかいろんなフラグ
-;GLOBAL:8800 連続呼び出し防止用のタイマー
-;GLOBAL:8801 出力テキストにつく連番
+;GLOBAL:800 連続呼び出し防止用のタイマー　グローバルにする意味はあまりない
+;GLOBAL:801 出力テキストにつく連番　グローバルにする意味は全くない
 ;引数
 ;ARGS どの場面から呼ばれたかを表す文字列 。"scene"要素としてそのまま文字列出力
 ;ARG 描画キャラの番号 省略したらTARGET
@@ -31,6 +31,8 @@ SCENE = %ARGS%
 
 ;引数TACHIEで呼ばれたら、予約があるときのみ反応する（呼び出し元:SHOW_STATUS関数）
 IF ARGS == "TACHIE"
+;PRINTFORML TACHIE
+;WAIT
 	IF FLAG:8800 == 1
 		SCENE = ターゲット切替
 ;		PRINTFORML %CALLNAME:target%を選択した
@@ -41,10 +43,11 @@ IF ARGS == "TACHIE"
 ;		PRINTFORML 移動直後です
 ;		WAIT
 		FLAG:8800 = 0
-			ELSEIF FLAG:8800 == 3
-		SCENE = 真名看破
-		PRINTFORML 真名看破
-		WAIT
+	ELSEIF FLAG:8800 == 3
+	    ;ターゲット切替特有の処理がなければこれでいい
+		SCENE = ターゲット切替
+;		PRINTFORML その他の立ち絵
+;		WAIT
 		FLAG:8800 = 0
 	ELSE
 		;予約なしで呼ばれたらキャンセル
@@ -70,12 +73,12 @@ SIF TFLAG:224 == 555
 ;タイマーで200ミリ秒未満の連続実行を防ぐ
 GETMILLISECOND
 LOCAL = RESULT
-SIF GLOBAL:3000 - LOCAL > -200
+SIF GLOBAL:800 - LOCAL > -200
 	RETURN 0
 
 
 ;連続実行防止タイマー更新
-GLOBAL:3000 = LOCAL
+GLOBAL:800 = LOCAL
 
 
 ;対象がTARGETでない場面での呼び出しに対応するため、TAEGETを退避しておく。最後に戻す
@@ -90,7 +93,7 @@ LOCALS = \{
 
 ;タイムスタンプ 時刻ミリ秒-----------------------------------------------------
 ;txtとプロンプトを紐づけるIDにする。今のところ使ってない
-LOCALS = %LOCALS%"timestamp":{GLOBAL:3000},
+LOCALS = %LOCALS%"timestamp":{GLOBAL:800},
 
 ;シーン------------------------------------------------------------------------
 ;シーン文字列を書き出す
@@ -361,6 +364,7 @@ LOCALS = %LOCALS%"MAPID":"{場所ID/100}",
 
 ;派生コマンドの処理---
 ;派生で変化したコマンド名を保存する変数　下の方でkey"コマンド名"としてjsonに記入する
+;派生なしの場合の文字列をここで記入
 コマンド名 = %TRAINNAME:(SELECTCOM)%
 ;ダブルフェラ等のときに相方を入れる変数　下の方でkey"ふたりめ"としてjsonに記入する
 ふたりめ = 0
@@ -387,7 +391,7 @@ ELSEIF TCVAR:MASTER:112 == 2
 			コマンド名 = お掃除フェラ他人
 		ENDIF
 ENDIF
-			
+
 ;ダブルフェラ
 ELSEIF SELECTCOM == 81 && TEQUIP:TARGET:口接触部位 == 1 && (MASTER_POSE(SET_M,SET_P,1) && MASTER_POSE(SET_M,SET_P,1) != TARGET )
 	コマンド名 = ダブルフェラ
@@ -689,15 +693,15 @@ LOCALS = %LOCALS%\}
 ;PRINTFORML %LOCALS%
 ;SAVETEXT関数でsavフォルダに出力される。
 ;SAVETEXT 文字列, 連番, (第3引数はsavフォルダ強制), 第4引数によりエンコードをUTF-8に強制
-SAVETEXT LOCALS, GLOBAL:8801, 0, 1
+SAVETEXT LOCALS, GLOBAL:801, 0, 1
 
 ;後始末 ARGを省略していたら意味のない処理
 TARGET = LOCAL:3
 
 ;出力テキストの連番は0～4でループさせる
-GLOBAL:8801 = GLOBAL:8801 + 1
-SIF GLOBAL:8801 == 5
-	GLOBAL:8801 = 0
+GLOBAL:801 = GLOBAL:801 + 1
+SIF GLOBAL:801 == 5
+	GLOBAL:801 = 0
 
 PRINTFORML {SELECTCOM}
 ;-------------------------------------------------------------------------------
@@ -708,8 +712,8 @@ PRINTFORML {SELECTCOM}
 		FLAG:8800 = 1
 	ELSEIF ARGS == "マスター移動"
 		FLAG:8800 = 2
-	ELSEIF ARGS == "真名看破"
-		FLAG:8800 = 3
+	ELSEIF ARGS == "その他立ち絵"
+		FLAG:8800 = 3	
 	ENDIF
 
 ;
