@@ -67,6 +67,9 @@ ERAI:
       1girl,breast grab, arms at side,pov hand{|s}
     3pp:
       1girl,sitting,breast grab, arms at side,faceless male
+    deep skin:
+      #巨乳限定
+      1girl,breast grab, arms at side,pov hands, deep skin,breast squeeze,unaligned breasts
     clothing:
       __ERAI/breast grabEX/{clothing pov|clothing 3pp}__
     clothing pov:
@@ -81,6 +84,9 @@ ERAI:
       1girl,nipple tweak, arms at side,pov hand
     3pp:
       1girl,sitting,nipple tweak, arms at side,faceless male
+  #乳首吸い
+  nipple sucking:
+    1girl,nipple sucking,faceless male sucking breast,(saliva),grabbing another's breast,deep skin,breast squeeze
   #秘貝開帳
   spread pussy:
     1girl,spread legs,spread pussy,pov hand
@@ -346,6 +352,10 @@ ERAI:
   #縄
   rope:
     1girl,bdsm,rope,shibari,kneeling
+  #乳スパンキング
+  breast spanking:
+    #small breastがないキャラは巨乳になる。
+    1girl,pov hand,(slapping), slapping breasts,breast spanking,bouncing breasts,unaligned breasts,speed lines,^^^
   #ボールギャグ
   ball gag:
     1girl,ball gag,forced to wear a gag,pov hands,hands on another's face,from above
@@ -428,7 +438,7 @@ ERAI:
     1girl, wind lift,skirt tug,windy,motion lines,panties,pantyshot
   skirt liftEX:
     failure:
-      1girl, facing viewer,(wind lift:0.9),(skirt tug),moving lines,angry,glaring,(panties:-1), from above
+      1girl, facing viewer,(wind lift:0.9),(skirt tug),moving lines,glaring,(panties:-1)
     no panties:
       1girl, wind lift,skirt tug,windy,motion lines,pussy
     timestop:
@@ -529,7 +539,7 @@ ERAI:
     1girl,solo,bustshot,(simple background),(sepia,monochrome:1.2),emphasis lines,(purple background:1.2)
 #初対面
   encounter:
-    1girl,cowboy shot,zoom layer,blurry background,english text,subtitles,(character name:1.3),letterboxed,information box,character sheet,stats 
+    1girl,cowboy shot,zoom layer,blurry background,english text,(japanese text),subtitles,(character name:1.5),letterboxed,information box,character sheet,stats 
 #パンツをくすねる
   panty pull:
     (panty pull:1.1), pov hands,panties,pussy,(head out of frame:1.2), thighs
