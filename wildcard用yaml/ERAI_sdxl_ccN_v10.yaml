@@ -9,7 +9,8 @@ ERAIeffect:
   timestop:
     time stop,expressionless,emotionless sex,looking forward,gaze into the distance,(looking at viewer:-1),(closed eyes:-1)
   base:
-    (modare:0.3), (greatmosu:0.5), (sumiyao (amam):0.3), (hirayama kanna:0.3)
+    #各自で絵柄タグとか書くとこ
+    __mybase__
 
 ERAI:
   #ターゲット変更*
