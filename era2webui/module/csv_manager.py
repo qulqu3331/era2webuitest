@@ -107,7 +107,7 @@ class CSVManager:
 
 
     def add_cloth_columns(self):
-        if 'Cloth.csv' in self.csvdatas:
+        if ('Cloth.csv' in self.csvdatas) and (Settings.variant == "eraTW"):
             df = self.csvdatas["Cloth.csv"]
             columns_to_copy  = {
                 'class_name': 'カテゴリ',
