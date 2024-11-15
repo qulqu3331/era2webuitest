@@ -2,7 +2,9 @@
 #ワイルドカードというより置換リストとして使用
 #ネガティブプロンプトを別で指定するのが面倒なため、negpipの拡張を使用
 
-#HyperSDXLの低step生成だとcum描写がだいぶ弱いらしい
+#HyperSDXLの低step生成だとcum描写がだいぶ弱いらしいのでerase_cumのlecoを常時-1でつけた状態でプロンプトを書いている。過剰気味なので別にお勧めはしない
+
+
 
 ERAIeffect:
   #時間停止（継続）
@@ -11,6 +13,7 @@ ERAIeffect:
   base:
     #各自で絵柄タグとか書くとこ
     __mybase__
+
 
 ERAI:
   #ターゲット変更*
@@ -32,9 +35,9 @@ ERAI:
   cunnilingus:
     __ERAI/cunnilingusEX/3pp__
   cunnilingusEX:
-    # povバージョンは "disembodied tongue" が安定しないので消した結果、ただの局部接写になってしまった
+    # povバージョンは "disembodied tongue" が安定しない。妖怪が出るのでコメントアウト
     #pov:
-    #  (close-up of girl's crotch:0.9),(pussy),spread legs,botomless,pussy juice
+    #  (close-up of girl's crotch:0.9),(pussy),disembodied tongue,spread legs,botomless,pussy juice
     3pp:
       1girl,spread legs,cunnilingus,faceless male,bald man licking pussy,{sitting|lying,folded}
     standing:
@@ -94,6 +97,9 @@ ERAI:
   #自慰
   masturbation:
     1girl,female masturbation
+  masturbationEX:
+    breasts:
+      1girl,self caressing breasts,hands on own breasts
   #アナル開帳
   spread anus:
     __ERAI/spread anusEX/{front|behind}__
@@ -266,27 +272,12 @@ ERAI:
       - __ERAI/fellatioEX/cleanup zoom__
       - __ERAI/fellatioEX/cleanup after v__
     cleanup zoom:
-      "\
-      (drooping penis:1.4),testicles,simple background,1girl,(kneeling:0.6),faceless male,(flaccid penis:1.5),bending penis,kneeling to penis,\
-      (kiss penis:1.1),(face to face:-1),lip on penis,tongue,(licking:0.8),(penis awe:0.6),(cum covered penis,cum:1.2),\
-      (erection:-0.8),(facing side:0.6),face focus,close up,out of frame,steam,half closed eyes\
-      "
+      (drooping penis:1.4),testicles,simple background,1girl,(kneeling:0.6),faceless male,(flaccid penis:1.5),bending penis,kneeling to penis,(kiss penis:1.1),(face to face:-1),lip on penis,tongue,(licking:0.8),(penis awe:0.6),(cum covered penis,cum:1.2), (erection:-0.8),(facing side:0.6),face focus,close up,out of frame,steam,half closed eyes
     cleanup after v:
-      "\
-      nipples,lying on back,(fellatio),(man kneeing beside the girl's head and she is sucking his flaccid penis),\
-      (flaccid penis),facing side,out of frame,after sex,heavy breathing,spread legs,(gaping:0.8),\
-      cumdrip from pussy,steam,(cum soaked into sheets),cum ,cum on body,eroge cum,cum on face,\
-      Tiredness,sweat,out of power,mind break,scattered cum ,Both legs thrown out,(pov crotch,vaginal penetration:-0.7)\
-      "
+      nipples,lying on back,(fellatio),(man kneeing beside the girl's head and she is sucking his flaccid penis),(flaccid penis),facing side,out of frame,after sex,heavy breathing,spread legs,(gaping:0.8), cumdrip from pussy,steam,(cum soaked into sheets),cum ,cum on body,eroge cum,cum on face,Tiredness,sweat,out of power,mind break,scattered cum ,Both legs thrown out,(pov crotch,vaginal penetration:-0.7)
     cleanup after a:
     #顔が見えないのがさみしいので分岐してない
-      "\
-      1girl,1boy,M legs,Implied fellatio,(ass focus:0.8),wariza ,(dogeza:0.7),feet,from behind,\
-      head grab,bent over,hairy man,fat man squatting,(indian style:1.5),motion lines,\
-      from above,dutch angle,(from side:0.8),out of frame,facing away,\
-      after anal,anus,gaping,anal gaping,cumdrip from anus,steam,cum ,sweat,out of power,scattered cum ,\
-      (sex from behind:-1),(pov crotch,vaginal penetration:-0.7),(cum in pussy:-1)\
-      "
+      1girl,1boy,M legs,Implied fellatio,(ass focus:0.8),wariza ,(dogeza:0.7),feet,from behind,head grab,bent over,hairy man,fat man squatting,(indian style:1.5),motion lines,from above,dutch angle,(from side:0.8),out of frame,facing away,after anal,anus,gaping,anal gaping,cumdrip from anus,steam,cum ,sweat,out of power,scattered cum ,(sex from behind:-1),(pov crotch,vaginal penetration:-0.7),(cum in pussy:-1)
     #時止めフェラ
     timestop:
       #上/横/下視点
@@ -300,7 +291,10 @@ ERAI:
     #睡眠フェラ
     sleep:
       1girl,lying,fellatio,sucking penis,saliva,{|from {side|below|above}},(handjob:-1)
-
+  #シックスナイン
+  sixnine:
+    #安定しない
+    1girl,nsfw,(69:1.3),penis,(testicles:0.8),(fellatio),saliva,girl on top,implied cunnilingus,grabbing another's ass,(looking at viewer:-0.6)
   #パイズリ
   paizuri:
     1girl,paizuri,penis
@@ -314,6 +308,12 @@ ERAI:
       - 1girl,lying,arms at sides,(from above),straddling paizuri,(pov hands,holding another's breasts),breasts squeezed together,penis
       #3pp
       - 1girl,lying on back,arms at sides,(from above,from side:0.7),dutch angle,dynamic angle,straddling paizuri,faceless male,boy on top,(holding another's breasts),breasts squeezed together,penis
+    #パイズリフェラ
+    fellatio:
+      1girl,paizuri,penis,fellatio,{|licking}
+    #縦パイズリ
+    perpendicular:
+      1girl,(sperpendicular paizuri),penis,(from above,from side:0.6)
   #素股
   grinding:
     __ERAI/grindingEX/front__
@@ -486,10 +486,7 @@ ERAI:
       faceless male,
   #弾幕
   danmaku:
-    "\
-    1girl,{|(fighting stance:0.7)|flying},{outstretched arm|outstretched arms|arm up},\
-    (light trail:1.2),(danmaku:1.5),(motion lines:1.1),(magic circle:0.5),(from behind:-1)\
-    "  
+    1girl,{|(fighting stance:0.7)|flying},{outstretched arm|outstretched arms|arm up},(light trail:1.2),(danmaku:1.5),(motion lines:1.1),(magic circle:0.5),(from behind:-1)
   #勉強
   study:
     studying,writing,book,book stack
@@ -520,7 +517,14 @@ ERAI:
     #ダブルフェラ
     fellatio:
       #検証モデルでは fouge couple 等を使わなくても案外出せる。3回に1回くらいは。細かい要素は混ざる
-      (2girls:1.1),multiple girls,(solo:-1),2girls kneeling side by side,cooperative fellatio,pubic hair,penis,saliva trail,precum string,(deepthroat:1.2),head grab,stand-by,open mouth,perspective,oral invitation, (close-up:1.1),out of frame,dynamic angle,(steam:1.2),(panel layout:-1)
+      (2girls:1.1),multiple girls,(solo:-1),(heads together:0.5),2girls kneeling side by side,cooperative fellatio,pubic hair,penis,saliva trail,precum string,(deepthroat:1.2),head grab,stand-by,open mouth,perspective,oral invitation, (close-up:1.1),out of frame,dynamic angle,(steam:1.2),(panel layout:-1)
+    #ダブル手淫
+    handjob:
+      #heads togetherで縦画面での打率が爆上がりするけど横画面では変かも。あとときどき顔が縦長に歪む
+      (2girls:1.1),multiple girls,(solo:-1),(heads together:0.8),2girls,cooperative handjob,pubic hair,penis,precum string,out of frame,dynamic angle,(steam:1.2),(panel layout:-1)
+    #ダブルパイズリ
+    paizuri:
+      (2girls:1.1),multiple girls,(solo:-1),(cooperative paizuri:1.3),penis
     #交互挿入対面立位
     standing missionary:
       2girls, standing side-by-side,take your pick ,multiple girls,bust shot,mmf threesome,vaginal,penetration,facing viewer,(legs apart),bowlegged pose,against wall,(from below:0.8),dynamic angle,close-up,(disembodied penis:1.2),large penis,speed lines,(penis:1.1),(leg up:-0.8),(multiple penis:-1),(cum string:0.8),(gaping:0.8),after sex,open clothes,pussy,group sex
@@ -552,4 +556,5 @@ ERAI:
 #耳かき
   earpick:
     1girl, lap pov ,looking down,from below,ear cleaning,tender smile
+
 

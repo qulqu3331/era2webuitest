@@ -1,0 +1,1334 @@
+;===============================================================================
+;  ◇記載関数一覧(記載順)
+;
+;		Module Name						Explanation
+;
+;	・ COMMON_SCENE_ENCOUNTER_PART		汎用情景：遭遇部
+;	・ COMMON_SCENE_ACTION_PART			汎用情景：行動部
+;	・ COMMON_SCENE_NTR_PART			汎用情景：ＮＴＲ部
+;	・ COMMON_SCENE_PERSONALITY			汎用情景：性格判定
+;	・ COMMON_SCENE_BUST_SIZE			汎用情景：胸サイズ
+;	・ COMMON_SCENE_BUST_INFO			汎用情景：胸情報
+;	・ COMMON_SCENE_TITLE				汎用情景：表題
+;	・ COMMON_SCENE_SUBTITLE			汎用情景：副表題
+;	・ COMMON_SCENE_EFFECT				汎用情景：効果
+;	・ COMMON_SCENE_CLOTHES				汎用情景：着衣
+;	・ COMMON_SCENE_AEGI				汎用情景：喘ぎ声
+;
+;===============================================================================
+
+;=================================================
+;   sub COMMON_SCENE_ENCOUNTER_PART
+;=================================================
+;   汎用情景：遭遇部
+;-------------------------------------------------
+; Input:
+;  ARG:0				対象者
+;  ARG:1				情景番号（2桁+1桁(条件分類2桁＋位置区分1桁)）
+;  ARGS:0				相手名称（無しの場合、場面より自動判定）
+;-------------------------------------------------
+@COMMON_SCENE_ENCOUNTER_PART(ARG:0, ARG:1, ARGS:0="")
+#DIMS L_NAME
+
+IF ARGS:0 == ""
+	L_NAME = %CALLNAME:MASTER%
+ELSE
+	L_NAME = %ARGS:0%
+ENDIF
+
+SELECTCASE ARG:1
+;-----------------------------
+;■遭遇
+;-----------------------------
+	CASE [[汎用情景:遭遇_交流開始]]
+		;初回
+		IF !CFLAG:口上初回交流情景フラグ
+			CFLAG:口上初回交流情景フラグ = 1
+			;傷物
+			IF TALENT:傷物
+				PRINTFORML 【遭遇：傷物】
+				;捕縛失踪を回収
+				IF CFLAG:ＮＴＲ捕縛ルートフラグ
+					PRINTFORMW そこには懐かしい顔……この館から奪い去られた、%CALLNAME%がいた……。
+					PRINTFORMW 養う気など微塵も無い男は彼女を性奴隷として弄び、傷物にし、最後には売り飛ばし――%CALLNAME:MASTER%が買い戻した。
+					PRINTFORMW %CALLNAME:MASTER%以外の男に犯された彼女は俯いて何も語らず、時折震えながら%CALLNAME:MASTER%の審判を待っている。
+				;調教失踪を回収
+				ELSE
+					PRINTFORMW そこには懐かしい顔……ここを捨てて他の男の下に去った、%CALLNAME%がいた……。
+					PRINTFORMW 養う気など微塵も無い男は彼女を性奴隷として弄び、傷物にし、最後には売り飛ばし――%CALLNAME:MASTER%が買い戻した。
+					PRINTFORMW 肝心の彼女は裏切った罪悪感からか俯いて何も語らず、時折震えながら%CALLNAME:MASTER%の審判を待っている。
+				ENDIF
+				PRINTFORMW %CALLNAME:MASTER%が買い戻した理由……自分の嫁にする事を伝えると、%CALLNAME%は涙を流して抱き付いた……。
+				PRINTL
+				TALENT:依存 = 1
+				PRINTFORML %CALLNAME%は[依存]を取得した
+				PRINTL
+			ELSE
+				PRINTL
+				PRINTFORML 【初回遭遇】
+				IF CFLAG:イベント加入
+					PRINTFORML %CALLNAME:MASTER%は%CALLNAME%に挨拶し、今後は配下兼性奴隷として口説く事を伝えた…
+				ELSE
+					PRINTFORML %CALLNAME:MASTER%は館内で初めて出会う%CALLNAME%に挨拶し、今後は配下兼性奴隷として口説く事を伝えた…
+				ENDIF
+				PRINTFORML %CALLNAME%はこの荒廃した世界で%CALLNAME:MASTER%を主人にする事を、少しは意識している様だ……
+			ENDIF
+
+		;それ以外
+		ELSE
+			PRINTL
+			PRINTFORML 【遭遇】
+			PRINTFORML %CALLNAME:MASTER%は%CALLNAME%に挨拶をした…
+			;反発刻印LV3
+			IF MARK:反発刻印 == 3
+				PRINTFORML %CALLNAME%は%L_NAME%に不満を貯め込んでいる様だ…
+			;ＮＴＲ後初遭遇
+			ELSEIF TALENT:ＮＴＲ陥落
+				PRINTFORML 【ＮＴＲ】%CALLNAME%に今後は再調教する事を伝えると、%CALLNAME%は観念した顔で忠誠を誓った…
+			ELSE
+				;反応◎：恋慕開始 or 隷属開始
+				IF TALENT:恋慕 || TALENT:隷属
+					PRINTFORML %CALLNAME%は性奴隷の関係にある気慣れた様子で挨拶を返した…
+				;反応〇：合意開始
+				ELSEIF TALENT:合意
+					PRINTFORML %CALLNAME%は身体の関係のある距離感で挨拶を返した…
+				;反応△：好意開始
+				ELSEIF TALENT:好意
+					PRINTFORML %CALLNAME%は打ち解けて来た様子で挨拶を返した…
+				;反応△：それ以外
+				ELSE
+					PRINTFORML %CALLNAME%は挨拶を返した…
+				ENDIF
+			ENDIF
+		ENDIF
+		PRINTL
+
+	CASE [[汎用情景:遭遇_調教開始]]
+		;初回
+		IF !CFLAG:口上初回調教情景フラグ
+			CFLAG:口上初回調教情景フラグ = 1
+
+			CALL C_COLOR_PRINTL("【初調教】", COLOR("紫"))
+
+			;1行目
+			;反応〇：合意以上
+			IF TALENT:合意
+				PRINTFORML 初めての調教を伝えて%CALLNAME%を押し倒すと、その表情には%CALLNAME:MASTER%への恋愛感情が見え隠れしている…
+				PRINTFORML %CALLNAME:MASTER%の性奴隷となる事を理解しながら、%CALLNAME%は服を脱がされていった…
+			;反応×：TALENT:好意、それ以外
+			ELSE
+				PRINTFORML 性奴隷として囲った%CALLNAME%に初めての調教を伝えると、こちらの真意を探る様な視線を向けている……
+				PRINTFORML %CALLNAME:MASTER%の庇護に嘘が無い事は理解しつつも、未だ心の準備ができていない%CALLNAME%の服を脱がしていった…
+			ENDIF
+		ELSE
+			;反発刻印LV3
+			IF MARK:反発刻印 == 3
+				PRINTFORML %CALLNAME%は%L_NAME%に不満を貯め込んでいる様だ…
+			;ＮＴＲ後初遭遇
+			ELSEIF TALENT:ＮＴＲ陥落
+				PRINTFORML 【ＮＴＲ】%CALLNAME%はそっぽを向いているが、一応忠誠を誓った…
+			ELSE
+				;反応◎：恋慕開始 or 隷属開始
+				IF TALENT:恋慕 || TALENT:隷属
+					PRINTFORML %CALLNAME%は%L_NAME%の性奴隷にされる事を望み、欲情を隠さずに忠誠を誓った…
+				;反応〇：合意開始
+				ELSEIF TALENT:合意
+					PRINTFORML %CALLNAME%は性奴隷になる合意をしたせいか、顔を赤らめながらこちらを見ている…
+				;反応△：好意開始
+				ELSEIF TALENT:好意
+					PRINTFORML %CALLNAME%は愛撫を許したせいか、顔を赤らめながらこちらを見ている…
+				;反応△：それ以外
+				ELSE
+					PRINTFORML %CALLNAME%は契約とは言え、調教される事に不満そうだ…
+				ENDIF
+			ENDIF
+		ENDIF
+	CASEELSE
+
+ENDSELECT
+WAIT
+
+;=================================================
+;   sub COMMON_SCENE_ACTION_PART
+;=================================================
+;   汎用情景：行動部
+;-------------------------------------------------
+; Input:
+;  ARG:0				対象者
+;  ARG:1				情景番号（2桁+1桁(条件分類2桁＋位置区分1桁)）
+;  ARGS:0				相手名称（無しの場合、場面より自動判定）
+;-------------------------------------------------
+@COMMON_SCENE_ACTION_PART(ARG:0, ARG:1, ARGS:0="")
+#DIMS L_NAME
+
+IF ARGS:0 == ""
+	L_NAME = %CALLNAME:MASTER%
+ELSE
+	L_NAME = %ARGS:0%
+ENDIF
+
+SELECTCASE ARG:1
+	CASE [[汎用情景:行動_仕事系]], [[汎用情景:行動_日常系]]
+		;反応◎：恋慕開始 or 隷属開始
+		IF TALENT:恋慕 || TALENT:隷属
+			PRINTFORML %CALLNAME%は楽しそうにしている…
+		;反応〇：合意開始
+		ELSEIF TALENT:合意
+			PRINTFORML %CALLNAME%は好意の笑みを浮かべている…
+		;反応△：好意開始
+		ELSEIF TALENT:好意
+			PRINTDATAL
+				DATAFORM %CALLNAME%は%CALLNAME:PLAYER%に好意を抱いている様だ…
+				DATAFORM %CALLNAME%は時折好意の笑みを交えている…
+			ENDDATA
+		;反応△：信頼開始
+		ELSEIF TALENT:信頼
+			PRINTFORML %CALLNAME%は%CALLNAME:MASTER%を信頼している様子である…
+		;反応△：それ以外
+		ELSE
+			PRINTDATAL
+				DATAFORM %CALLNAME%はまだ%CALLNAME:PLAYER%と距離がある様だ…
+				DATAFORM %CALLNAME%はまだ%CALLNAME:PLAYER%と打ち解けるまで時間が掛かりそうだ…
+			ENDDATA
+		ENDIF
+	CASEELSE
+
+ENDSELECT
+WAIT
+
+;=================================================
+;   sub COMMON_SCENE_NTR_PART
+;=================================================
+;   汎用情景：ＮＴＲ部
+;-------------------------------------------------
+; Input:
+;  ARG:0				対象者
+;  ARG:1				情景番号（2桁+1桁(条件分類2桁＋位置区分1桁)）
+;  ARGS:0				相手名称（無しの場合、場面より自動判定）
+;  ARGS:1				追加文1(有りの場合、一部で表示される)
+;  ARGS:2				追加文2(有りの場合、一部で表示される)
+;  ARGS:3				追加文3(有りの場合、一部で表示される)
+;-------------------------------------------------
+;  2+1桁(条件分類＋位置区分)の情景番号が振られており、進行度別に以下の段階で進む想定で記載されている
+;  ※位置区分は1が前部、2が中部、3が後部となる。
+;
+;  ■ＮＴＲ合意ルート
+;    ・No.11x：進行LV1 回避
+;    ・No.12x：進行LV2 会話（愛撫）
+;    ・No.13x：進行LV3 合意（本番無し調教）
+;  ■ＮＴＲ捕縛ルート
+;    ・No.21x：進行LV1 捕縛（愛撫）
+;    ・No.22x：進行LV2 調教（本番無し調教）
+;    ・No.23x：進行LV3 服従（本番有り調教）
+;  ■共通(LV4隷属以降)
+;    ・No.91x：進行LV4 隷属（本番有り調教）
+;    ・No.92x：進行LV5 陥落（本番有り調教＋陥落）
+;    ・No.93x：進行LV6 失踪
+;-------------------------------------------------
+@COMMON_SCENE_NTR_PART(ARG:0, ARG:1, ARGS:0="", ARGS:1="", ARGS:2="", ARGS:3="")
+#DIM L_T
+#DIM L_BAK
+#DIM L_危険日
+#DIMS L_NAME
+#DIMS L_KOJO, 10
+
+L_BAK  = TARGET
+TARGET = ARG:0
+L_NAME = %ARGS:0%
+L_KOJO:1 = %ARGS:1%
+L_KOJO:2 = %ARGS:2%
+L_KOJO:3 = %ARGS:3%
+SIF L_NAME == ""
+	L_NAME = 男
+
+;危険日判定
+L_危険日 = C_危険日(TARGET)
+;妊娠中は危険日解除
+SIF TALENT:妊娠
+	L_危険日=0
+
+CALL COMMON_SCENE_PERSONALITY(TARGET)
+
+SELECTCASE ARG:1
+;-----------------------------
+;■ＮＴＲ合意ルート：LV1回避
+;-----------------------------
+	;回避(情景前部)
+	CASE [[ＮＴＲ結果:回避(情景前部)]]
+		CALL OUTPUT_TXT("ＮＴＲ合意ルート:回避")
+		PRINTDATAL
+			DATAFORM %CALLNAME%に%L_NAME%が通路で声をかけている……
+			DATAFORM %CALLNAME%に%L_NAME%が客室で声をかけている……
+			DATAFORM %CALLNAME%に%L_NAME%が倉庫前で声をかけている……
+		ENDDATA
+		PRINTDATAL
+			DATAFORM 男は%CALLNAME%を狙っている様だが、%CALLNAME%は相手にしていない様だ……
+			DATAFORM この荒廃した世界では女は貴重であり、%CALLNAME%も狙われている様だ……
+		ENDDATA
+		WAIT
+		PRINTL
+
+	;回避(情景中部)
+	CASE [[ＮＴＲ結果:回避(情景中部)]]
+		PRINTDATAL
+			DATAFORM %CALLNAME%は笑顔でかわした……
+			DATAFORM %CALLNAME%は事務的に対処した……
+			DATAFORM %CALLNAME%はうまくあしった……
+		ENDDATA
+		WAIT
+		PRINTL
+
+	;回避(情景後部)
+	CASE [[ＮＴＲ結果:回避(情景後部)]]
+		IF CFLAG:ＮＴＲ好感度
+			SETCOLOR COLOR("紫")
+			PRINTDATAL
+				DATAFORM だが、男の口説きに%CALLNAME%は悪い気はしていない様だ……
+			ENDDATA
+			WAIT
+			PRINTL
+		ENDIF
+
+;-----------------------------
+;■ＮＴＲ合意ルート：LV2会話
+;-----------------------------
+	CASE [[ＮＴＲ結果:会話(情景前部)]]
+		PRINTDATAL
+			DATAFORM %CALLNAME%に%L_NAME%が人気の無い通路で口説いている……
+			DATAFORM %CALLNAME%に%L_NAME%が誰もいない客室で口説いている……
+			DATAFORM %CALLNAME%に%L_NAME%が人気の無い倉庫前で口説いている……
+		ENDDATA
+		PRINTFORMW 男の熱心な口説きに負け、%CALLNAME%は主人に構われていない事を話した様だ……
+		PRINTL
+
+		CALL OUTPUT_TXT("ＮＴＲ合意ルート:愛撫")
+		CALL COMMON_SCENE_TITLE("ＮＴＲ会話 - 愛撫", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTFORML %CALLNAME%は男の「スキ」という言葉に、身体への愛撫を許してしまっている……
+		PRINTDATAL
+			DATAFORM %CALLNAME%は奴隷になる様に誘われながら、太ももを撫でられている……
+			DATAFORM %CALLNAME%は奴隷になる様に誘われながら、身体を抱き寄せられて胸を揉まれている……
+			DATAFORM %CALLNAME%は奴隷になる様に誘われながら、パンティ越しに秘裂に指を這わされている……
+		ENDDATA
+		WAIT
+		PRINTL
+
+	CASE [[ＮＴＲ結果:会話(情景中部)]]
+
+	CASE [[ＮＴＲ結果:会話(情景後部)]]
+		SETCOLOR COLOR("紫")
+		PRINTFORML 男が夜に客室に来る様に口説くと、%CALLNAME%は聞き入っている……
+		PRINTFORML %CALLNAME%を放置すると、男の部屋に行くかもしれない……
+		WAIT
+		PRINTL
+
+;-----------------------------
+;■ＮＴＲ合意ルート：LV3合意
+;-----------------------------
+	CASE [[ＮＴＲ結果:合意(情景前部)]]
+		PRINTDATAL
+			DATAFORM %CALLNAME%に%L_NAME%が人気の無い通路で、夜に客室に来る様に口説いている……
+			DATAFORM %CALLNAME%に%L_NAME%が誰もいない客室で、夜に客室に来る様に口説いている……
+			DATAFORM %CALLNAME%に%L_NAME%が人気の無い倉庫前で、夜に客室に来る様に口説いている……
+		ENDDATA
+		PRINTFORML 性奴隷にされる事を理解しながらも、男の言葉を信じた%CALLNAME%は夜に男の客室を訪れた……
+		WAIT
+		PRINTL
+		;初回
+		IF !CFLAG:ＮＴＲ合意ルート：合意フラグ
+			CALL OUTPUT_TXT("NTR合意ルート:ＮＴＲ合意")
+			CALL COMMON_SCENE_TITLE("ＮＴＲ合意", COLOR("ピンク"), 1)
+
+			;情景(前部)
+			SETCOLOR COLOR("紫")
+			PRINTFORML 男はベッドの上で言葉巧みに%CALLNAME%を抱き寄せ、%CALLNAME%の心を蝕んでいく……
+			PRINTDATAL
+				DATAFORM 男がその肢体に指を這わしながら%CALLNAME%の唇を奪うと、%CALLNAME%は舌を搦めてしまう…
+				DATAFORM 男の優しい言葉を信じた%CALLNAME%は唇を奪われると、舌を搦めてしまう…
+				DATAFORM 後ろから抱き締められた%CALLNAME%は唇を奪われると、舌を搦めてしまう…
+			ENDDATA
+			PRINTFORML そのまま胸と秘所を直に触られると、%CALLNAME%は調教される事を理解して性奴隷を受け入れた……
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML 男は%CALLNAME%の【合意】を得た
+			SETCOLOR COLOR("紫")
+			PRINTFORML %CALLNAME%の下腹部に男の小さな淫紋が刻まれ、男の支配が進んでいく……
+			WAIT
+			PRINTL
+			CALL COMMON_SCENE_TITLE("ＮＴＲ合意 - 初調教", COLOR("ピンク"), 1)
+		;上記以外
+		ELSE
+			CALL COMMON_SCENE_TITLE("ＮＴＲ合意 - 性奴隷調教", COLOR("ピンク"), 1)
+		ENDIF
+
+	CASE [[ＮＴＲ結果:合意(情景中部)]]
+		SETCOLOR COLOR("紫")
+		;1行目：全裸前戯
+		PRINTDATAL
+			DATAFORM 生まれたままの姿にされた%CALLNAME%は、男にキスをされながら愛撫され、犯される準備をしている……
+			DATAFORM 生まれたままの姿にされた%CALLNAME%は、秘裂を舌で何度も舐め上げられ、犯される準備をしている……
+			DATAFORM 生まれたままの姿にされた%CALLNAME%は、言われた通りにペニスをしゃぶり、犯される準備をしている……
+		ENDDATA
+
+		;2行目：奉仕
+		IF TALENT:巨乳 || TALENT:爆乳
+			PRINTDATA
+				DATAFORM %CALLNAME%は言われるままにペニスを\@TALENT:巨乳 ? 巨乳 # 爆乳\@で挟んで奉仕し、
+				DATAFORM %CALLNAME%は\@TALENT:巨乳 ? 豊満な双丘 # 溢れんばかりの爆乳\@でペニスに奉仕し、
+			ENDDATA
+		ELSE
+			PRINTFORM %CALLNAME%は言われるままにペニスに舌を這わせて奉仕し、
+		ENDIF
+		PRINTDATAL
+			DATAFORM 射精を口内で受け止めていく…
+			DATAFORM 射精を顔で受け止めていく…
+		ENDDATA
+
+		;3行目:疑似性交
+		IF !RAND:3
+			CALL OUTPUT_TXT("ＮＴＲ合意ルート:疑似性交_騎乗位")
+			PRINTFORML そのまま%CALLNAME%は促されるままに男の腰に跨ると、ペニスに雌芯をこすりつける疑似性交にだらしない顔を晒している…
+			SIF L_KOJO:1 != ""
+				PRINTFORML %L_KOJO:1%
+			PRINTFORML 腰を前後に振りながら騎乗位で激しく絶頂すると、%CALLNAME%の身体に男の精液が放たれた…
+		ELSEIF !RAND:2
+			CALL OUTPUT_TXT("ＮＴＲ合意ルート:疑似性交_正常位")
+			PRINTFORML そのまま%CALLNAME%は正常位の姿勢で、ペニスを雌芯にこすりつける疑似性交にだらしない顔を晒している…
+			SIF L_KOJO:1 != ""
+				PRINTFORML %L_KOJO:1%
+			PRINTFORML 男とキスをしながら激しく絶頂すると、%CALLNAME%の身体に男の精液が放たれた…
+		ELSE
+			CALL OUTPUT_TXT("ＮＴＲ合意ルート:疑似性交_後背位")
+			PRINTFORML そのまま%CALLNAME%は後背位の姿勢で、ペニスを雌芯にこすりつける疑似性交にだらしない顔を晒している…
+			SIF L_KOJO:1 != ""
+				PRINTFORML %L_KOJO:1%
+			PRINTFORML 両腕を掴まれながら激しく絶頂すると、%CALLNAME%の身体に男の精液が放たれた…
+		ENDIF
+		WAIT
+		PRINTL
+
+	CASE [[ＮＴＲ結果:合意(情景後部)]]
+		CALL COMMON_SCENE_TITLE("ＮＴＲ合意 - 後戯", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTDATAL
+			DATALIST
+				DATAFORM ……男が正常位でペニスを秘裂に宛がうと、%CALLNAME%は最後の一線でそれだけは拒んだ……
+				DATAFORM だが言葉とは裏腹に%CALLNAME%は両脚をＭ字に開脚し、牝の部分が支配され始めている……
+			ENDLIST
+			DATALIST
+				DATAFORM ……男が後背位でペニスを秘裂に宛がうと、%CALLNAME%は最後の一線でそれだけは拒んだ……
+				DATAFORM だが言葉とは裏腹に%CALLNAME%は尻を高く上げ、牝の部分が支配され始めている……
+			ENDLIST
+		ENDDATA
+		PRINTFORML 男の「ダイジニスル」という言葉を受けてキスで後戯をされると、%CALLNAME%は何度も舌を絡めた……
+		WAIT
+		PRINTL
+
+;-----------------------------
+;■ＮＴＲ捕縛ルート：LV1捕縛
+;-----------------------------
+	CASE [[ＮＴＲ結果:捕縛(情景前部)]]
+		SETCOLOR COLOR("紫")
+		PRINTFORML %CALLNAME%はどこかの館の客室に捕らえられ、%L_NAME%の部屋に呼ばれていた……
+		PRINTFORML 部屋では男が、淫紋が刻まれた別の性奴隷達を侍らせている…
+		PRINTL
+
+		;初回
+		CALL COMMON_SCENE_TITLE("ＮＴＲ捕縛", COLOR("ピンク"), 1)
+		IF !CFLAG:ＮＴＲ捕縛ルート：捕縛フラグ
+			;性格別
+			IF RESULT == [[性格分類:抵抗系]]
+				PRINTFORM %CALLNAME%はその%RESULTS%性格を気に入られ、
+			ELSEIF RESULT == [[性格分類:妖艶系]]
+				PRINTFORM %CALLNAME%はその%RESULTS%\@ !RAND:2 ? 容姿 # 性格 \@を気に入られ、
+			ELSEIF RESULT == [[性格分類:妖艶系]]
+				PRINTFORM %CALLNAME%はその%RESULTS%\@ !RAND:2 ? 容姿 # 性格 \@を気に入られ、
+			ELSEIF RESULT == [[性格分類:硬質系]]
+				PRINTFORM %CALLNAME%はその%RESULTS%\@ !RAND:2 ? 容姿 # 性格 \@を気に入られ、
+			;性格別：通常系
+			ELSE
+				PRINTFORM %CALLNAME%はその容姿を気に入られ、
+			ENDIF
+			PRINTFORML 男に性奴隷として攫われた様だ…
+		ENDIF
+		PRINTFORML その首には首輪状の淫紋が刻まれており、行動を管理された%CALLNAME%は男に従うしかない……
+		CALL COMMON_SCENE_EFFECT("[催淫]", @"首輪の効果で%CALLNAME%は劣情に支配されていき、熱っぽい吐息と共に乳首は尖り切り、秘裂は濡れそぼっていく……", COLOR("ピンク"))
+		WAIT
+		PRINTL
+		CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:愛撫")
+		CALL COMMON_SCENE_TITLE("ＮＴＲ捕縛 - 愛撫", COLOR("ピンク"), 1)
+
+	CASE [[ＮＴＲ結果:捕縛(情景中部)]]
+		;1行目
+		PRINTDATA
+			DATAFORM %CALLNAME%は憎むべき男に身体を抱き寄せられながら太ももを撫でられ、
+			DATAFORM %CALLNAME%は憎むべき男に身体を抱き寄せられながら胸を揉まれ、
+			DATAFORM %CALLNAME%は憎むべき男に身体を抱き寄せられながらパンティ越しに秘裂に指を這わされ、
+		ENDDATA
+		PRINTDATAL
+			DATAFORM 秘裂を濡らしている……
+			DATAFORM 乳首を尖らせている……
+		ENDDATA
+
+		;2行目
+		;性格別
+		IF RESULT == [[性格分類:抵抗系]]
+			PRINTDATA
+				DATAFORM [抵抗] %CALLNAME%は抵抗として顔を背けるが、
+				DATAFORM [抵抗] %CALLNAME%は敵意の視線を向けるが、
+			ENDDATA
+		ELSEIF RESULT == [[性格分類:妖艶系]]
+			PRINTDATA
+				DATAFORM [誘惑] %CALLNAME%はその容姿で男を操ろうと誘うが、
+				DATAFORM [誘惑] %CALLNAME%は男を操ろうと誘う様な仕草で嫌がるが、
+			ENDDATA
+		ELSEIF RESULT == [[性格分類:硬質系]]
+			PRINTDATA
+				DATAFORM [硬質] %CALLNAME%は愛撫に無反応を装うが、
+				DATAFORM [硬質] %CALLNAME%は男に無視を示すが、
+			ENDDATA
+		ELSE
+			PRINTFORM %CALLNAME%は弱々しい抵抗を示すが、
+		ENDIF
+		PRINTFORML その頬は紅潮し、首輪状の淫紋に逆らえない…
+		WAIT
+		PRINTL
+
+	CASE [[ＮＴＲ結果:捕縛(情景後部)]]
+		CALL COMMON_SCENE_TITLE("ＮＴＲ捕縛 - 後戯", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTFORML %CALLNAME%は自室に戻された後、%CALLNAME:MASTER%の名を呼びながら自慰をした……
+		PRINTFORML %CALLNAME%は劣情に支配されながらも、%CALLNAME:MASTER%が助けに来ると信じている様だ…
+		PRINTFORML %CALLNAME%は首輪と快楽によってこのまま堕とされていくだろう……
+		WAIT
+		PRINTL
+
+;-----------------------------
+;■ＮＴＲ捕縛ルート：LV2調教
+;-----------------------------
+	CASE [[ＮＴＲ結果:調教(情景前部)]]
+		SETCOLOR COLOR("紫")
+		PRINTFORML %CALLNAME%はどこかの館の客室に捕らえられ、%L_NAME%の部屋に呼ばれていた……
+		PRINTFORML 部屋では男が、淫紋が刻まれた別の性奴隷達を侍らせ愛し合っている…
+		PRINTFORML 首輪状の淫紋によって行動を管理された%CALLNAME%は、男に従うしかない……
+		WAIT
+		PRINTL
+
+		CALL COMMON_SCENE_TITLE("ＮＴＲ調教", COLOR("ピンク"), 1)
+		PRINTFORML 男はベッドの上で%CALLNAME%を抱き寄せ、己の性奴隷である事を刷り込みながら首輪を使用した……
+		CALL COMMON_SCENE_EFFECT("[催淫]", @"首輪の効果で%CALLNAME%は劣情に支配されていき、熱っぽい吐息と共に乳首は尖り切り、秘裂は濡れそぼっていく……", COLOR("ピンク"))
+
+		;性格別
+		IF RESULT == [[性格分類:抵抗系]]
+			PRINTFORM [抵抗] 抵抗の視線を返していた%CALLNAME%だが、
+		ELSEIF RESULT == [[性格分類:妖艶系]]
+			PRINTFORM [誘惑] 男を己の肢体で操ろうとした%CALLNAME%だが、
+		ELSEIF RESULT == [[性格分類:硬質系]]
+			PRINTFORM [硬質] 男を無視しようとした%CALLNAME%だが、
+		ELSE
+			PRINTFORM 抵抗を試みた%CALLNAME%だが、
+		ENDIF
+		PRINTFORML 男に唇を奪われそのまま直に胸と秘所を触られると、%CALLNAME%は性奴隷に調教される事を理解した……
+		PRINTFORML 子宮の命令に逆らえない%CALLNAME%は、涙を流しながらキスと愛撫を受け入れている……
+
+		;初回
+		IF !CFLAG:ＮＴＲ捕縛ルート：調教フラグ
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML 男は%CALLNAME%の【服従】を得た
+			SETCOLOR COLOR("紫")
+			WAIT
+			PRINTL
+			CALL COMMON_SCENE_TITLE("ＮＴＲ調教 - 初調教", COLOR("ピンク"), 1)
+		;上記以外
+		ELSE
+			WAIT
+			PRINTL
+			CALL COMMON_SCENE_TITLE("ＮＴＲ調教 - 性奉仕調教", COLOR("ピンク"), 1)
+		ENDIF
+
+	CASE [[ＮＴＲ結果:調教(情景中部)]]
+		;1行目：全裸化
+		PRINTFORML 生まれたままの姿にされた%CALLNAME%は、男にキスをされながら愛撫され、犯される準備をしている……
+
+		;2行目：愛撫
+		IF RESULT == [[性格分類:抵抗系]]
+			CALL COMMON_SCENE_EFFECT("[抵抗]", @"", COLOR("ピンク"), 1)
+			PRINTDATAL
+				DATAFORM %CALLNAME%は敵意の視線を返すが、はしたなく絶頂して自分が牝である事を分からせられている…
+				DATAFORM %CALLNAME%は顔を背けるが、秘裂を愛撫されると牝の声を上げて絶頂している…
+			ENDDATA
+		ELSEIF RESULT == [[性格分類:妖艶系]]
+			CALL COMMON_SCENE_EFFECT("[誘惑]", @"", COLOR("ピンク"), 1)
+			PRINTDATAL
+				DATAFORM 男を虜にする肢体を曝け出しながら、%CALLNAME%は男の愛撫に絶頂している…
+				DATAFORM 男を誘惑する肢体を弄ばれ、%CALLNAME%ははしたなく絶頂している…
+			ENDDATA
+		ELSEIF RESULT == [[性格分類:硬質系]]
+			CALL COMMON_SCENE_EFFECT("[硬質]", @"", COLOR("ピンク"), 1)
+			PRINTDATAL
+				DATAFORM %CALLNAME%は無関心を装いながらも、秘裂を愛撫されると牝の声を上げて絶頂している…
+				DATAFORM %CALLNAME%は冷静な普段の表情を崩し、秘裂から愛液を伝わせて絶頂している…
+			ENDDATA
+		ELSE
+			PRINTDATAL
+				DATAFORM %CALLNAME%は与える快楽に堪まらず絶頂し、秘裂から愛液を伝わせている…
+				DATAFORM %CALLNAME%は男の愛撫を受け入れてしまい、秘裂から愛液を伝わせて絶頂している…
+			ENDDATA
+		ENDIF
+
+		;3行目：抵抗低下
+		IF RESULT == [[性格分類:抵抗系]]
+			CALL COMMON_SCENE_EFFECT("[抵抗低下]", @"そのまま男にペニスを突き付けられると、%CALLNAME%は性奉仕を選んでしまった…", COLOR("ピンク"))
+		ELSEIF RESULT == [[性格分類:妖艶系]]
+			CALL COMMON_SCENE_EFFECT("[誘惑低下]", @"そのまま男にペニスを突き付けられると、%CALLNAME%は性奉仕を選んでしまった…", COLOR("ピンク"))
+		ELSEIF RESULT == [[性格分類:硬質系]]
+			CALL COMMON_SCENE_EFFECT("[硬質低下]", @"そのまま男にペニスを突き付けられると、%CALLNAME%は性奉仕を選んでしまった…", COLOR("ピンク"))
+		ELSE
+			CALL COMMON_SCENE_EFFECT("[服従進行]", @"そのまま男にペニスを突き付けられると、%CALLNAME%は性奉仕を選んでしまった…", COLOR("ピンク"))
+		ENDIF
+
+		;4行目：奉仕
+		PRINTDATAL (LOCAL) ;<ERA2WEBUI> PRINTDATALに分岐を受け取る変数を追記
+			DATAFORM \@ !TALENT:非処女 ? 処女の # \@%CALLNAME%はペニスをしゃぶり精液を顔に浴びながら、太ももに愛液を伝わせている……
+			DATAFORM 男の上に跨り \@ !TALENT:非処女 ? 処女の # \@秘裂にペニスを擦りつけると、%CALLNAME%は%COMMON_SCENE_BUST_SIZE(TARGET)%を揺らして嬌声を上げている……
+			DATAFORM \@ !TALENT:非処女 ? 処女の # \@%CALLNAME%は%COMMON_SCENE_BUST_SIZE(TARGET)%でペニスに奉仕し、精液を顔と胸と口で受け止めている……
+		ENDDATA
+		;<ERA2WEBUI>
+		SELECTCASE LOCAL
+			CASE 0
+				CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:調教_奉仕Ｆ")
+			CASE 1
+				CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:調教_奉仕Ｃ")
+			CASE 2
+				CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:調教_奉仕Ｐ")
+		ENDSELECT
+		;</ERA2WEBUI>
+		WAIT
+		PRINTL
+
+	CASE [[ＮＴＲ結果:調教(情景後部)]]
+		CALL COMMON_SCENE_TITLE("ＮＴＲ調教 - 後戯", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTDATAL
+			DATALIST
+				DATAFORM ……男が正常位でペニスを秘裂に宛がうと、%CALLNAME%は最後の一線でそれだけは拒んだ……
+				DATAFORM %CALLNAME%は男に%CALLNAME:MASTER%が助けに来ると言っている……
+				DATAFORM だが言葉とは裏腹に%CALLNAME%は両脚をＭ字に開脚し、身体はレイプを期待している様だ……
+			ENDLIST
+			DATALIST
+				DATAFORM ……男が後背位でペニスを秘裂に宛がうと、%CALLNAME%は最後の一線でそれだけは拒んだ……
+				DATAFORM %CALLNAME%は男に%CALLNAME:MASTER%が助けに来ると言っている……
+				DATAFORM だが言葉とは裏腹に%CALLNAME%は尻を高く上げ、身体はレイプを期待している様だ……
+			ENDLIST
+		ENDDATA
+		PRINTFORML 自室に戻された後、%CALLNAME%は%CALLNAME:MASTER%が助けに来て自分を犯す事を想像して何度も自慰をしている……
+		PRINTFORML %CALLNAME%の子宮はオスに服従したがっており、牝の部分が支配され始めている……
+		WAIT
+		PRINTL
+
+;-----------------------------
+;■ＮＴＲ捕縛ルート：LV3服従
+;-----------------------------
+	CASE [[ＮＴＲ結果:服従(情景前部)]]
+		SETCOLOR COLOR("紫")
+		PRINTFORML %CALLNAME%はどこかの館の客室に捕らえられ、%L_NAME%の部屋に呼ばれていた……
+		PRINTFORML 部屋では男が、淫紋が刻まれた別の性奴隷達を侍らせ愛し合っている…
+		PRINTFORML 首輪状の淫紋によって行動を管理された%CALLNAME%は、男に従うしかない……
+		WAIT
+		PRINTL
+		;初回
+		IF !CFLAG:ＮＴＲ捕縛ルート：服従フラグ
+			CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_キス")
+			CALL COMMON_SCENE_TITLE("ＮＴＲ服従", COLOR("ピンク"), 1)
+			PRINTFORML 男の「服従するならハーレムに加える」と言う言葉を聞いた%CALLNAME%は、乳首が尖り、秘裂が濡れそぼっていく……
+			PRINTFORML 目の前のオスのペニスを求めている事に気付いた%CALLNAME%は、レイプされる事を知りながら男の前で全裸となる……
+			IF RESULT == [[性格分類:抵抗系]]
+				CALL COMMON_SCENE_EFFECT("[抵抗消失]", @"男に抱き寄せられて唇を奪われると、%CALLNAME%は抵抗を諦め", COLOR("ピンク"), 1)
+			ELSEIF RESULT == [[性格分類:妖艶系]]
+				CALL COMMON_SCENE_EFFECT("[誘惑消失]", @"男に抱き寄せられて唇を奪われると、%CALLNAME%は誘惑を諦め", COLOR("ピンク"), 1)
+			ELSEIF RESULT == [[性格分類:硬質系]]
+				CALL COMMON_SCENE_EFFECT("[硬質消失]", @"男に抱き寄せられて唇を奪われると、%CALLNAME%は無視を諦め", COLOR("ピンク"), 1)
+			ELSE
+				CALL COMMON_SCENE_EFFECT("[抵抗消失]", @"男に抱き寄せられて唇を奪われると、%CALLNAME%は", COLOR("ピンク"), 1)
+			ENDIF
+			PRINTFORML 涙を流してキスを受け入れた……
+			PRINTFORML ………………
+			PRINTFORML …………
+			PRINTFORML ……
+			PRINTFORML 生まれたままの姿にされた%CALLNAME%は、男にキスをされながら愛撫され、犯される準備をしている……
+			PRINTFORML %CALLNAME%は服従したメスの貌で押し倒されると、せめて優しくして欲しいと性奴隷になる事を受け入れた……
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML 男は%CALLNAME%の【合意】を得た
+			SETCOLOR COLOR("紫")
+			PRINTFORML %CALLNAME%の下腹部に男の小さな淫紋が刻まれ、男の支配が進んでいく……
+			WAIT
+			PRINTL
+			CALL COMMON_SCENE_TITLE("ＮＴＲ服従 - 初性交", COLOR("ピンク"), 1)
+		;上記以外
+		ELSE
+			PRINTDATAL
+				DATAFORM 生まれたままの姿にされた%CALLNAME%は、男にキスをされながら愛撫され、犯される準備をしている……
+				DATAFORM 生まれたままの姿にされた%CALLNAME%は、秘裂を舌で何度も舐め上げられ、犯される準備をしている……
+				DATAFORM 生まれたままの姿にされた%CALLNAME%は、言われた通りにペニスをしゃぶり、犯される準備をしている……
+			ENDDATA
+			PRINTFORML 性奴隷にされる性交に%CALLNAME%の秘裂は濡れそぼり、子宮はオスに服従したがっている……
+			WAIT
+			PRINTL
+			CALL COMMON_SCENE_TITLE("ＮＴＲ服従 - 性交調教", COLOR("ピンク"), 1)
+		ENDIF
+
+	CASE [[ＮＴＲ結果:服従(情景中部)]]
+		;初回
+		IF !CFLAG:ＮＴＲ捕縛ルート：服従フラグ
+			;<ERA2WEBUI>
+			LOCAL = RAND:2
+			;</ERA2WEBUI> 次の行のLOCALにRAND:2が入っていたのを外に出した
+			PRINTFORML 男が\@ (!LOCAL) ? 正常位 # 後背位 \@で秘裂にペニスを宛がうと、%CALLNAME%は涙を流して\@ (!TALENT:非処女) ? 処女を捧げた # 受け入れた \@……
+			PRINTFORML 初めての性交を許してしまった%CALLNAME%は、%COMMON_SCENE_BUST_SIZE(TARGET)%を揺らして嬌声を上げている…
+			PRINTFORML そのまま男が初めての種付けを行うと、%CALLNAME%は無防備な子宮を差し出してオスに服従した……
+			PRINTFORML %CALLNAME%は%CALLNAME:MASTER%の名前を呼びながら、自分からペニスに子宮を押し付けて絶頂している…
+			PRINTFORML 男のペニスが脈動する度に、\@!TALENT:非処女 ? 処女の #\@%CALLNAME%の子宮に初めての精液が解き放たれていた…
+			;<ERA2WEBUI>
+			SELECTCASE LOCAL
+				CASE 0
+					CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_正常位")
+				CASE 1
+					CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_後背位")
+			ENDSELECT
+			;</ERA2WEBUI>
+		;上記以外
+		ELSE
+			;1行目
+			IF RESULT == [[性格分類:抵抗系]]
+				PRINTFORM 抵抗を諦め肢体を捧げた%CALLNAME%は
+			ELSEIF RESULT == [[性格分類:妖艶系]]
+				PRINTFORM 男を誘惑する肢体を差し出した%CALLNAME%は
+			ELSEIF RESULT == [[性格分類:硬質系]]
+				PRINTFORM 普段の冷静な顔を快楽に歪めた%CALLNAME%は
+			ELSE
+				PRINTFORM 子宮の命令に逆らえない%CALLNAME%は
+			ENDIF
+			PRINTFORML 男にペニスを挿入されると、男の性奴隷となった…
+
+			;2行目
+			PRINTDATAL (LOCAL) ;<ERA2WEBUI> PRINTDATALに分岐を受け取る変数を追記
+				DATAFORM 正常位で繋がった%CALLNAME%は、%COMMON_SCENE_BUST_SIZE(TARGET)%を揺らして嬌声を上げている…
+				DATAFORM 後背位で子宮を突かれる度に、%CALLNAME%は%COMMON_SCENE_BUST_SIZE(TARGET)%を揺らして嬌声を上げている…
+				DATAFORM 騎乗位で男に跨ると、%CALLNAME%は%COMMON_SCENE_BUST_SIZE(TARGET)%を揺らして嬌声を上げている…
+			ENDDATA
+			;<ERA2WEBUI>
+			SELECTCASE LOCAL
+				CASE 0
+					CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_正常位")
+				CASE 1
+					CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_後背位")
+				CASE 2
+					CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_騎乗位")
+			ENDSELECT
+			;</ERA2WEBUI>
+
+			;3行目
+			PRINTDATAL
+				DATAFORM %CALLNAME:MASTER%の名前を呼びながら別の男のペニスで絶頂を繰り返す姿は、只のメスでしかなかった……
+				DATAFORM 男の射精に合わせて自分から子宮を押し付ける姿は、只のメスでしかなかった……
+				DATAFORM 無防備な子宮を差し出してオスに服従した姿は、只のメスでしかなかった……
+			ENDDATA
+			;4行目
+			PRINTFORML そのまま男がキスで躾けると、%CALLNAME%は男と抱き合い、涙を流してハーレム入りを認めるキスを繰り返した……
+		ENDIF
+		PRINTL
+
+	CASE [[ＮＴＲ結果:服従(情景後部)]]
+		CALL COMMON_SCENE_TITLE("ＮＴＲ服従 - 後戯", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTFORML 部屋の中にはベッドの軋む音と%CALLNAME%の嬌声が響き続けている……
+		PRINTFORML %CALLNAME%の子宮はオスに服従し、牝の本能のままに精液を受け入れ、汚されていった……
+		CALL COMMON_SCENE_EFFECT("[性奴隷]", @"男の子種が胎内を満たすたびに、牝の悦びと引き換えに%CALLNAME%の中で大切な何かが崩れていった…", COLOR("ピンク"))
+		CALL COMMON_SCENE_EFFECT("[性奴隷]", @"幾度となく精液を放ったペニスを男が引き抜くと、\@!TALENT:非処女 ? 処女の #\@%CALLNAME%を征服した証の濃い糸が引いていた…", COLOR("ピンク"))
+		SIF MARK:隷属刻印
+			PRINTFORML %CALLNAME%は涙を流しながら%CALLNAME:MASTER%に謝っていた……
+		;初回
+		IF !CFLAG:ＮＴＲ行為：初性交フラグ
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML %CALLNAME%は【ＮＴＲ性交済】となった……
+			SETCOLOR COLOR("紫")
+		ENDIF
+		WAIT
+		PRINTL
+
+;-----------------------------
+;■ＮＴＲ共通ルート：LV4隷属
+;-----------------------------
+	CASE [[ＮＴＲ結果:隷属(情景前部)]]
+		PRINTFORML %CALLNAME%は言いつけの通り、夜に%L_NAME%の部屋を訪れた……
+		PRINTFORML 牝の部分を支配された%CALLNAME%は、もう男の命令に逆らえなかった……
+		WAIT
+		PRINTL
+		SETCOLOR COLOR("紫")
+		;初回
+		IF !CFLAG:ＮＴＲ共通ルート：隷属フラグ
+			CALL OUTPUT_TXT("ＮＴＲ共通ルート:隷属_誓いのキス")
+			CALL COMMON_SCENE_TITLE("ＮＴＲ隷属", COLOR("ピンク"), 1)
+			PRINTFORML 部屋で男に性奴隷の誓いを求められると、%CALLNAME%は子宮に従ってしまった……
+			PRINTFORML 男を主人と認めてしまった%CALLNAME%は頬を紅潮させながら、
+			PRINTFORML 自分から生まれたままの姿になり、秘めるべき秘所を晒けだしている……
+			PRINTFORML そのまま%CALLNAME%は男のペニスにキスをして、服従を誓った……
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML 男は%CALLNAME%の【隷属】を得た
+			SETCOLOR COLOR("紫")
+			PRINTFORML %CALLNAME%は男を主人と認めて性奴隷になる事を誓い、下腹部の淫紋が強化された…
+			WAIT
+			PRINTL
+			;初回
+			IF !CFLAG:ＮＴＲ行為：初性交フラグ
+				CALL COMMON_SCENE_TITLE("ＮＴＲ隷属 - 初性交", COLOR("ピンク"), 1)
+			ELSE
+				CALL COMMON_SCENE_TITLE("ＮＴＲ隷属 - 性交調教", COLOR("ピンク"), 1)
+			ENDIF
+		;上記以外
+		ELSE
+			CALL COMMON_SCENE_TITLE("ＮＴＲ隷属 - 性奴隷調教", COLOR("ピンク"), 1)
+		ENDIF
+
+	CASE [[ＮＴＲ結果:隷属(情景中部)]]
+		SETCOLOR COLOR("紫")
+		;初回
+		IF !CFLAG:ＮＴＲ共通ルート：隷属フラグ
+			CALL OUTPUT_TXT("ＮＴＲ捕縛ルート:服従_正常位") ;lv3の使いまわし
+			PRINTFORML 男が正常位で秘裂にペニスを宛がうと、%CALLNAME%は両脚をＭ字に開脚して性交を求めた……
+			IF !TALENT:非処女
+				PRINTFORML 「私の処女を御主人様に捧げます」と%CALLNAME%が忠誠を誓うと、男はそのまま腰を押し進め、%CALLNAME%は悲鳴を上げた……
+			ELSE
+				PRINTFORML そのまま男が腰を押し進めると、%CALLNAME%は悲鳴を上げた……
+			ENDIF
+			SIF L_KOJO:1 != ""
+				PRINTFORML %L_KOJO:1%
+			PRINTFORML 根元までペニスを挿入されて、%CALLNAME%は男のメスにされた様だ……
+			;処女
+			IF !TALENT:非処女
+				PRINTFORML 処女を捧げて全てを上書きされていく感覚に、%CALLNAME%は一筋だけ涙を流した……
+				PRINTFORML だがその両胸の乳首は尖りきり、嬌声を上げて子宮で精液を受け止める姿はオスに服従した只の牝でしか無かった……
+			ELSE
+				PRINTFORML 初めての\@ (!CFLAG:ＮＴＲ捕縛ルートフラグ) ? 性交 # 和姦 \@を許してしまった%CALLNAME%は、無防備な子宮を差し出してオスに服従している……
+				PRINTFORML 男の性奴隷となった事を理解した%CALLNAME%は、子宮を突かれるとすぐに発情した牝の嬌声を上げ始めた……
+			ENDIF
+		;上記以外
+		ELSE
+			;危険日
+			IF L_危険日
+				SELECTCASE RAND:2
+					CASE 1
+						CALL OUTPUT_TXT("ＮＴＲ共通ルート:種付け")
+						PRINTFORML 今日は危険日である事を知っていた%CALLNAME%だったが、
+						PRINTFORML %L_NAME%に抱き締められ押し倒されると、そのままペニスの挿入を許してしまった……
+						SIF L_KOJO:1 != ""
+							PRINTFORML %L_KOJO:1%
+						PRINTFORML 何度も子宮で精液を受け止めながら、%CALLNAME%は牝の本能のまま子宮を捧げ続けた……
+					CASEELSE
+						CALL OUTPUT_TXT("ＮＴＲ共通ルート:種付け")
+						PRINTFORML %L_NAME%は%CALLNAME%が危険日だと知ると、普段よりも激しく%CALLNAME%を求めていった…
+						SIF L_KOJO:1 != ""
+							PRINTFORML %L_KOJO:1%
+						PRINTFORML %CALLNAME%の子宮を精液で満たし、しっかり種付けを完了させるまで
+						PRINTFORML %L_NAME%の雄の本能が行為を終わらせようとはしなかった……
+				ENDSELECT
+			;通常日
+			ELSE
+				SELECTCASE RAND:3
+					CASE 3
+						CALL OUTPUT_TXT("ＮＴＲ共通ルート:グラインド騎乗位")
+						PRINTFORML %L_NAME%の上で腰を振る様に言われた%CALLNAME%は、男に跨り種付けの為の挿入を受け入れた……
+						IF TALENT:合意
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、%CALLNAME:MASTER%への想いが上書きされていく……
+						ELSE
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、目の前の男の所有物であると認識が上書きされていく……
+						ENDIF
+						SIF L_KOJO:1 != ""
+							PRINTFORML %L_KOJO:1%
+						PRINTFORML 男の上で腰を振りながら、%CALLNAME%は身も心も調教されていった……
+					CASE 2
+						CALL OUTPUT_TXT("ＮＴＲ共通ルート:キス正常位")
+						PRINTFORML ベッドに生まれたままの姿で入ると、%CALLNAME%は%L_NAME%に強く抱かれ、唇を貪られた……
+						IF TALENT:合意
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、%CALLNAME:MASTER%への想いが上書きされていく……
+						ELSE
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、目の前の男の所有物であると認識が上書きされていく……
+						ENDIF
+						PRINTFORML 種付けをしようとする雄の愛撫にすっかり身体を準備された%CALLNAME%は、正常位で身体を開き雄の欲望を受け入れた……
+						SIF L_KOJO:1 != ""
+							PRINTFORML %L_KOJO:1%
+						PRINTFORML 何度も子宮で精液を受け止めながら、%CALLNAME%は牝の本能のまま子宮を捧げ続けた……
+					CASE 1
+						CALL OUTPUT_TXT("ＮＴＲ共通ルート:側位") ;体位指定ないので愛撫しやすい側位にする
+						PRINTFORML %L_NAME%に服を脱ぐように言われた%CALLNAME%は、服を肌蹴けて素肌を晒してしまった……
+						IF TALENT:合意
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、%CALLNAME:MASTER%への想いが上書きされていく……
+						ELSE
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、目の前の男の所有物であると認識が上書きされていく……
+						ENDIF
+						PRINTFORML そのまま%CALLNAME%の全身をくまなく愛撫されると、%CALLNAME%は種付けの為の挿入を受け入れた……
+						SIF L_KOJO:1 != ""
+							PRINTFORML %L_KOJO:1%
+						PRINTFORML 部屋の中にはベッドの軋む音と%CALLNAME%の嬌声が響き続けた……
+					CASEELSE
+						CALL OUTPUT_TXT("ＮＴＲ共通ルート:背面立位_壁")
+						PRINTFORML %CALLNAME%は壁に手をついた格好で%L_NAME%に後ろから犯されている……
+						SIF L_KOJO:1 != ""
+							PRINTFORML %L_KOJO:1%
+						IF TALENT:合意
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、%CALLNAME:MASTER%への想いが上書きされていく……
+						ELSE
+							PRINTFORML %CALLNAME%は男を主人として見てしまっており、目の前の男の所有物であると認識が上書きされていく……
+						ENDIF
+						PRINTFORML 男が子宮で受け止める様に伝えると、%CALLNAME%は嬌声と共に子宮を差し出した……
+						PRINTFORML %CALLNAME%は尻肉を掴まれながら、ゆっくりと確実に%L_NAME%の子種を種付けされた……
+				ENDSELECT
+			ENDIF
+		ENDIF
+		WAIT
+		PRINTL
+
+	CASE [[ＮＴＲ結果:隷属(情景後部)]]
+		CALL COMMON_SCENE_TITLE("ＮＴＲ隷属 - 後戯", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTFORML 部屋の中にはベッドの軋む音と%CALLNAME%の嬌声が響き続けている……
+		PRINTFORML %CALLNAME%の子宮はオスに服従し、牝の本能のままに精液を受け入れ、汚されていった……
+		PRINTFORML 男の射精に合わせて、%CALLNAME%は自分から子宮を捧げている……
+		PRINTFORML 幾度となく精液を放ったペニスを男が引き抜くと、\@!TALENT:非処女 ? 処女の # \@%CALLNAME%を征服した証の濃い糸が引いていた…
+		;初回
+		IF !CFLAG:ＮＴＲ行為：初性交フラグ
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML %CALLNAME%は【ＮＴＲ性交済】となった……
+			SETCOLOR COLOR("紫")
+		ENDIF
+		WAIT
+		PRINTL
+
+;-----------------------------
+;■ＮＴＲ共通ルート：LV5陥落
+;-----------------------------
+	CASE [[ＮＴＲ結果:陥落(情景前部)]]
+		PRINTFORMW %CALLNAME%は頬を赤らめながら、夜に%L_NAME%の客室を訪れた……
+		PRINTL
+		;初回
+		IF !CFLAG:ＮＴＲ共通ルート：陥落フラグ
+			CALL COMMON_SCENE_TITLE("ＮＴＲ陥落 - 刻印", COLOR("ピンク"), 1)
+			SETCOLOR COLOR("紫")
+			PRINTFORML 身も心も%CSTR:ＮＴＲキャラ名%によって染まりきった%CALLNAME%は、自ら一糸まとわぬ姿で忠誠を誓った…
+			PRINTFORML 男は最後の仕上げに%CALLNAME%の子宮の淫紋を強化すると、淫紋は桃色に発光して所有の証を示した…
+			SETCOLOR COLOR("ピンク")
+			PRINTFORML 男は%CALLNAME%に【ＮＴＲ淫紋】を刻み、%CALLNAME%の【陥落】を得た……
+			SETCOLOR COLOR("紫")
+			PRINTL
+		ENDIF
+		CALL COMMON_SCENE_TITLE("ＮＴＲ陥落 - 性奴隷調教", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+
+	CASE [[ＮＴＲ結果:陥落(情景中部)]]
+		SETCOLOR COLOR("紫")
+		IF L_危険日
+			SELECTCASE RAND:6
+				CASE 5
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:キス正常位")
+					PRINTFORML ベッドで仰向けに寝そべる%CALLNAME%は%L_NAME%に身を任せ、押し寄せる快楽に喘いでいる……
+					PRINTFORML そのまま%CALLNAME%が『中に出して』と囁くと、男の精液が排卵日の子宮内を埋め尽くしていく……
+					PRINTFORML 男の射精が終わった後も繋がったままでキスを交わしながら、%CALLNAME%は想いを確かめ合っている……
+				CASE 4
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:種付け")
+					PRINTFORML %CALLNAME%は部屋に着くなり%L_NAME%に抱き付き、耳元で危険日である事を告げた……
+					PRINTFORML %CALLNAME%が求めているものを察した%L_NAME%は、たまらず%CALLNAME%の下着に手を掛けた……
+					PRINTFORML 子作りの為のセックスを終えた%CALLNAME%は、注ぎ込まれた子種に満足している……
+				CASE 3
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:足絡め")
+					PRINTFORML 仰向けで%L_NAME%を受け入れている%CALLNAME%は、足を絡ませ潤んだ瞳で膣内射精を強請った……
+					PRINTFORML 裸の身体を密着させて子宮の奥で熱い射精を感じると、%CALLNAME%は仰け反りながら嬌声をあげた……
+					PRINTFORML %CALLNAME%は膣口から溢れる精液を%L_NAME%に見せながら、今日が危険日だと微笑んだ……
+				CASE 2
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:尻上げ後背位")
+					PRINTFORML %CALLNAME%が危険日である事を知ると、男は後背位で%CALLNAME%の子宮を突き始めた……
+					PRINTFORML 男が本気で自分を孕ませるつもりなのだと理解した%CALLNAME%は、牝の本能のまま髪を振り乱す……
+					PRINTFORML 激しい快感と女としての喜びに、%CALLNAME%は涙を流しながら膣内に広がる%L_NAME%の精液を味わった……
+				CASE 1
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:側位")
+					PRINTFORML 危険日だから今日はダメだと心に決めていたはずの%CALLNAME%だったが、
+					PRINTFORML %L_NAME%に抱き締められその体温を身体で感じると、決意よりも本能が打ち勝った……
+					PRINTFORML %L_NAME%の子宮はオスに服従し、精液を受け止めたいという牝の本能に逆らう事は出来なかった……
+				CASEELSE
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:失神")
+					PRINTFORML %L_NAME%は%CALLNAME%が危険日だと知ると、普段よりも激しく%CALLNAME%を求めていった…
+					PRINTFORML 何度も注がれた精液を垂らしたまま横たわる%CALLNAME%にペニスを突き立て、体を揺すりだす……
+					PRINTFORML %CALLNAME%の子宮を精液で満たし、種付けを完了させるまで雄の本能のまま行為が続けられた……
+			ENDSELECT
+		;通常日
+		ELSE
+			SELECTCASE RAND:9
+				CASE 8
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:尻上げ後背位")
+					PRINTFORML ベッドの上で四つん這いになった%CALLNAME%を、%L_NAME%は腰を掴んで欲望のまま犯し続ける……
+					PRINTFORML やがて前のめりに崩れ落ちた%CALLNAME%に覆いかぶさり、体を押さえつけて種付けした……
+					PRINTFORML 絶頂に震える二人だったが、しばらくすると二人の部屋からは再び喘ぎ声が漏れ聞こえてきた……
+				CASE 7
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:グラインド騎乗位")
+					PRINTFORML ペニスを打ち付ける%CSTR:ＮＴＲキャラ名%の動きに合わせて腰をくねらせ、%CALLNAME%は相手の射精を促す……
+					PRINTFORML %CALLNAME%の身も心も染め上げた上に自身の子を孕ませるべく、
+					PRINTFORML %L_NAME%は大量の遺伝子を%CALLNAME%の中に刻み込んだ…
+				CASE 6
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:足絡め")
+					PRINTFORML 結合部から淫らな音を鳴らしながら、二人はある一室で子作りしていた……
+					PRINTFORML 種付けを強請るように脚を絡ませて、愛し合うように身体を打ち付けあう……
+					PRINTFORML 隆起する乳頭を弄びながら、%L_NAME%は%CALLNAME%の最奥に白濁液をぶちまけた……
+				CASE 5
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:背面立位_腕掴み")
+					PRINTFORML %CALLNAME%は両腕を後ろ手に掴まれ、胸を突き出す格好で%L_NAME%と交わっている……
+					PRINTFORM %L_NAME%が腰を振るたびに、突き出された
+					IF TALENT:巨乳 || TALENT:爆乳
+						PRINTFORML たわわに実った乳房がいやらしく揺れている……
+					ELSEIF TALENT:貧乳 || TALENT:絶壁
+						PRINTFORML わずかな膨らみが、つぼみを尖らせながらプルプルと揺れている……
+					ELSE
+						PRINTFORML 柔らかな乳房が自己主張するように揺れている……
+					ENDIF
+					PRINTFORML %L_NAME%はあられもない声を上げる%CALLNAME%の中にしっかりと自分の遺伝子を刻み込んだ……
+				CASE 4
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:完堕ち後背位")
+					PRINTFORML %L_NAME%に後ろから突かれながら%CALLNAME%は甘い嬌声をあげている……
+					PRINTFORML %CALLNAME%のほぐれた膣は、少しでも多くの精子を受けとめようと%L_NAME%のペニスを締め付けて離さない……
+					PRINTFORML %L_NAME%に何度も本気の種付けをされながら、%CALLNAME%は子宮を捧げ続けた……
+				CASE 3
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:キス正常位")
+					PRINTFORML ベッドに生まれたままの姿で入ると、%CALLNAME%と%L_NAME%は強く抱き合い、お互いの唇を貪った……
+					PRINTFORML すっかり準備の出来ている%CALLNAME%は、貫かれることを求めて%L_NAME%に無意識に腰を擦り付けている……
+					PRINTFORML そして%CALLNAME%は%L_NAME%のペニスを受け入れると、%L_NAME%の耳元で甘い声をあげ始めた……
+				CASE 2
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:背面座位")
+					PRINTFORML %L_NAME%は%CALLNAME%を後ろから激しく突きながら、胸や局部への愛撫を欠かさない……
+					PRINTFORML %CALLNAME%の弱い所を知りぬいた指が、%CALLNAME%を今日何度目かの絶頂に簡単に追い詰める……
+					PRINTFORML そして、頭の中が真っ白になった中で更に責められ続け、%CALLNAME%は%L_NAME%に身も心も任せていった……
+				CASE 1
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:恋人繋ぎキス正常位")
+					PRINTFORML %CALLNAME%と%L_NAME%は両手を握り合い、視線を絡ませ見つめ合いながら何度も熱い口付けをしている……
+					PRINTFORML %CALLNAME%はとろんとした眼差しで、%L_NAME%とのキスに夢中になり、唾液の交換を続けている……
+					PRINTFORML 長くて熱い口付けですっかり開ききった%CALLNAME%の体は、%L_NAME%のペニスを受け入れるだけで絶頂した……
+				CASEELSE
+					CALL OUTPUT_TXT("ＮＴＲ共通ルート:背面立位_壁")
+					PRINTFORML %CALLNAME%は壁に手をついた格好で%L_NAME%に後ろから犯されている……
+					PRINTFORML %CALLNAME%は尻肉を掴まれながら、ゆっくりと確実に%L_NAME%の子種を種付けされた……
+			ENDSELECT
+		ENDIF
+		SIF L_KOJO:1 != ""
+			PRINTFORML %L_KOJO:1%
+		WAIT
+		PRINTL
+	CASE [[ＮＴＲ結果:陥落(情景後部)]]
+		CALL COMMON_SCENE_TITLE("ＮＴＲ陥落 - 後戯", COLOR("ピンク"), 1)
+		SETCOLOR COLOR("紫")
+		PRINTDATAL
+			DATALIST
+				DATAFORM 部屋の中にはベッドの軋む音と%CALLNAME%の嬌声が響き続けている……
+				DATAFORM 淫紋が刻まれた%CALLNAME%の子宮はオスに服従し、牝の本能のままに精液を受け入れ、汚されていった……
+				DATAFORM 男の射精に合わせて、%CALLNAME%は子宮を捧げている……
+			ENDLIST
+			DATALIST
+				DATAFORM 種付けが終わり、%CALLNAME%はベッドに座る%L_NAME%のペニスを上目遣いをしながらで咥えている……
+				DATAFORM ペニスに付いた精液を舐め取りながら、%CALLNAME%は嬉しそうに頬を染めている……
+				DATAFORM 性奴隷の奉仕を続ける%CALLNAME%の膣口からは、先程放たれた男の精液が零れ落ちていた……
+			ENDLIST
+		ENDDATA
+		WAIT
+		PRINTL
+	CASEELSE
+ENDSELECT
+TARGET = L_BAK
+IF L_KOJO:1 != ""
+	SIF LINEISEMPTY()
+		CLEARLINE 1
+ENDIF
+
+RETURN
+
+;=================================================
+;   sub COMMON_SCENE_PERSONALITY
+;=================================================
+;   汎用情景：性格判定
+;-------------------------------------------------
+; Input:
+;  ARG:0				対象者
+; Output:
+;  RESULT				種類（ 0:通常系 1:抵抗系 2:妖艶系 3:硬質系 ）
+;  RESULTS				性格文
+;-------------------------------------------------
+@COMMON_SCENE_PERSONALITY(ARG:0)
+#DIM L_RESULT = 0
+#DIM L_BAK
+
+RESULT  = 0
+RESULTS = 
+L_BAK  = TARGET
+TARGET = ARG:0
+
+;抵抗系
+IF ( TALENT:強気 || TALENT:毅然 || TALENT:不良 || TALENT:ボーイッシュ || TALENT:腹黒 || TALENT:悪女 || TALENT:貞操観念 )
+	L_RESULT = [[性格分類:抵抗系]]
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:強気) ? 強気な # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:毅然) ? 毅然とした # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:不良) ? 不良の # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:ボーイッシュ) ? ボーイッシュな # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:腹黒) ? 腹黒な # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:悪女) ? 悪女な # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:貞操観念) ? 貞操の固い # \@
+;妖艶系
+ELSEIF ( TALENT:妖艶 || TALENT:色気 || TALENT:魅惑 )
+	L_RESULT = [[性格分類:妖艶系]]
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:妖艶) ? 妖艶な # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:色気) ? 色気のある # \@
+	RESULTS = %RESULTS%\@ (RESULTS == "" && TALENT:魅惑) ? 魅惑的な # \@
+;硬質系
+ELSEIF ( TALENT:クール )
+	L_RESULT = [[性格分類:硬質系]]
+	RESULTS = \@ (RESULTS == "" && TALENT:クール) ? クールな # \@
+;通常系
+ELSE
+	L_RESULT = [[性格分類:通常系]]
+ENDIF
+
+TARGET = L_BAK
+RESULT = L_RESULT
+
+;=================================================
+;   sub COMMON_SCENE_BUST_SIZE
+;=================================================
+;   汎用情景：胸サイズ
+;-------------------------------------------------
+; Input:
+;  ARG					キャラ
+; Output:
+;  RETURN				夢
+;-------------------------------------------------
+@COMMON_SCENE_BUST_SIZE(ARG)
+#FUNCTIONS
+#DIMS L_STR
+SELECTCASE VAR_バストサイズ(ARG)
+	CASE -2
+		L_STR = 薄い胸
+	CASE -1
+		L_STR = 小ぶりの胸
+	CASE 0
+		L_STR = 胸
+	CASE 1
+		L_STR = 巨乳
+	CASE 2
+		L_STR = 爆乳
+ENDSELECT
+;オトコ
+SIF !VAR_SEX(ARG)
+	L_STR =胸
+
+RETURNF L_STR
+
+;=================================================
+;   sub COMMON_SCENE_BUST_INFO
+;=================================================
+;   汎用情景：胸情報
+;-------------------------------------------------
+; Input:
+;  ARG					キャラ
+; Output:
+;  RETURN				夢
+;-------------------------------------------------
+@COMMON_SCENE_BUST_INFO(ARG)
+#FUNCTIONS
+#DIMS L_STR
+SELECTCASE VAR_バストサイズ(ARG)
+	CASE -2
+		L_STR = 僅かに膨らむ胸
+	CASE -1
+		L_STR = 小ぶりの胸
+	CASE 0
+		L_STR = 形の整った胸
+	CASE 1
+		SELECTCASE RAND:2
+			CASE 1
+				L_STR = たわわに実った乳房
+			CASEELSE
+				L_STR = 手から溢れそうな巨乳
+		ENDSELECT
+	CASE 2
+		SELECTCASE RAND:2
+			CASE 1
+				L_STR = たわわに実った爆乳
+			CASEELSE
+				L_STR = 豊満な爆乳
+		ENDSELECT
+ENDSELECT
+;オトコ
+SIF !VAR_SEX(ARG)
+	L_STR =胸
+
+RETURNF L_STR
+
+;=================================================
+;   sub COMMON_SCENE_TITLE
+;=================================================
+;   汎用情景：表題
+;-------------------------------------------------
+; Input:
+;  ARGS:0				表題
+;  ARG:0				色
+;  ARG:1				パターン
+;-------------------------------------------------
+@COMMON_SCENE_TITLE(ARGS:0, ARG:0, ARG:1)
+#DIM L_COLOR
+L_COLOR = GETCOLOR()
+SETCOLOR ARG:0
+IF ARG:1 == 1
+	PRINTFORML 《%ARGS:0%》
+ELSE
+	PRINTFORML 【%ARGS:0%】
+ENDIF
+SETCOLOR L_COLOR
+
+;=================================================
+;   sub COMMON_SCENE_SUBTITLE
+;=================================================
+;   汎用情景：副表題
+;-------------------------------------------------
+; Input:
+;  ARGS:0				表題
+;  ARG:0				色
+;-------------------------------------------------
+@COMMON_SCENE_SUBTITLE(ARGS:0, ARG:0)
+
+SETCOLOR ARG:0
+PRINTFORML ■%ARGS:0%
+RESETCOLOR
+
+;=================================================
+;   sub COMMON_SCENE_EFFECT
+;=================================================
+;   汎用情景：効果
+;-------------------------------------------------
+; Input:
+;  ARGS:0				効果名
+;  ARGS:1				効果情景
+;  ARG:0				色
+;  ARG:1				改行有無
+;-------------------------------------------------
+@COMMON_SCENE_EFFECT(ARGS:0, ARGS:1, ARG:0, ARG:1=0)
+#DIM L_COLOR
+L_COLOR = GETCOLOR()
+SETCOLOR ARG:0
+PRINTFORM %ARGS:0% 
+SETCOLOR L_COLOR
+PRINTFORM %ARGS:1%
+SIF !ARG:1
+	PRINTL
+
+
+;=================================================
+;   sub COMMON_SCENE_CLOTHES
+;=================================================
+;   汎用情景:着衣
+;-------------------------------------------------
+; Input:
+;  ARG					モード(0:着衣有り 1:着衣無し 2:着衣有り(秘裂))
+;-------------------------------------------------
+@COMMON_SCENE_CLOTHES(ARG=0)
+#FUNCTIONS
+#DIM L_VAL
+#DIMS L_STR, 2
+
+IF !ARG
+	IF FLAG:行動フェーズ == [[行動フェーズ：交流]]
+		L_VAL = 0
+	ELSE
+		L_VAL = 1
+	ENDIF
+ELSE
+	L_VAL = ARG
+ENDIF
+
+SELECTCASE L_VAL
+	CASE 2
+		L_STR:0 = 下着越しに
+		L_STR:1 = パンティの上から
+	CASE 1
+		L_STR:0 = 直に
+		L_STR:1 = 直に
+	CASEELSE
+		L_STR:0 = 着衣越しに
+		L_STR:1 = 服の上から
+ENDSELECT
+
+IF FLAG:行動フェーズ == [[行動フェーズ：交流]]
+	RETURNF L_STR:(RAND:2)
+ELSE
+	RETURNF 
+ENDIF
+
+;=================================================
+;   sub COMMON_SCENE_STEALTH
+;=================================================
+;   汎用情景：ステルス
+;-------------------------------------------------
+; Output:
+;  RETURNF				文字列
+;-------------------------------------------------
+@COMMON_SCENE_STEALTH
+#FUNCTIONS
+#DIM  DYNAMIC L_VAL
+#DIMS DYNAMIC L_STR, 10
+
+SELECTCASE FLAG:行動フェーズ
+	;調教
+	CASE [[行動フェーズ：調教]]
+	;交流
+	CASEELSE
+		CALLF TR_MAP_STAY_AREA_DATA(1)
+		LOCALS = %RESULTS:(TCVAR:MASTER:滞在エリア)%
+		L_STR:0 = 周りからは見えない様に
+		L_STR:1 = 空間を操作して周囲に幻像を映し、バレない様に
+		L_STR:2 = 周囲に人がいない%LOCALS%で、
+		L_STR:3 = 周囲に人がいない事を確認し、
+ENDSELECT
+
+RETURNF L_STR:(RAND:4)
+
+;=================================================
+;   sub COMMON_SCENE_AEGI
+;=================================================
+;   汎用情景：喘ぎ声
+;-------------------------------------------------
+; Input:
+;  ARG					モード(0:快感小 1:快感大)
+;-------------------------------------------------
+@COMMON_SCENE_AEGI(ARG=0)
+#FUNCTIONS
+#DIM  DYNAMIC L_VAL
+#DIMS DYNAMIC L_STR, 2
+
+SELECTCASE FLAG:行動フェーズ
+	;調教
+	CASE [[行動フェーズ：調教]]
+		IF ARG == 0
+			L_STR:0 = 絶え間なく喘いだ…
+			L_STR:1 = 絶え間なく喘いだ…
+		ELSE
+			L_STR:0 = 気持ち良さそうに鳴いていた…
+			L_STR:1 = 気持ち良さそうに鳴いていた…
+		ENDIF
+	;交流
+	CASEELSE
+		IF ARG == 0
+			L_STR:0 = 声を押し殺せずに喘ぎ声を出している…
+			L_STR:1 = 声を押し殺している…
+		ELSE
+			L_STR:0 = 声を押し殺している…
+			L_STR:1 = 声を押し殺している…
+		ENDIF
+ENDSELECT
+
+IF FLAG:行動フェーズ == [[行動フェーズ：交流]]
+	RETURNF L_STR:(RAND:2)
+ELSE
+	RETURNF 
+ENDIF
+

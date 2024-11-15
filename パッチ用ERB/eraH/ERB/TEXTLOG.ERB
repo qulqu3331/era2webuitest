@@ -1,0 +1,274 @@
+﻿;=============================================================================
+;調教中のパラメータをテキスト出力
+;JSON形式
+
+;引数
+;ARGS どの場面から呼ばれたかを表す文字列 "scene"要素としてそのまま文字列出力
+;ARG 描画するキャラの登録番号（固有番号ではない） 引数なしの場合はTARGETを描画
+
+
+;GLOBAL:280 連続呼び出し防止用のタイマー
+;GLOBAL:281 連続呼び出しの回数制限カウンタ
+;GLOBAL:289 出力テキストにつく連番
+
+;ローカル変数
+;LOCALS  txt出力する文字列
+;LOCAL:0～2 カウンタ等に適当に使用
+
+;=============================================================================
+
+@OUTPUT_TXT(ARGS,ARG = 0)
+#DIMS SCENE
+#DIM LOOP_CHR
+#DIM 場所ID
+#DIMS コマンド名
+#DIMS 表情
+#DIM TARGET退避用
+
+;基本的には第1引数だけ指定して呼び出す。
+;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
+
+SCENE = %ARGS%
+
+
+;タイマーで連続実行を防ぐ
+GETMILLISECOND
+LOCAL = RESULT
+;前回実行から200ミリ秒未満か
+IF GLOBAL:280 - LOCAL > -200
+	;この分岐に4回以上連続で引っかかったら処理中断
+    IF GLOBAL:281 > 3
+		RETURN 0
+	ELSE
+	;4回未満なら少し待たせて処理継続
+	;50msだと順番逆転が目立った
+		AWAIT 80
+		;待たせた回数をカウントする
+		GLOBAL:281 = GLOBAL:281 + 1
+	ENDIF
+ELSE
+	;きちんと待てたらカウンタを0にする
+	GLOBAL:281 = 0
+ENDIF
+
+;連続実行防止タイマー更新
+GLOBAL:280 = LOCAL
+
+
+;対象がTARGETでない場面での呼び出しに対応するため、TARGETを退避しておく。最後に戻す
+TARGET退避用 = TARGET
+;引数ありならTARGETを一時的に変更。引数を省略した場合はそのままTARGETを対象にする。
+SIF ARG != 0
+	TARGET = ARG
+
+
+;jsonの最初の波括弧を記述------------------------------------------------------
+LOCALS = \{
+
+;タイムスタンプ 時刻ミリ秒-----------------------------------------------------
+;txtとプロンプトを紐づけるIDにする。今のところ使ってない
+LOCALS = %LOCALS%"timestamp":{GLOBAL:280},
+
+;シーン------------------------------------------------------------------------
+;シーン文字列を書き出す
+LOCALS = %LOCALS%"scene":"%SCENE%",
+
+
+
+; ;TALENT(取得しているものだけ書き出し)-------------------------------------------
+; ;書式は "talent":["a","b","c",...]
+
+; ;素質を数えるカウンタ
+; LOCAL:2 = 0
+
+; LOCALS = %LOCALS%"talent":[
+; ;523,八重歯,までループ
+; REPEAT 523
+; 	LOCAL=COUNT
+; 	SIF STRLENS(TALENTNAME:LOCAL) <= 0
+; 		CONTINUE
+; 	IF TALENT:TARGET:(LOCAL) != 0
+; 		LOCALS = %LOCALS%"%GET_TALENTNAME(LOCAL,TALENT:TARGET:(LOCAL))%",
+; 		LOCAL:2 += 1
+; 	ENDIF
+; 	LOCAL += 1
+; REND
+
+; 	;余分な","を取り除くために末尾1文字を消す処理（素質が1つもなければ実行しない）
+; 	SIF LOCAL:2 >= 1
+; 		LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+
+; 	LOCALS = %LOCALS%],
+
+
+;ABL(すべて書き出し)------------------------------------------------------
+;書式は "abl":{"a":Lv,"b":Lv,"c":Lv,...}
+;55,既成事実
+LOCALS = %LOCALS%"abl":\{
+REPEAT 56
+	LOCAL=COUNT
+	SIF STRLENS(ABLNAME:LOCAL) <= 0
+		CONTINUE
+	LOCALS = %LOCALS%"%ABLNAME:(LOCAL)%":{ABL:TARGET:LOCAL},
+	LOCAL += 1
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;刻印-----------------------------------------------------------------------------------
+LOCALS = %LOCALS%"mark":\{
+REPEAT 10
+	LOCAL=COUNT
+	SIF STRLENS(MARKNAME:LOCAL) <= 0
+		CONTINUE
+	LOCALS = %LOCALS%"%MARKNAME:(LOCAL)%":{MARK:TARGET:LOCAL},
+	LOCAL += 1
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;このコマンドで上昇したPALAM-------------------------------------------------------
+;49,不快,;(マイナスPARAM)
+LOCALS = %LOCALS%"palam_up":\{
+REPEAT 50
+	LOCAL = COUNT
+	SIF STRLENS(PALAMNAME:LOCAL) <= 0
+		CONTINUE
+	;上昇値が負の数なら0にする
+	UP:LOCAL = MAX(UP:LOCAL, 0)
+	;下降値が負の数なら0にする
+	DOWN:LOCAL = MAX(DOWN:LOCAL, 0)
+	;変数を統一
+	LOCAL:1 = UP:LOCAL - DOWN:LOCAL
+	LOCALS = %LOCALS%"%PALAMNAME:LOCAL%":{LOCAL:1},
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+;現在PALAM----------------------
+LOCALS = %LOCALS%"palam":\{
+REPEAT 50
+	LOCAL = COUNT
+	SIF STRLENS(PALAMNAME:LOCAL) <= 0
+		CONTINUE
+	LOCAL:2 = PALAM:LOCAL + UP:LOCAL
+	LOCALS = %LOCALS%"%PALAMNAME:LOCAL%":{LOCAL:2},
+REND
+;末尾のカンマを消す
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+;TEQUIP------------------------------------------------------------------
+;値が1以上のものすべてについて、変数の番号をそのまま書き出す。
+LOCALS = %LOCALS%"tequip":\{
+LOCAL:2 = 0
+REPEAT 25
+	LOCAL = COUNT
+	SIF TEQUIP:LOCAL < 1
+		CONTINUE
+	LOCALS = %LOCALS%"{LOCAL}":{TEQUIP:LOCAL},
+	LOCAL:2 += 1
+REND
+
+;末尾のカンマを消す
+SIF LOCAL:2 >= 1
+	LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\},
+
+
+;------------------------------------------------------------------------
+;コマンドの成功失敗
+;eraHは成否判定が見当たらない
+
+LOCALS = %LOCALS%"success":1,
+
+
+
+;キャラ名称-------------------------------------------------------------
+LOCALS = %LOCALS%"target":"%CALLNAME:(TARGET)%",
+
+;------------------------------------------------------------------------
+
+;調教コマンド実行シーン
+SELECTCASE  SCENE
+	CASE "TRAIN"
+		コマンド名 = %TSTR:実行コマンド名%
+
+	;労役結果シーン
+	;メモ: L_WOMAN && L_NTR_MODE でいやらしい目つきで見られる1文が追加
+	;
+	CASE "労役結果"
+		SELECTCASE CFLAG:労役結果タイプ
+			CASE [[労役結果:ウェイトレス]]
+				コマンド名 = 労役結果:ウェイトレス
+			CASE [[労役結果:客室整備]]
+				コマンド名 = 労役結果:客室整備
+			CASE [[労役結果:歌唱練習]]
+				コマンド名 = 労役結果:歌唱練習
+			CASE [[労役結果:コンサート]]
+				コマンド名 = 労役結果:コンサート
+			CASE [[労役結果:娼館客室]]
+				IF MARK:淫乱刻印
+					コマンド名 = 労役結果:娼館客室_淫乱
+				ELSE
+					コマンド名 = 労役結果:娼館客室_不慣れ
+				ENDIF
+			;工場とかは描かなくてええやろ
+			CASE [[労役結果:民生用品]]
+				RETURN 0
+			CASE [[労役結果:探索装備]]
+				RETURN 0
+			CASE [[労役結果:設備メンテナンス]]
+				RETURN 0
+			CASE [[労役結果:戦闘訓練]]
+				RETURN 0
+			CASE [[労役結果:館内警備]]
+				RETURN 0
+			CASEELSE
+				RETURN 0
+		ENDSELECT
+
+	CASEELSE
+	;ここまでのCASEに該当しなければシーン名でそのままcsvを検索する
+		コマンド名 = %SCENE%
+ENDSELECT
+;----------------------------------------------------------------
+
+
+
+;---------------------------------------------------
+LOCALS = %LOCALS%"キャラ固有番号":{NO},
+LOCALS = %LOCALS%"コマンド":{SELECTCOM},
+LOCALS = %LOCALS%"コマンド名":"%コマンド名%",
+LOCALS = %LOCALS%"前回コマンド":{PREVCOM},
+
+LOCALS = %LOCALS%"体力":{BASE:0},
+LOCALS = %LOCALS%"最大体力":{MAXBASE:0},
+LOCALS = %LOCALS%"最大気力":{MAXBASE:1},
+LOCALS = %LOCALS%"絶頂":{BASE:2},
+LOCALS = %LOCALS%"ムード":{BASE:3},
+
+
+;末尾の,を消去してから波括弧を閉じる
+LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\}
+;PRINTFORML %LOCALS%
+;SAVETEXT関数でsavフォルダに出力される。
+;SAVETEXT 文字列, 連番, (第3引数はsavフォルダ強制), 第4引数によりエンコードをUTF-8に強制
+SAVETEXT LOCALS, GLOBAL:289, 0, 1
+
+;後始末 ARGを省略していたら意味のない処理
+TARGET = TARGET退避用
+
+;出力テキストの連番は0～4でループさせる
+GLOBAL:289 = GLOBAL:289 + 1
+SIF GLOBAL:289 == 5
+	GLOBAL:289 = 0
+
+PRINTFORML  <<オーダーTXT発行>> シーン:%SCENE% コマンドNo:{SELECTCOM} 連続カウンタ{GLOBAL:281}
+
+

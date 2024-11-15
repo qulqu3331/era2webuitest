@@ -1,0 +1,146 @@
+#他のファイルのワイルドカードを使用する場合はこの辺にメモする
+
+#こいつは然るべきところに移設する
+ERAIsound effects:
+  lv1:
+    (sound effects)
+  lv2:
+    (sound effects:1.3),(japanese text)
+
+ERAIeraH:
+  #eraH用 訓練
+  training:
+    housework:
+      "\
+      1girl,chibi,simple background,living room,\
+      {sweeping  | holding duster,arm up{|,running}  | (fluttering sheet:1.4),pulling sheet,(bed:1.2)}\
+      "
+    sing:
+      1girl,chibi,simple background,living room,singing,microphone
+    craft:
+      1girl at large work table, doing crafts,toys made from paper,origami,stuffed toy,craft tools,scissors,crayon
+    exploration:
+      "\
+      {1girl,(chibi),simple background,living room,yellow helmet helmet ,Safety harness,crouching on one knee,holding rope\
+      |\
+      1girl,(chibi),simple background,living room,yellow helmet ,Safety harness,outstretched arm,holding flashlight in hand,(flashlight:1.2),running}\
+      "
+    temptation:
+      1girl,chibi,simple background,living room,full face blush,seiza,sex toys on floor
+
+  #eraH用
+  working:
+    # ウェイトレス
+    waitress:
+      1girl,waitress,serving,tray,bar
+    # 客室整備
+    housekeeping:
+      #ベッドメイキング
+      - 1girl, solo, standing towards bed,(leaning forward:0.8),hands on bed, bending knees,bedside,(wide shot),bed making,(facing another:0.6),from behind,(from side:0.4),hotel,(bed),maid headdress 
+      #掃除
+      - 1girl, solo, standing, (sweeping:1.2),(mopping:1.2),(bending forward:0.8), (looking down:0.7),hotel,hotel room,bed,floor,maid headdress
+    singing:
+      1girl,solo,singing,holding microphone
+    concert:
+      1girl,solo,singing,holding microphone,concert,idol costume,dynamic angle,dramatic lighting,{|backlighting}
+    brothel:
+      1girl,fucked silly,vaginal sex,faceless male,fat man,cum,money
+    brothel_immature:
+      - 1girl,vaginal sex,clothed sex,(upside-down:-0.7),faceless male,lying,spread legs,missionary,(arms up:0.7),covering eyes with arms,open mouth,steam,dark pink room,dim lighting ,{|perspective, close-up,pussy focus,feet out of frame,disembodied penis,dutch angle}
+      # - 1girl,vaginal sex,faceless male,pov,cowgirl position,arched back,straddling,(from below:0.7),(nervous:1.2),(forced smile:0.5),(squinting:0.9),arm support,cum,money
+
+
+
+  #eraH用
+  ntr:
+    #合意ルート
+    consent:
+      #ＮＴＲ合意ルート:回避
+      pickup:
+        1girl,eye contact,sweat,@_@,1boy,faceless male,dark skinned male,against wall,(kabedon:1.1),height difference ,(hand on wall:1.1),hand on own hip,(grinning man:0.7),(spiked hair,blonde hair:0.8)
+      # ＮＴＲ合意ルート:愛撫
+      caress:
+        1girl,against wall,(squinting:0.8),blush,(moaning:1.1),breathing,trembling,^^^,1boy,faceless male,grabbing breast,caressing crotch,fingering,dark skinned male,(grinning man:0.7)
+      # ＮＴＲ合意ルート:ＮＴＲ合意
+      consent:
+        1girl,1boy,hetero,blush,(torogao:0.6),nude,upper body,french kiss,(tongue:0.2),(open mouth:0.4),saliva,steaming body,close-up,netorare,1boy,faceless male,arms around neck,dark skinned male,dutch angle,out of frame,simple dark background,dim light,glowing eyes
+      # ＮＴＲ合意ルート:疑似性交_騎乗位
+      grinding cowgirl:
+        1girl,nude,blush,torogao,narrowed eyes,saliva,steaming body,netorare,((grinding,imminent sex)),(penis),penis covered pussy juice,pussy,(x-ray:-1),straddling,arm support,girl on top,pressed penis,pov crotch,pov stomach,pov legs,dark skinned male,faceless male,crypt,simple background,black background, dim light,front view,(from side:0.7),[:pubic tattoo,glowing tatoo:0.3],glans,precum,cum on face
+      # ＮＴＲ合意ルート:疑似性交_正常位
+      grinding missionary:
+        1girl,nude,blush,torogao,narrowed eyes,saliva,steaming body,netorare,lying on back,(from above:0.8),(imminent sex:1.15),penis on pussy,penis covered pussy juice,spread legs ,cleft of venus,glans,precum,pussy peek,dark skinned male,(pov crotch:0.7),grabbing another's thighs,crypt,purple sheet,simple background,dark background, dim light,(pubic tattoo,glowing tatoo:0.7),dim backlighting,cum on face
+      # ＮＴＲ合意ルート:疑似性交_後背位
+      grinding doggystyle:
+        1girl,nude,breasts,hetero,1boy,blush,torogao,narrowed eyes,saliva,steaming body,netorare,faceless male,(thigh sex:1.1),(penis between thighs:1.2),glans,precum,pussy,crotch,hug from behind,(holding stomach:0.8),all fours,crypt,purple sheet,simple background,dark background, dim light,(pubic tattoo,glowing tatoo:0.7),dim backlighting,cum on face
+    captured:
+      # ＮＴＲ捕縛ルート:愛撫
+      caress:
+        1girl,blush,clothed sex,(clenched teeth:0.8),(torogao,narrowed eyes:0.8),saliva,heavy breathing,steam,netorare,faceless male,hand on another's breast ,gropping over cloth,(fingering:0.8),{|panties aside},head out of frame,(legs out of frame:0.6),simple background,black background, dim light,glowing tattoo,( pink tattoo on neck:1.1),dim backlighting
+      # ＮＴＲ捕縛ルート:調教_奉仕Ｆ
+      training service f:
+        1girl,1boy,hetero,blush,(torogao:0.6),(narrowed eyes:1.2),nude,sitting,(from above:0.8),(from side:0.6),hands up,hugging lower body,headpat,fellatio,{|open mouth,tongue,(penis on face)},cum on mouth,cum on face,(cum in pussy:-1),pussy,pussy juice drip,bleeding,wariza,netorare,1boy,faceless male,dark skinned male standing with legs apart,dutch angle,out of frame,simple dark background,dim light,purple sheet,pink tattoo,(glowing tattoo on neck),dynamic angle
+      # ＮＴＲ捕縛ルート:調教_奉仕Ｃ
+      training service c:
+        1girl,nude,blush,torogao,narrowed eyes,saliva,steaming body,netorare,((grinding,imminent sex)),(penis),penis covered pussy juice,pussy,(x-ray:-1),straddling,arm support,girl on top,pressed penis,pov crotch,pov stomach,pov legs,dark skinned male,faceless male,crypt,simple background,black background, dim light,front view,(from side:0.7),pink tattoo,(glowing tattoo on neck),glans,precum,cum on body,cum on breasts
+      # ＮＴＲ捕縛ルート:調教_奉仕Ｐ
+      training service p:
+        1girl,nude,blush,torogao,(ahegao:0.6),narrowed eyes,saliva,steaming body,netorare,paizuri,penis,fellatio,licking,(oral invitation:0.6),cum on face,cum on breasts,cum on tongue,bukkake,(projectile cum:0.8),open mouth,between legs,pink tattoo,(glowing tattoo on neck),crypt,simple background,black background, dim light,(backlighting:0.8)
+      # ＮＴＲ捕縛ルート:服従_キス
+      submission kiss:
+        1girl,1boy,hetero,blush,(torogao:0.6),narrowed eyes,nude,upper body,french kiss,saliva,steaming body,close-up,netorare,1boy,faceless male,arms around neck,dark skinned male,dutch angle,out of frame,simple dark background,dim light,glowing eyes,pink tattoo,(glowing tattoo on neck:0.8),(tears,streaming tears:1.1) 
+      # ＮＴＲ捕縛ルート:服従_正常位
+      submission missionary:
+        1girl,nude,navel,blush,torogao,narrowed eyes,saliva,steaming body,netorare,^^^,(motion lines),lying on back,(from above:0.4),(from side:0.3),(arched back:0.8),vaginal sex,cum in pussy,cum on body,(cum on breasts:0.7),scattered cum,spread legs ,(pov crotch:0.4),grabbing another's thighs,crypt,purple sheet,simple background,dark background, dim light,(pubic tattoo,glowing tatoo:0.7),tears,__ERAIsound effects/lv2__
+      # ＮＴＲ捕縛ルート:服従_後背位
+      submission doggystyle:
+        1girl,nude,blush,torogao,wince,narrowed eyes,saliva,steaming body,netorare,^^^,(motion lines),all fours,(from above:0.4),(from side:0.3),(arched back:0.8),sex from behind,vaginal sex,cum in pussy,cum on body,scattered cum,spread legs ,crypt,purple sheet,simple background,dark background, dim light,tears,__ERAIsound effects/lv2__
+      # ＮＴＲ捕縛ルート:服従_騎乗位
+      submission cowgirl:
+        1girl,nude,navel,blush,torogao,narrowed eyes,saliva,steaming body,netorare,^^^,(motion lines),lying on back,(from below:0.4),(from side:0.3),(arched back:0.8),vaginal sex,penis,squatting,cowgirl position,cum in pussy,cum on body,(cum on breasts:0.7),scattered cum,spread legs ,(pov crotch:0.4),crypt,purple sheet,simple background,dark background, dim light,tears,(pubic tattoo,glowing tatoo:0.7),__ERAIsound effects/lv2__
+    common:
+      #ＮＴＲ共通ルート:隷属_誓いのキス       
+      enslavement kiss:
+        1girl,full face blush,completely nude,kneeling,hands on own chest,own hands clasped,praying,closed eyes,(penis kiss),(kiss:1.2),(penis on lips:1.2),(licking:-1),lips,large penis,veiny penis,steam,(smegma:0.7),pubic hair,(male masturbation),out of frame,on stone floor,simple background,black background,dim light,(dramatic backlighting:1.2),underlighting,spotlight
+      # ＮＴＲ共通ルート:種付け
+      mating press:
+        #顔表示と安定して共存するのが難しいので投げやり
+        1girl,completely nude,1boy,mating press,ass,vaginal,penis in pussy,cum in pussy,motion lines,from side,ahegao,__ERAIsound effects/lv2__
+      #部品
+      kanochi fuck set:
+        happy,(heart),(heart),heart-shaped pupils,__ERAIsound effects/lv2__,blush,torogao,(narrowed eyes:0.8),saliva,steaming body,netorare,^^^,(motion lines),simple background,dark background, dim light
+      # ＮＴＲ共通ルート:キス正常位
+      kiss missionary:
+        1girl,nude,lying,boy on top,vaginal sex,missionary,(spread legs:0.8),penis,(kiss,french kiss:1.2),cum in pussy,cum on body,faceless male,dark skinned male,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:側位
+      spooning:
+        #あんまり側位になってないけどこれはこれで
+        1girl,nude,lying,1boy,vaginal sex,spooning,grabbing breast,caressing crotch,clitoris,penis in pussy,cum in pussy,cum on body,ejaculation,faceless male,dark skinned male,grinning man,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:背面立位_壁
+      standing doggystyle against wall:
+        1girl,nude,1boy,vaginal sex,standing against wall,bend over,hands on wall,torso grab ,sex from behind,penis in pussy,cum in pussy,cum on body,ejaculation, faceless male,dark skinned male,grinning man,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:足絡め
+      leg lock:
+        1girl,nude,lying,boy on top,vaginal sex,missionary,(leg lock:1.2),cum in pussy,cum on body,faceless male,dark skinned male,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:尻上げ後背位
+      top-down bottom-up:
+        1girl,nude,lying,boy on top,vaginal sex,doggystyle,top-down bottom-up,cum in pussy,cum on body,faceless male,dark skinned male,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:失神
+      fainting prone bone:
+        1girl,nude,lying on stomach,boy on top,vaginal sex,(prone bone:1.2),cum in pussy,cum on body,ejaculation,faceless male,dark skinned male,grinning man,dutch angle,__ERAIsound effects/lv2__,fainting,rolling eyes,half closed eyes,out of power,blank eyes,(mind break:1.2), (cum on hair,cum on face:0.7),saliva,steaming body,netorare,(motion lines),simple background,dark background, dim light
+      # ＮＴＲ共通ルート:グラインド騎乗位
+      grind cowgirl:
+        1girl,nude,lying,girl on top,vaginal sex,straddling,arm support,arched back,cum in pussy,cum on body,ejaculation,faceless male,dark skinned male,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:背面座位
+      reverse upright straddle:
+        1girl,nude,vaginal sex,spread legs,reverse upright straddle,grabbing breast, caressing crotch,cum in pussy,cum on body,ejaculation,faceless male,dark skinned male,grinning man,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:背面立位_腕掴み
+      standing doggystyle grabbing arms:
+        1girl,nude,1boy,vaginal sex,standing sex,standing doggystyle,bend over,arm grab,grabbing another's arms ,(sex from behind:1.1),penis in pussy,cum in pussy,cum on body,ejaculation, faceless male,dark skinned male,grinning man,dutch angle,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:完堕ち後背位
+      doggystyle case4:
+        #表情を盛ったところに相反するanusを入れたらカオス謎漫画状態を呼んでいるがなんだか結果が悪くない
+        1girl,nude,vaginal sex,all fours,doggystyle, breast grab,penis in pussy,multiple views,(anus:1.2),cum in pussy,cum on body,ejaculation,faceless male,dark skinned male,__ERAIeraH/ntr/common/kanochi fuck set__
+      # ＮＴＲ共通ルート:恋人繋ぎキス正常位
+      holding hands missionary:
+        1girl,nude,vaginal sex,missionary,(spread legs:0.6),penis,hands up,(upside-down:-1),(holding hands:1.2),looking at viewer,pov hands,interlocked fingers,(cum in pussy:0.8),pov,(imminent kiss:1.4),perspective,face focus,dynamic angle,faceless male,dark skinned male,happy,(heart),(heart),heart-shaped pupils,glowing eyes,lips,blush,(narrowed eyes:1.2),half-closed eyes,saliva,steaming body,simple background,dark background, dim light,__ERAIsound effects/lv2__,(backlighting),head tilt
