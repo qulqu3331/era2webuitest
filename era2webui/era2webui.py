@@ -39,6 +39,9 @@ class PromptMakerFactory:
         elif variant == 'eraImascgpro':
             from eraImascgpro.subcgpro import PromptMakerImascgpro
             return PromptMakerImascgpro(sjhandler)
+        elif variant == 'eraH':
+            from module.promptmakerBlackRX import PromptMakerRX
+            return PromptMakerRX(sjhandler)
 
 class FileHandler(FileSystemEventHandler):
     """受け取る引数 order_queue は list

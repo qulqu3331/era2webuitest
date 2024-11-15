@@ -21,6 +21,7 @@ class Settings:
             print("1: eratohoYM")
             print("2: eraTW")
             print("3: eraImascgpro")
+            print("4: eraH")
             variant_number = input("選択: ")
 
             # バリアント番号に応じてバリアント名を設定
@@ -30,6 +31,8 @@ class Settings:
                 cls.variant = 'eraTW'
             elif variant_number == '3':
                 cls.variant = 'eraImascgpro'
+            elif variant_number == '4':
+                cls.variant = 'eraH'
 
             # iniに記入
             config_ini.set("Variant", "Variant", cls.variant)
