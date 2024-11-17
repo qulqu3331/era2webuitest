@@ -39,7 +39,7 @@ class PromptMakerFactory:
         elif variant == 'eraImascgpro':
             from eraImascgpro.subcgpro import PromptMakerImascgpro
             return PromptMakerImascgpro(sjhandler)
-        elif variant == 'eraH':
+        elif variant in ['eraH','東方触手宮']:
             from module.promptmakerBlackRX import PromptMakerRX
             return PromptMakerRX(sjhandler)
 
@@ -100,8 +100,8 @@ def TaskExecutor(order_queue,driver):
             # ---------ここがメインのオーダー処理-----------------------
             # SaveJSONHandlerのインスタンスからJSONデータを取得
             json_data = sjhandler.data  # JSONデータを別の変数に代入
-            print("txtを読み込み シーン:" + json_data["scene"]) #読み込みチェック　シーンを書き出す
-            print("キャラ名:" + json_data["target"]) #キャラ名を書き出す
+            #print("txtを読み込み シーン:" + json_data["scene"]) #読み込みチェック　シーンを書き出す
+            #print("キャラ名:" + json_data["target"]) #キャラ名を書き出す
 
             # プロンプト整形 SaveJSONHandlerのメソッドを使うため  インスタンスそのもの  をわたす 依存性注入とかいうらしい
             promptmaker = PromptMakerFactory.create_prompt_maker(sjhandler)

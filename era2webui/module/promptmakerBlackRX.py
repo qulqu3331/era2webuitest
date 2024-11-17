@@ -60,12 +60,10 @@ class PromptMakerRX():
         # 判定につかうセーブデータをクラス変数内にしまう専用のメソッド
         # 判定に必要なSaveデータをinitで全部先に取得すると読みにくので分離だ
         #値が存在しない場合 NanやNoneにならないようにする あとで
-        self.scene  = self.sjh.get_save("scene")#str
         self.charno = self.sjh.get_save("キャラ固有番号")#int
-        self.name   = self.sjh.get_save("target") #list ターゲット名
-        self.comno  = self.sjh.get_save("コマンド")#int
-        self.com    = self.sjh.get_save("コマンド名")#str
-        self.succ   = self.sjh.get_save("success")#int
+        self.name   = self.sjh.get_save("キャラ名") #list ターゲット名
+        self.com    = self.sjh.get_save("シーン名")#str
+        self.succ   = 1
 
 
     def generate_prompt(self):
@@ -164,8 +162,8 @@ class PromptMakerRX():
             # コマンドが未記入の場合はget_dfが"ERROR"を返すのでEvent.csvの汎用調教を呼ぶ
             prompt = csvm.get_df(scn,"シーン名",self.com,"プロンプト")
             if prompt == "ERROR":
-                prompt = csvm.get_df(scn,"名称","汎用シーン","プロンプト")
-                nega = csvm.get_df(scn,"名称","汎用シーン","ネガティブ")
+                prompt = csvm.get_df(scn,"シーン名","汎用シーン","プロンプト")
+                nega = csvm.get_df(scn,"シーン名","汎用シーン","ネガティブ")
             else:
                 nega = csvm.get_df(scn,"シーン名",self.com,"ネガティブ")
             self.add_element("train", prompt, nega)

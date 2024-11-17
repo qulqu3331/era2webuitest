@@ -1,10 +1,10 @@
 ﻿名称,プロンプト,ネガティブ,備考
-基礎プロンプト,"<lora:Hyper-SDXL-1step-lora:1.0>,masterpiece, best quality","low quality, worst quality",すべての生成で必ず記入されるプロンプト
-人物プロンプト,,,キャラクター描写の時記入される
+基礎プロンプト,"<lora:Hyper-SDXL-1step-lora:1><lora:leco_cum_copycatNoob_v10_last:-1>masterpiece, best quality","low quality, worst quality",すべての生成で必ず記入されるプロンプト
+人物プロンプト,__ERAIeffect/base__,,キャラクター描写の時記入される
 ,,,
 ,,,
-AFTER用事後Lora,"<lora:murkysAfterSexLying_1:1:1:lbw=CT>,(looking away,trembling:1.3)",(looking viewer),
-AFTER用精液溢れ,"(cumdrip),cum drip,fucked silly, (cum pool:1.2),cum in pussy,pussy filled semen,(((cum on breasts,cum on stmach,cum on body,cum on face,scattered cum,bukkake)))",penis,
+,,,
+,,,
 ,,,
 ,,,
 ,,,
@@ -12,14 +12,14 @@ AFTER用精液溢れ,"(cumdrip),cum drip,fucked silly, (cum pool:1.2),cum in pus
 主人が大量射精,"(semen splash,excessive cum:1.5)",,
 噴乳,"(lactation, projectile lactation:1.2)",,
 放尿,"(squirt urination,peeing:1.2)",,
-処女喪失,"(defloration blood from pussy,ryona:1.1)",,効かない
-今回の調教で処女喪失,,,その調教の間ずっと(V描画ありの時)
+処女喪失,"(defloration blood from pussy,ryona:1.1)",,
+今回の調教で処女喪失,,,
 ,,,
 ,,,
-妊娠中期,"<lora:nikePregnant_v10:0.1:1:lbw=NC>,PREGNANT",,大きさがまったく安定しない
-妊娠後期,"<lora:nikePregnant_v10:0.4:1:lbw=NC>,PREGNANT",,
+妊娠中期,未,,
+妊娠後期,未,,
 ,,,
-時間停止,__timestop__,,無表情なのは本意ではないがカメラ目線よりはマシ
+時間停止,__ERAIeffect/timestop__,,
 睡眠中,"sleeping,closed eyes,lying",,
 ,,,
 ,,,
