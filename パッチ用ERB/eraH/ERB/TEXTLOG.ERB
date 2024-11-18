@@ -18,17 +18,13 @@
 ;=============================================================================
 
 @OUTPUT_TXT(ARGS,ARG = 0)
-#DIMS SCENE
-#DIM LOOP_CHR
-#DIM 場所ID
-#DIMS コマンド名
-#DIMS 表情
-#DIM TARGET退避用
+#DIMS シーン名
+#DIM 表示キャラ番号
 
 ;基本的には第1引数だけ指定して呼び出す。
 ;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
 
-SCENE = %ARGS%
+シーン名 = %ARGS%
 
 
 ;タイマーで連続実行を防ぐ
@@ -55,12 +51,12 @@ ENDIF
 GLOBAL:280 = LOCAL
 
 
-;対象がTARGETでない場面での呼び出しに対応するため、TARGETを退避しておく。最後に戻す
-TARGET退避用 = TARGET
-;引数ありならTARGETを一時的に変更。引数を省略した場合はそのままTARGETを対象にする。
-SIF ARG != 0
-	TARGET = ARG
-
+;引数ありの場合,引数のキャラを表示、なければキャラ番号1　(主人公交代したらどうなるか未確認)
+IF ARG:0 != 0
+	表示キャラ番号 = ARG:0
+ELSE
+    表示キャラ番号 = TARGET
+ENDIF
 
 ;jsonの最初の波括弧を記述------------------------------------------------------
 LOCALS = \{
@@ -69,36 +65,7 @@ LOCALS = \{
 ;txtとプロンプトを紐づけるIDにする。今のところ使ってない
 LOCALS = %LOCALS%"timestamp":{GLOBAL:280},
 
-;シーン------------------------------------------------------------------------
-;シーン文字列を書き出す
-LOCALS = %LOCALS%"scene":"%SCENE%",
 
-
-
-; ;TALENT(取得しているものだけ書き出し)-------------------------------------------
-; ;書式は "talent":["a","b","c",...]
-
-; ;素質を数えるカウンタ
-; LOCAL:2 = 0
-
-; LOCALS = %LOCALS%"talent":[
-; ;523,八重歯,までループ
-; REPEAT 523
-; 	LOCAL=COUNT
-; 	SIF STRLENS(TALENTNAME:LOCAL) <= 0
-; 		CONTINUE
-; 	IF TALENT:TARGET:(LOCAL) != 0
-; 		LOCALS = %LOCALS%"%GET_TALENTNAME(LOCAL,TALENT:TARGET:(LOCAL))%",
-; 		LOCAL:2 += 1
-; 	ENDIF
-; 	LOCAL += 1
-; REND
-
-; 	;余分な","を取り除くために末尾1文字を消す処理（素質が1つもなければ実行しない）
-; 	SIF LOCAL:2 >= 1
-; 		LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
-
-; 	LOCALS = %LOCALS%],
 
 
 ;ABL(すべて書き出し)------------------------------------------------------
@@ -193,10 +160,10 @@ LOCALS = %LOCALS%"target":"%CALLNAME:(TARGET)%",
 
 ;------------------------------------------------------------------------
 
-;調教コマンド実行シーン
-SELECTCASE  SCENE
+SELECTCASE  ARGS
+	;調教コマンド実行シーン
 	CASE "TRAIN"
-		コマンド名 = %TSTR:実行コマンド名%
+		シーン名 = %TSTR:実行コマンド名%
 
 	;労役結果シーン
 	;メモ: L_WOMAN && L_NTR_MODE でいやらしい目つきで見られる1文が追加
@@ -204,18 +171,18 @@ SELECTCASE  SCENE
 	CASE "労役結果"
 		SELECTCASE CFLAG:労役結果タイプ
 			CASE [[労役結果:ウェイトレス]]
-				コマンド名 = 労役結果:ウェイトレス
+				シーン名 = 労役結果:ウェイトレス
 			CASE [[労役結果:客室整備]]
-				コマンド名 = 労役結果:客室整備
+				シーン名 = 労役結果:客室整備
 			CASE [[労役結果:歌唱練習]]
-				コマンド名 = 労役結果:歌唱練習
+				シーン名 = 労役結果:歌唱練習
 			CASE [[労役結果:コンサート]]
-				コマンド名 = 労役結果:コンサート
+				シーン名 = 労役結果:コンサート
 			CASE [[労役結果:娼館客室]]
 				IF MARK:淫乱刻印
-					コマンド名 = 労役結果:娼館客室_淫乱
+					シーン名 = 労役結果:娼館客室_淫乱
 				ELSE
-					コマンド名 = 労役結果:娼館客室_不慣れ
+					シーン名 = 労役結果:娼館客室_不慣れ
 				ENDIF
 			;工場とかは描かなくてええやろ
 			CASE [[労役結果:民生用品]]
@@ -234,23 +201,17 @@ SELECTCASE  SCENE
 
 	CASEELSE
 	;ここまでのCASEに該当しなければシーン名でそのままcsvを検索する
-		コマンド名 = %SCENE%
+		シーン名 = %ARGS%
 ENDSELECT
 ;----------------------------------------------------------------
 
 
 
 ;---------------------------------------------------
-LOCALS = %LOCALS%"キャラ固有番号":{NO},
+LOCALS = %LOCALS%"キャラ固有番号":{NO:表示キャラ番号},
 LOCALS = %LOCALS%"コマンド":{SELECTCOM},
-LOCALS = %LOCALS%"コマンド名":"%コマンド名%",
-LOCALS = %LOCALS%"前回コマンド":{PREVCOM},
+LOCALS = %LOCALS%"シーン名":"%シーン名%",
 
-LOCALS = %LOCALS%"体力":{BASE:0},
-LOCALS = %LOCALS%"最大体力":{MAXBASE:0},
-LOCALS = %LOCALS%"最大気力":{MAXBASE:1},
-LOCALS = %LOCALS%"絶頂":{BASE:2},
-LOCALS = %LOCALS%"ムード":{BASE:3},
 
 
 ;末尾の,を消去してから波括弧を閉じる
@@ -261,14 +222,12 @@ LOCALS = %LOCALS%\}
 ;SAVETEXT 文字列, 連番, (第3引数はsavフォルダ強制), 第4引数によりエンコードをUTF-8に強制
 SAVETEXT LOCALS, GLOBAL:289, 0, 1
 
-;後始末 ARGを省略していたら意味のない処理
-TARGET = TARGET退避用
 
 ;出力テキストの連番は0～4でループさせる
 GLOBAL:289 = GLOBAL:289 + 1
 SIF GLOBAL:289 == 5
 	GLOBAL:289 = 0
 
-PRINTFORML  <<オーダーTXT発行>> シーン:%SCENE% コマンドNo:{SELECTCOM} 連続カウンタ{GLOBAL:281}
+PRINTFORML  <<オーダーTXT発行>> シーン:%シーン名% コマンドNo:{SELECTCOM} 連続カウンタ{GLOBAL:281}
 
 

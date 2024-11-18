@@ -2,3 +2,4 @@ __pycache__
 era2webui/chromeuserdata
 venv
 venv311
+era2webui/chromedriver.exe

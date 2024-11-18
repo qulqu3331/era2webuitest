@@ -12,8 +12,9 @@ ERAIeffect:
     time stop,expressionless,emotionless sex,looking forward,gaze into the distance,(looking at viewer:-1),(closed eyes:-1)
   base:
     #各自で絵柄タグとか書くとこ
+    __mybase0__
+  charabase:
     __mybase__
-
 
 ERAI:
   #ターゲット変更*
@@ -531,13 +532,6 @@ ERAI:
     #交互挿入背面立位
     standing doggy:
       2girls,1boy,take your pick ,multiple girls,mmf threesome, side-by-side,doggystyle,ass,vaginal,speed lines,imminent penetration,(penis:1.1),(multiple penis:-1),cum string,(gaping:0.8),after sex,hand on ass,skirt lift,pussy,group sex
-
-  # 交互挿入正常位
-  # forge couple用
-  # ${a=lying on back,vaginal,missionary,torso grab,spread legs,penis in pussy}${b=lying on back,after sex,cum drip,pussy}2girls ,side-by-side,hinanawi tenshi,hat,${a},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
-  # 2girls,side-by-side,nagae iku,hat,${b},unfocused eyes, time stop,expressionless,emotionless sex,looking forward
-  # 2girls,side-by-side,from above,pov croth,(take your pick:1.2),<lora:Hyper-SDXL-1step-lora:1> ,以下絵柄タグ
-
 
   #時間停止（コマンド実行時）
   timestop:
