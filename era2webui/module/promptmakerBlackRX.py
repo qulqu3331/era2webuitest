@@ -27,14 +27,8 @@ class PromptMakerRX():
     def __init__(self, sjh):
         self.sjh = sjh
         self.initialize_class_variables()#判定に必要なセーブデータを一括取得 #0 or 1はBoolにするかも
-        self.prompt =    {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
-                          "chara":"","cloth":"","train": "","emotion": "","stain": "",\
-                          "潤滑": "","effect": "", "body": "","hair": ""}
-        self.negative =  {"situation":"", "location":"", "weather":"", "timezone":"", "scene":"",\
-                          "chara":"","cloth":"", "train": "","emotion": "","stain": "",\
-                          "潤滑": "","effect": "","eyes": "", "body": "","hair": ""}
-        self.flags = {"drawchara":True,"drawface":True,"drawbreasts":False,\
-            "drawvagina":False,"drawanus":False,"主人公以外が相手":False,"indoor":False}
+        self.prompt =    {"base":"","scene":"","chara":"","chara_2":"","cloth":"","general":""}
+        self.negative =  {"base":"","scene":"","chara":"","chara_2":"","cloth":"","general":""}
         self.width = 0
         self.height = 0
 
@@ -61,9 +55,9 @@ class PromptMakerRX():
         # 判定に必要なSaveデータをinitで全部先に取得すると読みにくので分離だ
         #値が存在しない場合 NanやNoneにならないようにする あとで
         self.charno = self.sjh.get_save("キャラ固有番号")#int
-        self.name   = self.sjh.get_save("キャラ名") #list ターゲット名
         self.com    = self.sjh.get_save("シーン名")#str
         self.succ   = 1
+        self.direct_orders  = self.sjh.get_save("DirectOrders")#dict型のリスト
 
 
     def generate_prompt(self):
@@ -83,15 +77,20 @@ class PromptMakerRX():
         このメソッドを使って、どんなシナリオにもバッチリ対応できる呪文を作れるぜ！
         """
 
+        # 基礎プロンプトの読み込み
         efc = "Effect.csv"
         prompt = csvm.get_df(efc,"名称","基礎プロンプト","プロンプト")
         nega = csvm.get_df(efc,"名称","基礎プロンプト","ネガティブ")
-        self.add_element("situation", prompt, nega)
+        self.add_element("base", prompt, nega)
 
         # self.create_location_element() #場所
 
-        self.create_train_element() #行動
+        self.create_scene_element() #シーン
         self.create_chara_element() #キャラ
+
+        if self.direct_orders:
+            self.execute_dyrect_orders() #DyrectOrders:csvから検索するパラメータをオーダーtxtに直接記述するシステムの展開
+
 
 
         #辞書のvalueが空の要素を消す
@@ -133,41 +132,38 @@ class PromptMakerRX():
             self.negative[elements] += nega
 
 
-
-    def create_train_element(self):
+    def execute_dyrect_orders(self):
         """
-        コマンドに対応するプロンプトを生成するんだ。
-        CSVファイルから読み込んだコマンド名に基づいて、適切なプロンプトとネガティブプロンプトを組み立てるぜ。
+        オーダーテキストに直接csvm.get_dfに入れる各パラメータを書けるようにした
+        json中に"DirectOrders"という辞書のリストがあればそれを展開する
+        """
+        # リスト中の辞書の数だけ繰り返す
+        for dictionary in self.direct_orders:
+            csv = dictionary["csv"]
+            element = dictionary["element"]
+            searchcolumn = dictionary["searchcolumn"]
+            searchvalue = dictionary["searchvalue"]
+            pickcolumn = dictionary["pickcolumn"]
 
-        行動が成功したか失敗したかによって処理が分岐するから、それもしっかりチェックしてくれよな。
-        成功した場合は、CSVから読み込んだ情報に基づいてプロンプトを作成する。失敗した場合は、拒否プロンプトを使うんだ。
-        # drawchara drawface drawbreasts drawvagina drawanus
+            prompt = csvm.get_df(csv,searchcolumn,searchvalue,pickcolumn)
+            if prompt != "ERROR":
+                self.add_element(element, prompt, None)
+
+
+    def create_scene_element(self):
+        """
+        シーン名に対応したプロンプトをscene要素に書き出す。空欄のときは汎用シーンを返す。
         """
         scn = "Scene.csv"
 
-        #0 以上だと成功
-        #あとで検証
-        self.succ == 1
-        if self.succ < 0:
-            deny = csvm.get_df(scn,"シーン名",self.com,"拒否プロンプト")
-            if deny != "ERROR":
-                # 拒否プロンプトがERRORでない場合、拒否プロンプトを出力
-                nega = csvm.get_df(scn,"シーン名",self.com,"拒否ネガティブ")
-                self.add_element("train", deny, nega)
-                self.flags["drawchara"] = True
-                self.flags["drawface"] = True
-                return
+        # プロンプト欄が未記入の場合はget_dfが"ERROR"を返すのでEvent.csvの汎用調教を呼ぶ
+        prompt = csvm.get_df(scn,"シーン名",self.com,"プロンプト")
+        if prompt == "ERROR":
+            prompt = csvm.get_df(scn,"シーン名","汎用シーン","プロンプト")
+            nega = csvm.get_df(scn,"シーン名","汎用シーン","ネガティブ")
         else:
-
-            # コマンドが未記入の場合はget_dfが"ERROR"を返すのでEvent.csvの汎用調教を呼ぶ
-            prompt = csvm.get_df(scn,"シーン名",self.com,"プロンプト")
-            if prompt == "ERROR":
-                prompt = csvm.get_df(scn,"シーン名","汎用シーン","プロンプト")
-                nega = csvm.get_df(scn,"シーン名","汎用シーン","ネガティブ")
-            else:
-                nega = csvm.get_df(scn,"シーン名",self.com,"ネガティブ")
-            self.add_element("train", prompt, nega)
-
+            nega = csvm.get_df(scn,"シーン名",self.com,"ネガティブ")
+        self.add_element("scene", prompt, nega)
 
 
 
@@ -183,8 +179,7 @@ class PromptMakerRX():
 
         # キャラ描写で毎回記述するプロンプト Effect.csvから読み出す
         charabase = csvm.get_df(efc,"名称","人物プロンプト","プロンプト")
-        charabase = charabase + ", " #charaキーで辞書に格納する時カンマ スペースが入らないのでここで足す
-        self.add_element("chara", charabase, None)
+        self.add_element("base", charabase, None)
 
         prompt = csvm.get_df(cha,"キャラ固有番号",self.charno,"プロンプト")
 
@@ -202,6 +197,7 @@ class PromptMakerRX():
         for key, value in self.negative.items():
             print (f'nega:::{key}:::{value}')
 
-        for key, value in self.flags.items():
-            print (f'flags:::{key}:::{value}')
+        # 描画flag管理は必要に駆られるまでオミット
+        # for key, value in self.flags.items():
+        #     print (f'flags:::{key}:::{value}')
     
