@@ -172,6 +172,8 @@ if __name__ == '__main__':
         config_ini.add_section('Viewer')
     if not config_ini.has_section('Generater'):
         config_ini.add_section('Generater')
+    if not config_ini.has_section('Variant'):
+        config_ini.add_section('Variant')
     if not 'erasav' in config_ini['Paths']:
         config_ini.set('Paths', 'erasav', '')
     if not 'image' in config_ini['Paths']:
@@ -199,7 +201,9 @@ if __name__ == '__main__':
 
     # ダイアログで監視対象フォルダを選ばせる。
     # ダイアログ表示はconfigファイルでスキップ設定可能
-    dir = config_ini.get("Paths", "erasav", fallback="")
+
+    # フォルダ名とバリアント名が一致している前提
+    dir = config_ini.get("Paths", f"{Settings.variant}sav", fallback="")
     # スキップ設定を読む
     skip = int(config_ini.get("Generater", "savフォルダの選択をスキップ", fallback=0))
     if skip and os.path.isdir(dir):
@@ -219,13 +223,9 @@ if __name__ == '__main__':
         sys.exit()
 
     # CSVフォルダの処理
-    csv_dir = config_ini.get("Paths", "eracsv", fallback="")
-    skip_csv = int(config_ini.get("Generater", "csvフォルダの選択をスキップ", fallback=0))
-    if skip_csv and os.path.isdir(csv_dir):
-        csv_target_dir = csv_dir
-    else:
-        #Settings.variantで設定されたバリアントから監視するcsvフォルダのPathを作成
-        csv_target_dir = os.path.join(os.path.dirname(__file__), Settings.variant, 'csvfiles')
+    # Settings.variantで設定されたバリアントから監視するcsvフォルダのPathを作成
+    # フォルダ名とバリアント名が一致している前提
+    csv_target_dir = os.path.join(os.path.dirname(__file__), Settings.variant, 'csvfiles')
     # iniにCSVパスを記入
     config_ini.set("Paths", "eracsv", csv_target_dir)
     with open(inipath, "w", encoding='UTF-8') as configfile:

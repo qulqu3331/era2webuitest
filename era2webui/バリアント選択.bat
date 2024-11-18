@@ -1,0 +1,2 @@
+python select_variant.py
+pause
