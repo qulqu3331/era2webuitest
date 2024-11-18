@@ -1,0 +1,6 @@
+﻿名称,プロンプト,備考
+衣服新品,,
+衣服微損,,
+衣服損傷,torn cloth,
+半裸,"torn cloth,half nude,(torn panties:0.4),(torn bra:0.7)",暫定的なやつ。構図によってpantiesは映らないのでこういう服装指定はしてはいけない
+全裸,"completely nude,uncensored,(object insertion:-0.5)",

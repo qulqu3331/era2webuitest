@@ -1,0 +1,203 @@
+﻿;=============================================================================
+;調教中のパラメータをテキスト出力
+;JSON形式
+
+;引数
+;ARGS どの場面から呼ばれたかを表す文字列
+;ARG:0 描画するキャラの登録番号（固有番号ではない） 引数なしの場合は主人公を描画
+;ARG:1～2 場面によるが行動番号などが入る。
+
+;GLOBAL:280 連続呼び出し防止用のタイマー
+;GLOBAL:281 連続呼び出しの回数制限カウンタ
+;GLOBAL:289 出力テキストにつく連番
+
+;ローカル変数
+;LOCALS  txt出力する文字列
+;LOCAL:0～2 カウンタ等に適当に使用
+
+;=============================================================================
+
+@OUTPUT_TXT(ARGS,ARG:0 = 0,ARG:1 = 0,ARG:2 = 0)
+#DIMS シーン名
+#DIM 表示キャラ番号
+#DIMS DirectOrders
+#DIMS 衣服
+
+
+;基本的には第1引数だけ指定して呼び出す。
+;対象がTARGETでない場面で呼び出すとき第2引数を指定する。（育児部屋など）
+
+;変数 シーン名 は最終的な出力シーン名。Scene.csvからプロンプトを検索するキーにする
+;ARGS は呼び出し元を表す文字列。例外を除き、そのままシーン名に入れる
+
+シーン名 = %ARGS%
+
+;タイマーで連続実行を防ぐ
+GETMILLISECOND
+LOCAL = RESULT
+;前回実行から200ミリ秒未満か
+IF GLOBAL:280 - LOCAL > -200
+	;この分岐に4回以上連続で引っかかったら処理中断
+    IF GLOBAL:281 > 3
+		RETURN 0
+	ELSE
+	;4回未満なら少し待たせて処理継続
+	;50msだと順番逆転が目立った
+		AWAIT 80
+		;待たせた回数をカウントする
+		GLOBAL:281 = GLOBAL:281 + 1
+	ENDIF
+ELSE
+	;きちんと待てたらカウンタを0にする
+	GLOBAL:281 = 0
+ENDIF
+
+;連続実行防止タイマー更新
+GLOBAL:280 = LOCAL
+
+;引数ありの場合,引数のキャラを表示、なければキャラ番号1　(主人公交代したらどうなるか未確認)
+IF ARG:0 != 0
+	表示キャラ番号 = ARG:0
+ELSE
+    表示キャラ番号 = 1
+ENDIF
+;jsonの最初の波括弧を記述------------------------------------------------------
+LOCALS = \{
+
+;あとでまとめてLOCALSに合流させる用の文字列変数
+;DirectOrder は辞書型を要素とするリスト
+DirectOrders = "DirectOrders":\[
+
+;タイムスタンプ 時刻ミリ秒-----------------------------------------------------
+;txtとプロンプトを紐づけるIDにする。今のところ使ってない
+LOCALS = %LOCALS%"timestamp":{GLOBAL:280},
+
+
+;キャラ名称-------------------------------------------------------------
+;この項目は今のところデバッグ用途
+LOCALS = %LOCALS%"表示キャラ名称":"%CALLNAME:(表示キャラ番号)%",
+
+;------------------------------------------------------------------------
+;ARGSにより分岐し、表示キャラやシーン名を決定する
+;ここでどのCASEにも引っかからなかったら シーン名=ARGS で出力する
+
+SELECTCASE ARGS
+	CASE "バトル中の行動"
+		;味方か敵かで分岐
+		IF TFLAG:51
+			;味方の行動
+			;表示キャラは いま行動しているキャラ
+			表示キャラ番号 = TFLAG:51
+			;CFLAG:50 コマンドIDで分岐する。ただし武器1なら100、武器2なら200が加算されているので除く
+			SELECTCASE (CFLAG:(表示キャラ番号):50 % 100)
+				CASE 10
+					シーン名 = 味方攻撃_弱弾幕
+				CASE 11
+					シーン名 = 味方攻撃_中弾幕
+				CASE 12
+					シーン名 = 味方攻撃_強弾幕
+				CASE 13
+				;溜めターンはTFLAGが更新されず、ここには来ないのでこの分岐は意味なかった
+					; IF CFLAG:(表示キャラ番号):31 == 2
+					; 	シーン名 = 味方攻撃_溜め
+					; ELSE
+						シーン名 = 味方攻撃_溜め撃ち
+					; ENDIF
+				CASE 14
+					シーン名 = 味方攻撃_ばら撒き弾
+				CASE 15
+					シーン名 = 味方攻撃_貫通弾
+				CASE 20,21,22,23,24,25,30,31,32,33,34
+					;弾幕以外の武器攻撃
+					;装備品は {TFLAG:67}
+					シーン名 = 味方攻撃_攻撃_武器_{TFLAG:67}
+
+				CASEELSE
+					RETURN 0
+			ENDSELECT
+		ELSE
+			;敵の行動
+			;表示キャラは 行動対象になるキャラ
+			表示キャラ番号 = TFLAG:54
+			シーン名 = 敵攻撃_{TFLAG:50}
+		ENDIF
+
+	CASE "バトル中の行動_溜め"
+		IF CFLAG:(表示キャラ番号):31 == 2
+			シーン名 = 味方攻撃_溜め
+		ENDIF
+
+	CASE "移動"
+		IF CFLAG:(表示キャラ番号):11 == 0
+			シーン名 = 移動_突撃
+		ELSE
+			シーン名 = 移動_慎重
+		ENDIF
+
+	CASE "アイテム発見"
+		;引数ARG:1にアイテム番号を入れておく
+		DirectOrders = %DirectOrders%\{"csv":"Item.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"変数代入プロンプト"\},
+
+	CASE "敵と遭遇"
+		;引数ARG:1に敵の番号を入れておく
+		DirectOrders = %DirectOrders%\{"csv":"Monster.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"プロンプト"\},
+
+	CASEELSE
+ENDSELECT
+
+
+;衣服------------------------------------------------------------
+;CPはBASE:3
+;それとは別に はいてないフラグがある CFLAG:44
+;とりあえず版
+IF BASE:表示キャラ番号:3 == MAXBASE:表示キャラ番号:3
+	衣服 = 衣服新品
+;少しの傷
+ELSEIF BASE:表示キャラ番号:3 * 10 >= MAXBASE:表示キャラ番号:3 * 7
+	衣服 = 衣服微損
+;破れあり
+ELSEIF BASE:表示キャラ番号:3 * 10 >= MAXBASE:表示キャラ番号:3 * 4
+	衣服 = 衣服損傷
+ELSEIF BASE:表示キャラ番号:3 > 0
+	衣服 = 半裸
+ELSE
+	衣服 = 全裸
+ENDIF
+
+DirectOrders = %DirectOrders%\{"csv":"Cloth.csv","element":"cloth","searchcolumn":"名称","searchvalue":"%衣服%","pickcolumn":"プロンプト"\},
+;末尾の,はあとで除去する
+
+LOCALS = %LOCALS%"衣服状態":"%衣服%",
+
+
+;---------------------------------------------------
+LOCALS = %LOCALS%"キャラ固有番号":{NO:表示キャラ番号},
+LOCALS = %LOCALS%"シーン名":"%シーン名%",
+
+LOCALS = %LOCALS%"体力":{BASE:表示キャラ番号:0},
+LOCALS = %LOCALS%"最大体力":{MAXBASE:表示キャラ番号:0},
+LOCALS = %LOCALS%"CP":{BASE:表示キャラ番号:3},
+
+;DirectOrdersをLOCALSに合流
+;末尾の,を消去してから角括弧を閉じる
+DirectOrders = %SUBSTRING(DirectOrders,0,STRLENS(DirectOrders)-1)%
+DirectOrders = %DirectOrders%\]
+
+LOCALS = %LOCALS% %DirectOrders%
+;最後の要素である↑で末尾にカンマをつけてないので、カンマを削る必要がなくなった
+;のでこの処理いらない。LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS%\}
+;PRINTFORMW %LOCALS%
+;SAVETEXT関数でsavフォルダに出力される。
+;SAVETEXT 文字列, 連番, (第3引数はsavフォルダ強制), 第4引数によりエンコードをUTF-8に強制
+SAVETEXT LOCALS, GLOBAL:289, 0, 1
+
+
+;出力テキストの連番は0～4でループさせる
+GLOBAL:289 = GLOBAL:289 + 1
+SIF GLOBAL:289 == 5
+	GLOBAL:289 = 0
+
+PRINTFORML  <<オーダーTXT発行>> シーン:%シーン名% コマンドNo:{SELECTCOM} 連続カウンタ{GLOBAL:281}
+
+

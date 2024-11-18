@@ -1,0 +1,118 @@
+#他のファイルのワイルドカードを使用する場合はこの辺にメモする
+
+
+
+ERAIshkQ:
+  person encounter:
+    1girl, solo, looking at viewer,standing in tentacle pit,feet out of frame
+  enemy encounter:
+    monster ,encounter,1girl,standing,fighting stance, from behind,profile, wide shot,(in tentacle pit:0.8), simple background,black background,emphasis lines,(Off-Center Composition:1.1),out of frame
+  enemy attack:
+    general:
+      1girl,solo,nsfw,upper body, one eye closed ,hands up,blocking,(bending  backward:1.2),dynamic angle,single tentacle,a large tentacle hitting her,(profile ,facing to the side:0.6),suffering,(energy burst:1.1),pov tentacle,motion blur,moving lines,speed lines,^^^,attacked,damage,sound effects,japanese text,torn clothes,simple background,(black background:0.8)
+    cloth:
+      1girl,tearing clothes,simple background,(black background:0.8)
+    tentacle C:
+      #イソギンチャク型とかブラシ触手とか出せないかなあ
+      - 1girl,solo,M legs,hanging in midair,bound by tentacles,(warts:1.2),warty tentacle,thin tentacles,thin tentacles,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.2), clitoris,(cleft of venus:1.2),(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      #接写
+      - 1girl,solo,,spread legs,(close-up:0.6),(pussy focus:0.8),hanging in midair,bound by tentacles,(warts:1.2),warty tentacle,thin tentacles,thin tentacles,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.4), clitoris,(cleft of venus:1.2),(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle B:
+      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),(nipple tweak:1.2), upper body,breasts focus,from below,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle B suck:
+      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),(nipple tweak:1.2), upper body,breasts focus,from below,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle V:
+      #M字、V字
+      - 1girl,solo,hanging in midair, binding by tentacles,{spread legs|V legs,legs up},portrait,penetration,arms behind head,warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,(female ejaculation:0.8),tentacle sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+      #接写
+      # - 1girl,solo,hanging in midair, binding by tentacles,spread legs,(close-up:0.8),(pussy focus:0.8),warts,warty tentacle,thin tentacles,penis in pussy,pussy juice,tentacle sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle A:
+      #後ろから
+      - 1girl,solo,hanging in midair, binding by tentacles,from behind,(hands up:0.6),warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,cleft of venus,tentacle anal sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      #M字
+      - 1girl,solo,hanging in midair, binding by tentacles,M legs,arms behind head,portrait,anal penetration,warts,warty tentacle,pussy,pussy juice,cleft of venus,tentacle anal sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+    tentacle AV:
+      #M字、V字
+      - 1girl,solo,hanging in midair, binding by tentacles,{spread legs|V legs,legs up},portrait,penetration,arms behind head,warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,(female ejaculation:0.8),tentacle sex,vaginal insertion,anal sex,(double penetration:1.1),(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+    hang:
+      1girl,solo,hanging in midair,bound arms,tentacle pit,(simple background,black background:0.8)
+    vore:
+      1girl,solo,dutch antle,upper body,(through wall:0.8) ,vore,waist,hands,outstretched arm,out of frame,bury into tentacles,tentacle pit,{|(facing side:0.5)},(simple background,black background:0.9),scared,(screaming:0.5),viscosity fluid
+    cought by male:
+      1girls,(lying:1.1), on back,(hair spread out:0.2),hands up,imminent rape,pov,from above,(pov hands:1.1),grabbing wrist,(disembodied arms:0.4),simple background,tentacle pit,^^^,emphasis lines
+    cought by female:
+      #男の腕のまま
+      1girls,(lying:1.1), on back,(hair spread out:0.2),hands up,imminent rape,pov,from above,(pov hands:1.1),grabbing wrist,(disembodied arms:0.4),simple background,tentacle pit,^^^,emphasis lines
+    cought by dog:
+      1girls,all fours,imminent rape,hunting dog,cought by dog,simple background,black background,tentacle pit
+
+
+
+
+  pt attack:
+    danmaku:
+      #弱
+      light:
+        1girl, solo, outstretched arm,shooting,(danmaku:1.2),light trail,(energy beam:0.9),motion lines,simple background,black background
+      #中
+      medium:
+        #描き分けはあとで
+        __ERAIshkQ/pt attack/danmaku/light__
+      #強
+      heavy:
+        #描き分けはあとで
+        __ERAIshkQ/pt attack/danmaku/light__
+      charge:
+        1girl, solo,(stance:0.8),(incoming attack:0.8),(wide shot:0.7),(huge energy ball:1.2),dynamic angle,(simple background,black background:0.8)
+      charge attack:
+        (from behind,back,stance,spread arms:1.5),(energy burst:4.0),(aura,electricity,emphasis lines:2.0),(white out:4),(backlighting:2.0),(tentacle pit:2.0)
+      spread:
+        #描き分けはあとで
+        __ERAIshkQ/pt attack/danmaku/light__
+      laser:
+        #描き分けはあとで
+        __ERAIshkQ/pt attack/danmaku/light__
+    weapon:
+      crossbow:
+        1girl,holding crossbow, aiming,(incoming attack:0.8) ,(crossbow:1.2),upper body, in tentacle pit
+      magic arrow:
+        1girl,solo,(drawing bow:1.3),(holding bow \(weapon\):1.1),(bow \(weapon\):1.3),(arrow \(projectile\)),in tentacle pit,(dark background:0.8),looking forward,bust shot,Off-Center Composition,foreshortening,(forest:-1)
+      flamethrower:
+        1girl,hold a flamethrower,burst into flames,in tentacle pit
+      magic missile:
+        1girl,hold a rocket launcher, firing, magic missile,in tentacle pit
+      strawberry cross:
+        1girl,arm up,wide shot,dutch angle,falling a huge cross behind her,glowing white cross,decorated cross with buried strawberry,simple background,black background
+      hakurei amulet:
+        1girl,outstretched arm,  danmaku,(ofuda:1.2),glowing ofuda,simple background,black background,__cover B__
+      spell card:
+        1girl,solo,flying,(arm up),(holding a card),dynamic angle,(magic circle:0.8),(danmaku:1.2),light trails,motion lines,simple background,black background,__cover B__
+      magic restraints:
+        hoge
+      tentacle thrower:
+        1girl,outstretched arm, incoming attack,emphasis lines,(attack with tentacles:1.2),simple background,black background,bust shot,Off-Center Composition
+      club:
+        1girl, solo,(club \(weapon\):1.3),(holding weapon:1.1),incoming attack,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
+      naginata:
+        1girl, solo,(naginata:1.3),(holding polearm :1.1),incoming attack,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
+      hakurou sword:
+        1girl, solo,(katana:1.3),(holding sword :1.1),incoming attack,motion blur,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
+      magical stick:
+        1girl, solo,(magical girl:0.8),aura,kaleidostick,star \(symbol\), (magic wand:1.2),(holding weapon :1.1),incoming attack,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
+      dragonfish drill:        
+        #生成序盤だけを一瞬衣玖さんにすることで無理やり羽衣だけ借りる。失敗すると普通に衣玖さんが出てくる
+        1girl, solo, [(nagae iku:0.6)::0.2],(frilled shawl, white hagoromo with red frills:1.5),(grabbing own cloth:1.1),aura,fighting stance,motion blur,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
+      yin yang orb:
+        1girl, solo,(yin yang orb:1.3),poke ball,foreshortening,(throwing ball:1.2),incoming attack,motion blur,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
+      hihiirokane sword:
+        #katanaとredが両立しないのをエフェクトで誤魔化したかった
+        1girl, solo,(holding sword),(red blade sword:1.2),katana,sparkle,(aura:0.8),slashing,motion lines,motion blur,incoming attack,motion blur,smear frame,attack trail,(upper body:0.9),tentacle pit,(simple background:0.6),dynamic angle
+      tentacle:
+        1girl,outstretched arm, incoming attack,emphasis lines,(attack with tentacles:1.2),simple background,black background,bust shot,Off-Center Composition
+      tentacle sword:
+        1girl, solo,[holding sword:holding dildo:0.2],(long tentacle dildo in hand:1.2),glans,attacking,looking viewer,(incomin attack:1.3),emphasis lines,(upper body:0.9),black background,(simple background:0.8),dynamic angle,Off-Center Composition
+
+  get item:
+    - 1girl, solo,standing,looking down,(holding:-1),(find something on ground:0.8),(spoken exclamation mark),tentacle pit, full shot,(find ${Item:treasure box}:1.2){|, from below,foreshortening},{|(deformed:0.8)}
+  no item:
+    - 1girl, solo,looking down,looking for something,(sigh:1.2),standing in tentacle pit,feet out of frame 

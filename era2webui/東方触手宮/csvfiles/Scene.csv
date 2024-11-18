@@ -934,22 +934,22 @@
 ,,敵攻撃,敵攻撃_,,
 2961:アルケニー:特殊,2961,敵攻撃,敵攻撃_2961,,
 ,,,,,
-,,,敵の通常攻撃,__ERAIshkQ/enemy attack/general__,
-,,,敵の性攻撃,,
 ,,,,,
-,,,マップ画面,"1girl, solo, walking in tentacle pit",移動後何のイベントもなかったとき
-,,,マップ画面_仲間あり,"2girls, walking in tentacle pit",
 ,,,,,
-,,,人と遭遇,"1girl, solo, looking at viewer,standing in tentacle pit,feet out of frame",
-,,,敵と遭遇,"1girl, chibi, in tentacle pit, explosion",
-,,,探索_何も見つからない,"1girl, solo,looking down,looking for something,(sigh:1.2),standing in tentacle pit,feet out of frame ",
+,,,,,
+,,,マップ画面,"1girl, solo, walking in tentacle pit",未
+,,,マップ画面_仲間あり,"2girls, walking in tentacle pit",未
+,,,,,
+,,,人と遭遇,__ERAIshkQ/person encounter__,
+,,,敵と遭遇,__ERAIshkQ/enemy encounter__,
+,,,探索_何も見つからない,__ERAIshkQ/no item__,
 ,,,アイテム発見,__ERAIshkQ/get item__,
-,,,移動先選択中,"1girl, solo, walking in tentacle pit",
-,,,移動先選択中_仲間あり,"2girls, walking in tentacle pit",
-,,,移動_突撃,"1girl, solo,running form,hand up,running,motion lines, in tentacle pit,ducth angle,wide shot",毎回これを描画するとテンポ悪いかと思って実装してない
-,,,移動_突撃_仲間あり,"2girls, running form,hand up,running,motion lines, in tentacle pit,ducth angle,wide shot",〃
-,,,移動_慎重,"1girl, solo, walking in tentacle pit",〃
-,,,移動_慎重_仲間あり,"2girls, walking in tentacle pit",〃
+,,,,,
+,,,,,
+,,,移動_突撃,"1girl, solo,running form,hand up,running,motion lines, in tentacle pit,ducth angle,wide shot",直後にイベントがあるから移動のタイミングで生成はいまいち
+,,,移動_突撃_仲間あり,"2girls, running form,hand up,running,motion lines, in tentacle pit,ducth angle,wide shot",未
+,,,移動_慎重,"1girl, solo, walking in tentacle pit",未
+,,,移動_慎重_仲間あり,"2girls, walking in tentacle pit",未
 ,,,,,
 ,,,睡眠,,
 ,,,,,
