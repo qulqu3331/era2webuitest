@@ -27,8 +27,9 @@ class PromptMakerRX():
     def __init__(self, sjh):
         self.sjh = sjh
         self.initialize_class_variables()#判定に必要なセーブデータを一括取得 #0 or 1はBoolにするかも
-        self.prompt =    {"base":"","scene":"","chara":"","chara_2":"","cloth":"","general":""}
-        self.negative =  {"base":"","scene":"","chara":"","chara_2":"","cloth":"","general":""}
+        #ここで定義してないkeyも動的に追加されるが、書いておいたほうが見た目にわかりやすい。
+        self.prompt =    {"scene":"","chara":"","cloth":"","general":""}
+        self.negative =  {"base":"","scene":"","chara":"","cloth":"","general":""}
         self.width = 0
         self.height = 0
 
@@ -124,7 +125,8 @@ class PromptMakerRX():
         このメソッドを使えば、お前の辞書に新しいプロンプトやネガティブプロンプトをサクッと追加できるぜ。
         """
         if elements not in self.prompt:
-            raise KeyError(f" '{elements}' なんてプロンプト要素、ないぜ！")
+            self.prompt[elements] = ""
+            self.negative[elements] = ""
 
         if prompt is not None and prompt != "ERROR":
             self.prompt[elements] += prompt
