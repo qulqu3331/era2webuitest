@@ -10,41 +10,88 @@ ERAIshkQ:
   enemy attack:
     general:
       1girl,solo,nsfw,upper body, one eye closed ,hands up,blocking,(bending  backward:1.2),dynamic angle,single tentacle,a large tentacle hitting her,(profile ,facing to the side:0.6),suffering,(energy burst:1.1),pov tentacle,motion blur,moving lines,speed lines,^^^,attacked,damage,sound effects,japanese text,torn clothes,simple background,(black background:0.8)
-    cloth:
+    tearing cloth:
       1girl,tearing clothes,simple background,(black background:0.8)
+    exploding cloth:
+      1girl,tearing clothes,exploding clothes,simple background,(black background:0.8)
+    succubus C:
+      #没　意外と混ざらないけど実用的な確率ではない
+      2girls,(yuri:1.1),M legs,feet out of frame,in midair,clitoris,cleft of venus, gropping pussy,succubus,monster girl,(evil smile:0.6),(no eyes:0.8),daemon girl caressing another's pussy from behind,fingering,pussy juice,(faceless female:1.2),(blue skin:0.89),(blue hair:0.7),(upside-down:-1),twitching,motion lines,^^^, black background
+    # 汎用 out-of-frame censoring で誤魔化していく
+    sexual-general C:
+      1girl,solo,M legs,thighs,in midair,out-of-frame censoring,from below,(upside-down:-1),(twitching:1.1),motion lines,(emphasis lines:0.6),^^^, (female ejaculation:0.5), sound effects,black background
+    sexual-general C_soft:
+      #とりあえず同じ
+      __ERAIshkQ/enemy attack/sexual-general C__ 
+    sexual-general B:
+      #困る
+      1girl,solo,in midair,dutch angle, breasts focus,(head out of frame:0.4),arms behind head,(breast press:0.7), upper body,(upside-down:-1),(trembling:1.1), (twitching:1.1),motion lines,^^^, black background
+    sexual-general B_soft:
+      #困る
+      1girl,solo,in midair,dutch angle, breasts focus,(head out of frame:0.4),arms behind head,from side,arched back,(breast press:0.7), upper body,(upside-down:-1),(trembling:1.1), (twitching:1.1),motion lines,^^^, black background
+    sexual-general V:
+      #C使いまわし
+      __ERAIshkQ/enemy attack/sexual-general C__ 
+    sexual-general V_soft:
+      __ERAIshkQ/enemy attack/sexual-general V__ 
+    sexual-general A:
+      1girl,solo,looking back,dutch angle,out-of-frame censoring,  in midair, from behind,(hands up:0.6),(upside-down:-1),twitching,motion lines,^^^, black background,viscosity fluid
+    sexual-general A_soft:
+      __ERAIshkQ/enemy attack/sexual-general A__ 
+
     tentacle C:
       #イソギンチャク型とかブラシ触手とか出せないかなあ
-      - 1girl,solo,M legs,hanging in midair,bound by tentacles,(warts:1.2),warty tentacle,thin tentacles,thin tentacles,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.2), clitoris,(cleft of venus:1.2),(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      - 1girl,solo,M legs,hanging in midair,bound by tentacles,(warts:1.2),warty tentacle,thin tentacles,thin tentacles,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.2), clitoris,(cleft of venus:1.2),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
       #接写
-      - 1girl,solo,,spread legs,(close-up:0.6),(pussy focus:0.8),hanging in midair,bound by tentacles,(warts:1.2),warty tentacle,thin tentacles,thin tentacles,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.4), clitoris,(cleft of venus:1.2),(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      - 1girl,solo,,spread legs,(close-up:0.6),(pussy focus:0.8),hanging in midair,bound by tentacles,(warts:1.2),warty tentacle,thin tentacles,thin tentacles,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.4), clitoris,(cleft of venus:1.2),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle C_soft:
+      1girl,solo,standing,dutch angle,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.2),rubbing over panties, (cleft of venus:1.2),(upside-down:-1),thighs,knees,twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
     tentacle B:
-      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),(nipple tweak:1.2), upper body,breasts focus,from below,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),(nipple tweak:1.2), upper body,breasts focus,from below,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle B_soft:
+      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),caressing over clothes, upper body,breasts focus,from below,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
     tentacle B suck:
-      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),(nipple tweak:1.2), upper body,breasts focus,from below,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      #あからさまにガラスかプラスチックの搾乳機
+      1girl,solo,hanging in midair, bound by tentacles,arms behind head,thin tentacles,thin tentacles,(tentacles caressing breasts),nipples,(suction tentacles:1.2) ,suction cups,milking machine ,upper body,breasts focus,from below,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    #吸い付き系は着衣分岐ないっぽい？
+    tentacle B suck_soft:
+      __ERAIshkQ/enemy attack/tentacle B suck__
     tentacle V:
       #M字、V字
-      - 1girl,solo,hanging in midair, binding by tentacles,{spread legs|V legs,legs up},portrait,penetration,arms behind head,warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,(female ejaculation:0.8),tentacle sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+      - 1girl,solo,hanging in midair, binding by tentacles,{spread legs|V legs,legs up},portrait,penetration,arms behind head,warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,(female ejaculation:0.8),tentacle sex,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
       #接写
-      # - 1girl,solo,hanging in midair, binding by tentacles,spread legs,(close-up:0.8),(pussy focus:0.8),warts,warty tentacle,thin tentacles,penis in pussy,pussy juice,tentacle sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      # - 1girl,solo,hanging in midair, binding by tentacles,spread legs,(close-up:0.8),(pussy focus:0.8),warts,warty tentacle,thin tentacles,penis in pussy,pussy juice,tentacle sex,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+    tentacle V_soft:
+      1girl,solo,standing,bound,arms behind back,dutch angle,thin tentacles,(tentacles rubbing clitoris),(clitoral stimulation:1.2),panties aside,tentacle insertion,(upside-down:-1),thighs,twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
     tentacle A:
       #後ろから
-      - 1girl,solo,hanging in midair, binding by tentacles,from behind,(hands up:0.6),warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,cleft of venus,tentacle anal sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
+      - 1girl,solo,hanging in midair, binding by tentacles,from behind,(hands up:0.6),warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,cleft of venus,tentacle anal sex,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
       #M字
-      - 1girl,solo,hanging in midair, binding by tentacles,M legs,arms behind head,portrait,anal penetration,warts,warty tentacle,pussy,pussy juice,cleft of venus,tentacle anal sex,(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+      - 1girl,solo,hanging in midair, binding by tentacles,M legs,arms behind head,portrait,anal penetration,warts,warty tentacle,pussy,pussy juice,cleft of venus,tentacle anal sex,(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+    tentacle A_soft:
+      1girl,solo,{|looking back},hanging in midair, binding by tentacles,from behind,bound arms,thin tentacles,pussy juice,(upside-down:-1),(gropping anus over panties:1.1),ass,(rubbing anus:0.8),(covered anus:0.8),tentacles covering anus,twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid
     tentacle AV:
       #M字、V字
-      - 1girl,solo,hanging in midair, binding by tentacles,{spread legs|V legs,legs up},portrait,penetration,arms behind head,warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,(female ejaculation:0.8),tentacle sex,vaginal insertion,anal sex,(double penetration:1.1),(green tentacles:-1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+      - 1girl,solo,hanging in midair, binding by tentacles,{spread legs|V legs,legs up},portrait,penetration,arms behind head,warts,warty tentacle,thin tentacles,thin tentacles,pussy,pussy juice,(female ejaculation:0.8),tentacle sex,vaginal insertion,anal sex,(double penetration:1.1),(upside-down:-1),twitching,motion lines,^^^, (tentacle pit:0.6),black background,viscosity fluid,emphasis lines,sound effects
+    pre bound:
+      1girl,upper body,raised arm,capturing,tentacles on arm,(attacked:0.7),tentacle,(frown:0.6),flying sweatdrops,moving lines,black background
     hang:
-      1girl,solo,hanging in midair,bound arms,tentacle pit,(simple background,black background:0.8)
+      - 1girl,solo,hanging in midair,bound arms,tentacle pit,(simple background,black background:0.8)
+      # M legsとかやると挿入っちゃうのでlegs together
+      - 1girl,solo,in midair,restrained,legs together,from below,arms up,moving lines,bound,bound arms,tentacles,(penetration:-0.6)
+      # spread eagle
+      - 1girl,solo,restrained,arms up,(spread eagle position:0.5),legs apart,moving lines,perspective,from below,bound,bound arms,bound legs,tentacles,(penetration:-0.6)
     vore:
       1girl,solo,dutch antle,upper body,(through wall:0.8) ,vore,waist,hands,outstretched arm,out of frame,bury into tentacles,tentacle pit,{|(facing side:0.5)},(simple background,black background:0.9),scared,(screaming:0.5),viscosity fluid
     cought by male:
-      1girls,(lying:1.1), on back,(hair spread out:0.2),hands up,imminent rape,pov,from above,(pov hands:1.1),grabbing wrist,(disembodied arms:0.4),simple background,tentacle pit,^^^,emphasis lines
+      - 1girls,(lying:1.1), on back,(hair spread out:0.2),hands up,imminent rape,pov,from above,(pov hands:1.1),grabbing wrist,(disembodied arms:0.4),simple background,tentacle pit,^^^,emphasis lines
+      - 1girls,(lying:1.1), on back,(hair spread out:0.2),hands up,M legs,imminent rape,pov,from above,perspective,foreshortening,dutch angle,knees,close-up,feet out of frame,flesh background,^^^,emphasis lines, (tentacle pit:0.7),(pov hands:1.1),grabbing legs,(fat man:0.8)
+
     cought by female:
       #男の腕のまま
       1girls,(lying:1.1), on back,(hair spread out:0.2),hands up,imminent rape,pov,from above,(pov hands:1.1),grabbing wrist,(disembodied arms:0.4),simple background,tentacle pit,^^^,emphasis lines
     cought by dog:
-      1girls,all fours,imminent rape,hunting dog,cought by dog,simple background,black background,tentacle pit
+      1girls,all fours,imminent rape,large dog,cought by dog,simple background,black background,tentacle pit
 
 
 
@@ -54,6 +101,7 @@ ERAIshkQ:
       #弱
       light:
         1girl, solo, outstretched arm,shooting,(danmaku:1.2),light trail,(energy beam:0.9),motion lines,simple background,black background
+        #,blurry background,(dark background:0.8),(tentacle pit in background:0.9)
       #中
       medium:
         #描き分けはあとで
@@ -100,7 +148,7 @@ ERAIshkQ:
       magical stick:
         1girl, solo,(magical girl:0.8),aura,kaleidostick,star \(symbol\), (magic wand:1.2),(holding weapon :1.1),incoming attack,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
       dragonfish drill:        
-        #生成序盤だけを一瞬衣玖さんにすることで無理やり羽衣だけ借りる。失敗すると普通に衣玖さんが出てくる
+        #生成序盤だけを一瞬衣玖さんにすることで無理やり羽衣だけ借りたい DMD2になると収束が早すぎて上描きできないっぽい。要素の欠片もないか、衣玖さん本人になるか
         1girl, solo, [(nagae iku:0.6)::0.2],(frilled shawl, white hagoromo with red frills:1.5),(grabbing own cloth:1.1),aura,fighting stance,motion blur,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
       yin yang orb:
         1girl, solo,(yin yang orb:1.3),poke ball,foreshortening,(throwing ball:1.2),incoming attack,motion blur,(upper body:0.9),tentacle pit,(simple background:0.7),dutch angle
@@ -116,3 +164,9 @@ ERAIshkQ:
     - 1girl, solo,standing,looking down,(holding:-1),(find something on ground:0.8),(spoken exclamation mark),tentacle pit, full shot,(find ${Item:treasure box}:1.2){|, from below,foreshortening},{|(deformed:0.8)}
   no item:
     - 1girl, solo,looking down,looking for something,(sigh:1.2),standing in tentacle pit,feet out of frame 
+
+  tentacle detail:
+    plant:
+      plant tentacles,green tentacles,ivy
+    red vain:
+      ((red tentacles))

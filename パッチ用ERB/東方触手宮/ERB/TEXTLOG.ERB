@@ -83,6 +83,9 @@ LOCALS = %LOCALS%"表示キャラ名称":"%CALLNAME:(表示キャラ番号)%",
 
 SELECTCASE ARGS
 	CASE "バトル中の行動"
+		;呼び出し元\BATTLE\FIX_BATTLE_ACTION.ERB
+		;溜め攻撃は\ERB\BATTLE\DO_BATTLE_ACTION.ERB
+		;引数ARG:1に行動対象キャラIDが入っているので敵攻撃のときに使う
 		;味方か敵かで分岐
 		IF TFLAG:51
 			;味方の行動
@@ -116,15 +119,44 @@ SELECTCASE ARGS
 					RETURN 0
 			ENDSELECT
 		ELSE
-			;敵の行動
+			; <<<敵の行動はここ>>>
 			;表示キャラは 行動対象になるキャラ
-			表示キャラ番号 = TFLAG:54
-			シーン名 = 敵攻撃_{TFLAG:50}
+			表示キャラ番号 = ARG:1
+
+			;命中
+			IF ARG:2
+				;コマンドID TFLAG:50 をもとにシーン名を作る
+
+				;性攻撃の場合　衣服で地の文が分岐する
+				IF TFLAG:55 == 3
+					IF BASE:表示キャラ番号:3 <= 0
+						;全裸のとき ハード
+						シーン名 = 敵攻撃_{TFLAG:50}
+					ELSE
+						;シーン名にaがついた方がソフト
+						シーン名 = 敵攻撃_{TFLAG:50}a
+					ENDIF
+				ELSE
+						シーン名 = 敵攻撃_{TFLAG:50}
+				ENDIF
+			;回避
+			ELSE
+			;とりあえず表示しない
+				RETURN 0
+			ENDIF
 		ENDIF
+
+	CASE "敵の拘束攻撃発動"
+		;命中か否かにかかわらず表示
+		;服を犠牲に脱出の選択肢の前に呼ぶ
+		表示キャラ番号 = ARG:1
+		シーン名 = 敵の拘束攻撃
 
 	CASE "バトル中の行動_溜め"
 		IF CFLAG:(表示キャラ番号):31 == 2
 			シーン名 = 味方攻撃_溜め
+		ELSE
+			RETURN 0
 		ENDIF
 
 	CASE "移動"
@@ -140,6 +172,7 @@ SELECTCASE ARGS
 
 	CASE "敵と遭遇"
 		;引数ARG:1に敵の番号を入れておく
+		;呼び出し元:\BATTLE\PRE_BATTLE.ERB
 		DirectOrders = %DirectOrders%\{"csv":"Monster.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"プロンプト"\},
 
 	CASEELSE
