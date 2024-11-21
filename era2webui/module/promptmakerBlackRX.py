@@ -58,7 +58,7 @@ class PromptMakerRX():
         self.charno = self.sjh.get_save("キャラ固有番号")#int
         self.com    = self.sjh.get_save("シーン名")#str
         self.succ   = 1
-        self.direct_orders  = self.sjh.get_save("DirectOrders")#dict型のリスト
+        self.getCSV_orders  = self.sjh.get_save("getCSV")#dict型のリスト
 
 
     def generate_prompt(self):
@@ -89,8 +89,8 @@ class PromptMakerRX():
         self.create_scene_element() #シーン
         self.create_chara_element() #キャラ
 
-        if self.direct_orders:
-            self.execute_dyrect_orders() #DyrectOrders:csvから検索するパラメータをオーダーtxtに直接記述するシステムの展開
+        if self.getCSV_orders:
+            self.execute_getCSV_orders() #getCSV:csvファイル中を検索するパラメータをera出力に直接記述するシステムの展開
 
 
 
@@ -134,13 +134,13 @@ class PromptMakerRX():
             self.negative[elements] += nega
 
 
-    def execute_dyrect_orders(self):
+    def execute_getCSV_orders(self):
         """
         オーダーテキストに直接csvm.get_dfに入れる各パラメータを書けるようにした
-        json中に"DirectOrders"という辞書のリストがあればそれを展開する
+        json中に"getCSV"という辞書のリストがあればそれを展開する
         """
         # リスト中の辞書の数だけ繰り返す
-        for dictionary in self.direct_orders:
+        for dictionary in self.getCSV_orders:
             csv = dictionary["csv"]
             element = dictionary["element"]
             searchcolumn = dictionary["searchcolumn"]
@@ -148,6 +148,7 @@ class PromptMakerRX():
             pickcolumn = dictionary["pickcolumn"]
 
             prompt = csvm.get_df(csv,searchcolumn,searchvalue,pickcolumn)
+            # 空やエラーのときは何も追加しない
             if prompt != "ERROR":
                 self.add_element(element, prompt, None)
 

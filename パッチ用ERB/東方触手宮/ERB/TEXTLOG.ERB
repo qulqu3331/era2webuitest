@@ -20,7 +20,7 @@
 @OUTPUT_TXT(ARGS,ARG:0 = 0,ARG:1 = 0,ARG:2 = 0)
 #DIMS シーン名
 #DIM 表示キャラ番号
-#DIMS DirectOrders
+#DIMS GetCSV
 #DIMS 衣服
 
 
@@ -65,8 +65,9 @@ ENDIF
 LOCALS = \{
 
 ;あとでまとめてLOCALSに合流させる用の文字列変数
-;DirectOrder は辞書型を要素とするリスト
-DirectOrders = "DirectOrders":\[
+;GetCSV は辞書型を要素とするリスト
+GetCSV = "getCSV":\[
+
 
 ;タイムスタンプ 時刻ミリ秒-----------------------------------------------------
 ;txtとプロンプトを紐づけるIDにする。今のところ使ってない
@@ -139,11 +140,14 @@ SELECTCASE ARGS
 				ELSE
 						シーン名 = 敵攻撃_{TFLAG:50}
 				ENDIF
+
 			;回避
 			ELSE
 			;とりあえず表示しない
 				RETURN 0
 			ENDIF
+			;触手の種類
+			GetCSV = %GetCSV%\{"csv":"Variable.csv","element":"general","searchcolumn":"名称","searchvalue":"%TENTACLE_STYLE(DA:(TFLAG:52):0)%","pickcolumn":"変数代入プロンプト"\},
 		ENDIF
 
 	CASE "敵の拘束攻撃発動"
@@ -151,6 +155,9 @@ SELECTCASE ARGS
 		;服を犠牲に脱出の選択肢の前に呼ぶ
 		表示キャラ番号 = ARG:1
 		シーン名 = 敵の拘束攻撃
+
+		;触手の種類
+		GetCSV = %GetCSV%\{"csv":"Variable.csv","element":"general","searchcolumn":"名称","searchvalue":"%TENTACLE_STYLE(DA:(TFLAG:52):0)%","pickcolumn":"変数代入プロンプト"\},
 
 	CASE "バトル中の行動_溜め"
 		IF CFLAG:(表示キャラ番号):31 == 2
@@ -168,12 +175,18 @@ SELECTCASE ARGS
 
 	CASE "アイテム発見"
 		;引数ARG:1にアイテム番号を入れておく
-		DirectOrders = %DirectOrders%\{"csv":"Item.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"変数代入プロンプト"\},
+		GetCSV = %GetCSV%\{"csv":"Item.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"変数代入プロンプト"\},
 
 	CASE "敵と遭遇"
 		;引数ARG:1に敵の番号を入れておく
 		;呼び出し元:\BATTLE\PRE_BATTLE.ERB
-		DirectOrders = %DirectOrders%\{"csv":"Monster.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"プロンプト"\},
+		GetCSV = %GetCSV%\{"csv":"Monster.csv","element":"general","searchcolumn":"番号","searchvalue":"{ARG:1}","pickcolumn":"プロンプト"\},
+
+	CASE "ランダム自慰"
+		;呼び出し元 \関数フォルダ\エロ関連\MASTURBATION.ERB
+		;表示キャラはARG:0で受け取り済み
+		;ARG:1が自慰部位 自慰する箇所1A2B3C4V
+		シーン名 = ランダム自慰_女_{ARG:1}
 
 	CASEELSE
 ENDSELECT
@@ -197,10 +210,12 @@ ELSE
 	衣服 = 全裸
 ENDIF
 
-DirectOrders = %DirectOrders%\{"csv":"Cloth.csv","element":"cloth","searchcolumn":"名称","searchvalue":"%衣服%","pickcolumn":"プロンプト"\},
+GetCSV = %GetCSV%\{"csv":"Cloth.csv","element":"cloth","searchcolumn":"名称","searchvalue":"%衣服%","pickcolumn":"プロンプト"\},
 ;末尾の,はあとで除去する
 
 LOCALS = %LOCALS%"衣服状態":"%衣服%",
+
+;---------------------------------------------------
 
 
 ;---------------------------------------------------
@@ -211,14 +226,13 @@ LOCALS = %LOCALS%"体力":{BASE:表示キャラ番号:0},
 LOCALS = %LOCALS%"最大体力":{MAXBASE:表示キャラ番号:0},
 LOCALS = %LOCALS%"CP":{BASE:表示キャラ番号:3},
 
-;DirectOrdersをLOCALSに合流
+;GetCSVをLOCALSに合流
 ;末尾の,を消去してから角括弧を閉じる
-DirectOrders = %SUBSTRING(DirectOrders,0,STRLENS(DirectOrders)-1)%
-DirectOrders = %DirectOrders%\]
+GetCSV = %SUBSTRING(GetCSV,0,STRLENS(GetCSV)-1)%
+GetCSV = %GetCSV%\]
 
-LOCALS = %LOCALS% %DirectOrders%
-;最後の要素である↑で末尾にカンマをつけてないので、カンマを削る必要がなくなった
-;のでこの処理いらない。LOCALS = %SUBSTRING(LOCALS,0,STRLENS(LOCALS)-1)%
+LOCALS = %LOCALS% %GetCSV%
+
 LOCALS = %LOCALS%\}
 ;PRINTFORMW %LOCALS%
 ;SAVETEXT関数でsavフォルダに出力される。
@@ -234,3 +248,21 @@ SIF GLOBAL:289 == 5
 PRINTFORML  <<オーダーTXT発行>> シーン:%シーン名% コマンドNo:{SELECTCOM} 連続カウンタ{GLOBAL:281}
 
 
+@TENTACLE_STYLE(ARG)
+#FUNCTIONS
+;ARG 敵ID
+;触手の色形を表す文字列を返す
+SELECTCASE ARG
+	CASE 5,15,16,23,24,42,62,63,75,79,87,88,103
+		RETURNF "植物系触手"
+	CASE 6
+		RETURNF "赤触手"
+	CASE 9
+		RETURNF "タコ触手"
+	CASE 10,29
+		RETURNF "イカ触手"
+	CASE 64
+		RETURNF "メカ触手"
+	CASEELSE
+		RETURNF "通常の触手"
+ENDSELECT

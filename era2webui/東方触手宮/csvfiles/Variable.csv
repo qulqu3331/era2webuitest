@@ -1,0 +1,7 @@
+﻿名称,作業用,プロンプト,変数代入プロンプト,備考
+通常の触手,pink,__ERAIshkQ/tentacle detail/pink__,${tentacle=__ERAIshkQ/tentacle detail/pink__},
+植物系触手,plant,__ERAIshkQ/tentacle detail/plant__,${tentacle=__ERAIshkQ/tentacle detail/plant__},
+赤触手,red,__ERAIshkQ/tentacle detail/red__,${tentacle=__ERAIshkQ/tentacle detail/red__},
+メカ触手,mecha,__ERAIshkQ/tentacle detail/mecha__,${tentacle=__ERAIshkQ/tentacle detail/mecha__},
+タコ触手,octopus,__ERAIshkQ/tentacle detail/octopus__,${tentacle=__ERAIshkQ/tentacle detail/octopus__},
+イカ触手,squid,__ERAIshkQ/tentacle detail/squid__,${tentacle=__ERAIshkQ/tentacle detail/squid__},
